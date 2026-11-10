@@ -59,6 +59,7 @@ To resume documentation work:
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Component boundaries, stack candidates, and implementation sequence |
 | [TODO.md](TODO.md) | Current task status and blockers |
 | [WORKFLOW.md](WORKFLOW.md) | Work, verification, and handoff rules |
+| [BRANCH_PLAN.md](BRANCH_PLAN.md) | Proposed branch names, ownership, dependencies, PRs, and release milestones |
 | [PRODUCT_FLOWS.md](PRODUCT_FLOWS.md) | Resident and staff journeys, states, and exceptions |
 | [DOMAIN_MODEL.md](DOMAIN_MODEL.md) | Proposed DDD model and bounded contexts |
 | [API_CONTRACT.md](API_CONTRACT.md) | Draft contracts and integration boundaries |

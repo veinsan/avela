@@ -45,4 +45,6 @@ Maintain professional review boundaries and truthful availability. Clinical guid
 
 ## Handoff
 
+Use [BRANCH_PLAN.md](BRANCH_PLAN.md) for the proposed short-lived branch and PR workflow. Create branches only when their work starts; do not treat the planned catalogue as existing branches or as implementation authorization. Feature tests ship with their feature. Keep unrelated working-tree changes outside the task.
+
 Summarize completed work, verification, and unresolved dependencies. Update TODO with the next concrete action. The user performs Git staging, commits, and pushes; provide commands matching the observed branch and remote when appropriate. Do not create live clinical or external-service commitments through documentation wording.

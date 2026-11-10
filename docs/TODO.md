@@ -6,6 +6,7 @@
 | --- | --- | --- | --- |
 | A-00 | Establish documentation baseline | Done | 18 Markdown files, 42 relative links, 20 shared task IDs, 20 token references checked; no dependency cycles; skill validator and independent review passed for documentation scope. |
 | A-19 | Refine API selection and design specification | Done | Official-source shortlist and four probes recorded; links, token schema, task IDs, 22 text contrast pairs and four outline/focus pairs checked. UI rendering remains untested. |
+| A-20 | Plan branching and collaboration | Done | 22 catalogue branch names accepted by git check-ref-format; task references and 50 local links checked. No branches created. |
 | A-01 | Select preliminary workflow and demo boundary | Pending | Select primary workflow, pilot candidate, and simulated staffing; final freeze is A-17. |
 | A-02 | Audit environmental data | In progress | Two pilot-candidate AQ probes, place search, and BMKG example passed; pilot mapping, station history, quotas/failure tests, and final source choice remain. |
 | A-03 | Agree peer integrations | Pending | Identify two distinct groups and write feature-level contracts. |

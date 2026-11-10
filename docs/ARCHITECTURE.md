@@ -85,6 +85,7 @@ Backups and migration rollback procedures are required before sustained deployme
 | --- | --- | --- | --- |
 | A-00 | Establish documentation baseline | None | Required artifacts exist, links resolve, status is honest, validation recorded. |
 | A-19 | Refine API selection and design specification | A-00 | Official-source shortlist and bounded probe evidence recorded; DESIGN refined using Impeccable; links, tokens, contrast, and draft status checked. |
+| A-20 | Plan branching and collaboration | A-00 | Branch names, role ownership, dependencies, PR/release rules, and early course milestones documented and checked against this plan. |
 | A-01 | Select preliminary workflow and demo boundary | A-00 | Owner selects primary flow, candidate pilot, and simulated staffing plan for feasibility work; this is not final scope freeze. |
 | A-02 | Audit environmental data | A-00 | Pilot sample, timestamps, units, access terms, failures, and coverage documented. |
 | A-03 | Agree peer integrations | A-00 | Two named groups, written contracts, samples, feature mapping, and mock policy. |

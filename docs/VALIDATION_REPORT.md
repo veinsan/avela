@@ -6,7 +6,13 @@
 
 **Status:** Documentation baseline verified. Product scope, operational service, and implementation remain unapproved/unimplemented as documented.
 
-## Latest Revision: API and Design Refinement
+## Latest Revision: Branch Planning
+
+Added BRANCH_PLAN with one long-lived main branch, 22 on-demand branch names, role ownership, acceptance evidence, dependency ordering, early DDD/Registry milestones, PR conventions, and proposed milestone tags. No branch, tag, protection setting, PR, commit, or push was created for this task.
+
+All 22 catalogue names passed `git check-ref-format --branch`; no duplicate names were found. All referenced architecture IDs exist, the 22 architecture/TODO IDs match, and all 50 local links across 20 Markdown files resolve. The initial name-check expression also matched two prefix examples; it was narrowed to the branch catalogue and rerun successfully. `git diff --check` passed. The existing project-setup deletions remain untouched.
+
+## Previous Revision: API and Design Refinement
 
 The API shortlist was reviewed against provider-owned documentation after discovery through public-apis. Four bounded public requests returned HTTP 200; observed metadata and limits are in API_RESEARCH. This is a connectivity/schema check, not validation of forecast skill, all Indonesian locations, hospital access, or provider uptime.
 
