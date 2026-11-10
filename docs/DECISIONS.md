@@ -14,10 +14,11 @@
 | D-06 | Remote review first, onsite examination when needed. | Assistant recommendation; approval pending | Do not describe this workflow as an already agreed operational service. |
 | D-07 | React Native/Expo APK, core STB Docker service, and >=2 peer groups. | Assignment requirement | Website alone does not satisfy the course. |
 | D-08 | Backend framework, database, package manager, versions, and hosting. | Pending | Architecture candidates are proposals only. |
-| D-09 | Visual identity and design tokens. | Proposed baseline | Name approval does not approve palette, logo, or layout. |
+| D-09 | Visual identity and design tokens. | Refined proposal using Impeccable | Light/dark roles and screen hierarchy specified; no implemented or visually validated UI. |
 | D-10 | PM2.5-focused environmental information; original forecast ambition 6-24 hours. | Prior brainstorming direction, feasibility pending | No independent model or prediction horizon committed. |
 | D-11 | A real hospital or puskesmas partnership. | Unconfirmed | Santosa was an example, not an agreement or API grant. |
 | D-12 | Staging, commits, and pushes are performed by the user. | Project-setup rule | Agent leaves changes unstaged and provides commands when useful. |
+| D-13 | Open-Meteo forecast/geocoding, optional BMKG weather, optional OpenAQ observations. | Evidence-backed recommendation | Official docs and four public probes reviewed; not final pilot/production validation. |
 
 ## Alternatives Considered
 
@@ -60,3 +61,4 @@
 | 2026-11-10 | Avela selected as final name. | Explicit user message |
 | 2026-11-10 | Documentation setup requested in Avela workspace. | Explicit user message |
 | 2026-11-10 | Draft baseline records resident journeys, options, and unresolved dependencies. | Documentation work; does not freeze implementation |
+| 2026-11-10 | API recommendations and design refined at user request. | Public-apis discovery, provider documentation, bounded probes, and Impeccable source guidance |

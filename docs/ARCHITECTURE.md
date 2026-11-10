@@ -14,7 +14,10 @@
 | Integration layer | Separate small service outside STB | Proposed; server/laptop/VM hosting to be selected |
 | Staff interface | Role-gated mobile screens or separate web console | Pending workflow and workload choice |
 | Gateway / public access | Nginx + Cloudflare Tunnel | Course deployment pattern; class domain pending |
-| Mapping | Provider/library pending audit | Must support list fallback and relevant pilot coverage |
+| Environmental API | Open-Meteo Air Quality adapter | Recommended after two public probes; provider forecasts, no custom model claim |
+| Place search / weather | Open-Meteo Geocoding and optional BMKG adapter | Recommended; separate ID namespaces and reviewed administrative mapping |
+| Station observations | OpenAQ v3 | Optional; API key and local observation coverage pending |
+| Mapping | Peer directory; optional reviewed OSM import; tile/library choice pending | List works without map; shared Overpass instances are not the production backend |
 | Testing | Jest for mobile; backend runner after stack selection | Jest required by coursework; backend choice pending |
 | AI | None required for first vertical slice | Optional off-STB summarization or forecast experiment only after justification |
 | Package manager / versions | Pending | Verify supported combinations when scaffolding is authorized |
@@ -46,6 +49,8 @@ The mobile app may read/write its own core API directly and call the integration
 - **Environmental adapter:** preserve units, valid times, retrieved times, spatial resolution, and provenance. Category mapping is a versioned reviewed configuration.
 - **Staff surface:** read assigned queue, request information, publish follow-up, and publish simulated results. Explicit demo and availability labels.
 - **Research worker:** if approved, train/evaluate outside STB and publish documented artifacts; no synchronous heavy processing in the report path.
+
+Provider selection is detailed in DATA_SOURCES, with request evidence in API_RESEARCH. All public-provider orchestration remains outside STB. Use shared area-based fetches, provider-specific quotas and permissions, and separate valid/retrieval/issue timestamps. A geography identifier is not a universal identifier: GeoNames results need an explicit crosswalk before BMKG lookup. Facility location, clinical availability, and map tiles are independent sources.
 
 ## Planned Repository Layout
 
@@ -79,6 +84,7 @@ Backups and migration rollback procedures are required before sustained deployme
 | ID | Step | Depends on | Completion criteria |
 | --- | --- | --- | --- |
 | A-00 | Establish documentation baseline | None | Required artifacts exist, links resolve, status is honest, validation recorded. |
+| A-19 | Refine API selection and design specification | A-00 | Official-source shortlist and bounded probe evidence recorded; DESIGN refined using Impeccable; links, tokens, contrast, and draft status checked. |
 | A-01 | Select preliminary workflow and demo boundary | A-00 | Owner selects primary flow, candidate pilot, and simulated staffing plan for feasibility work; this is not final scope freeze. |
 | A-02 | Audit environmental data | A-00 | Pilot sample, timestamps, units, access terms, failures, and coverage documented. |
 | A-03 | Agree peer integrations | A-00 | Two named groups, written contracts, samples, feature mapping, and mock policy. |

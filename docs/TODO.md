@@ -5,8 +5,9 @@
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
 | A-00 | Establish documentation baseline | Done | 18 Markdown files, 42 relative links, 20 shared task IDs, 20 token references checked; no dependency cycles; skill validator and independent review passed for documentation scope. |
+| A-19 | Refine API selection and design specification | Done | Official-source shortlist and four probes recorded; links, token schema, task IDs, 22 text contrast pairs and four outline/focus pairs checked. UI rendering remains untested. |
 | A-01 | Select preliminary workflow and demo boundary | Pending | Select primary workflow, pilot candidate, and simulated staffing; final freeze is A-17. |
-| A-02 | Audit environmental data | Pending | Select pilot candidates and obtain relevant redacted API samples. |
+| A-02 | Audit environmental data | In progress | Two pilot-candidate AQ probes, place search, and BMKG example passed; pilot mapping, station history, quotas/failure tests, and final source choice remain. |
 | A-03 | Agree peer integrations | Pending | Identify two distinct groups and write feature-level contracts. |
 | A-04 | Validate stack and STB | Pending | Inspect actual hardware/resources after scope choice; approve stack. |
 | A-16 | Prepare and submit the DDD milestone | Pending | Due end of Week 13; use approved A-01 scope and available A-03 peer context, not the final APK. |
@@ -27,7 +28,7 @@
 
 ## Known Dependencies
 
-No live partner, peer contract, pilot region, clinical reviewer, final stack, or provider feasibility result is confirmed. These are planning dependencies, not failures of an implemented system. Scope approval and feasibility work are the next useful steps; do not begin by adding complex AI components.
+No live partner, peer contract, pilot region, clinical reviewer, or final stack is confirmed. Public documentation and bounded connectivity checks now support a provider shortlist, but do not complete data feasibility or validate forecast accuracy. Scope approval and the remaining source audit are next; do not begin by adding complex AI components.
 
 ## Verification Log
 
@@ -36,3 +37,4 @@ No live partner, peer contract, pilot region, clinical reviewer, final stack, or
 | 2026-11-10 | Read setup package and inspected repository | Existing repository contained `.git/` and untracked `project-setup/`; branch main, origin observed. |
 | 2026-11-10 | Drafted project documentation | Product status and proposed choices separated; final checks recorded in VALIDATION_REPORT. |
 | 2026-11-10 | Validated documentation baseline | Link/token/task checks passed; independent findings on milestone timing and scope-freeze dependencies corrected and rechecked. |
+| 2026-11-10 | Researched API shortlist and refined design | Read public-apis plus official documentation; four HTTP 200 probes recorded in API_RESEARCH; Impeccable source guidance applied to DESIGN. |

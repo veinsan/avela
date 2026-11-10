@@ -36,6 +36,11 @@ Jest is required for the mobile course deliverable. Backend and end-to-end tools
 | T-18 | NFR-07 | Large text, non-color status, form errors, and map-list alternative reviewed on Android. |
 | T-19 | Course | Release APK installed; login, four-plus screens, stack/tab navigation, validated form demonstrated. |
 | T-20 | NFR-02 | Fixtures, uploads, logs, screenshots, and video contain synthetic patient data only. |
+| T-21 | FR-02 | Provider adapter keeps model forecasts separate from observations, preserves grid/request coordinates, and does not use processing duration as issue time. |
+| T-22 | FR-02 | Missing BMKG code crosswalk yields optional-weather-unavailable; GeoNames identifiers are never substituted. |
+| T-23 | NFR-04 | Provider-specific cache permissions, quotas, 429 backoff, partial results, and attribution survive fallback. |
+| T-24 | NFR-07 | Light/dark themes, large text, TalkBack, Android Back, keyboard insets, and long staff responses verified on an actual Android build. |
+| T-25 | US-07 | Facility coordinates do not imply capacity or partnership; retrieval and operational-verification times remain distinct. |
 
 ## Evidence Record
 

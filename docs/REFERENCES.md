@@ -10,7 +10,7 @@
 | S-02 | `C:\Users\riant\Downloads\rangkuman_diskusi_health_karhutla_napas.md` | Prior brainstorming, candidate APIs, earlier forecasting ambition | Historical exploration; current conversation supersedes old primary-user and product assumptions |
 | S-03 | `C:\Users\riant\Downloads\B5AEE0368845D197C23A8E68642B97D50D23C294_datathon_2026 (2).pdf` | ToothFairy paper: text read and appendix figures inspected in this chat | Paper-reported results; repository, model weights, datasets, competition outcome, and claims not independently audited |
 | S-04 | Current project conversation | Brand, resident direction, two flows, onsite/remote alternatives, workspace request | User proposals distinguished from final choices; remote-first recommendation not explicitly approved |
-| S-05 | [Project setup skill](../project-setup/SKILL.md) and its eight references | Seven core artifacts, English documentation, README, Git handoff | User's `docs/` location overrides reference examples placing files at root |
+| S-05 | [Project setup skill at initial commit](https://github.com/veinsan/avela/blob/7347f64928fc2a8283f42090c33b9ac549dfd200/project-setup/SKILL.md) and its eight references | Seven core artifacts, English documentation, README, Git handoff | Package absent from current working tree; preserve historical provenance without restoring it |
 
 Absolute local paths are provenance references, not portable dependencies. Do not copy PDFs or publish their full contents without a reason. Do not propagate credentials from S-01.
 
@@ -30,7 +30,13 @@ For Avela, the analogous question is whether combining environmental context wit
 | [Washington State Department of Health: Wildfire Smoke, Know the Symptoms](https://doh.wa.gov/sites/default/files/2025-07/334-423.pdf) | Supports emergency bypass rationale for breathing difficulty/chest pain | Search excerpt consulted in conversation; local clinical protocol and Indonesian emergency channels still need review |
 | [CDC: How Wildfire Smoke Affects Your Body](https://www.cdc.gov/wildfires/risk-factors/index.html) | General source candidate for smoke-related health information | Search result consulted; not a complete basis for personalized guidance |
 
-Provider links in DATA_SOURCES are audit candidates inherited from discussion. Their inclusion does not prove live availability, free access, current licensing, suitable resolution, or Indonesian pilot coverage.
+## API and Design Research Update
+
+On 10 November 2026, the user requested a public-apis review and Impeccable-based DESIGN refinement. [DATA_SOURCES.md](DATA_SOURCES.md) links the provider-owned documentation actually reviewed; [API_RESEARCH.md](API_RESEARCH.md) records four executed requests and their limits. Other sources remain untested unless explicitly marked otherwise. A directory listing is not a provider contract.
+
+Impeccable was not found in the local skill directories. Its official [SKILL.md](https://github.com/pbakaus/impeccable/blob/main/.agents/skills/impeccable/SKILL.md), reporting version 4.8.2, was read from source, along with its [Operate guidance](https://github.com/pbakaus/impeccable/blob/main/.agents/skills/impeccable/reference/operate.md), [Android guidance](https://github.com/pbakaus/impeccable/blob/main/.agents/skills/impeccable/reference/android.md), and design-document/shape references. The launcher was unavailable; existing project context was read directly. No skill installation, code extraction, native rendering, or visual certification occurred.
+
+The task refines an existing proposed design document. Existing tokens are retained/refined as proposals rather than falsely described as extracted implementation values. The user-authorized file edit does not approve every visual decision for production.
 
 ## Evidence Rules
 

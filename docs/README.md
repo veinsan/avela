@@ -18,7 +18,7 @@ The intended benefit is fewer unnecessary journeys during smoke episodes without
 
 ## Key Features and Current Availability
 
-Available now: this documentation set and the supplied `project-setup/` skill package.
+Available now: this documentation set, a researched API shortlist with bounded probe evidence, and a refined proposed design system. The originally supplied `project-setup/` package is absent from the current working tree; its version used for setup remains in Git history.
 
 Planned capabilities, not implemented:
 
@@ -63,6 +63,7 @@ To resume documentation work:
 | [DOMAIN_MODEL.md](DOMAIN_MODEL.md) | Proposed DDD model and bounded contexts |
 | [API_CONTRACT.md](API_CONTRACT.md) | Draft contracts and integration boundaries |
 | [DATA_SOURCES.md](DATA_SOURCES.md) | Candidate data sources and feasibility audit |
+| [API_RESEARCH.md](API_RESEARCH.md) | Executed public requests, observed metadata, and evidence limitations |
 | [SAFETY_PRIVACY.md](SAFETY_PRIVACY.md) | Clinical boundaries, synthetic data, access, and privacy requirements |
 | [TEST_PLAN.md](TEST_PLAN.md) | Acceptance scenarios and evaluation strategy |
 | [COURSE_REQUIREMENTS.md](COURSE_REQUIREMENTS.md) | Assignment requirements, deadlines, and evidence |

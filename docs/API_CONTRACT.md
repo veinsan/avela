@@ -65,12 +65,64 @@ There is deliberately no client-selected owner ID or reviewer role. The server d
 
 | Endpoint | Function | Required metadata |
 | --- | --- | --- |
+| `GET /areas?query=...` | Indonesia-filtered manual place search | Internal area ID, provider ID namespace, label, coordinates, timezone; BMKG mapping optional |
 | `GET /environment?areaId=...` | Normalized environmental context | Source, unit, valid time, fetched time, observation/forecast type, freshness, resolution |
+| `GET /weather?areaId=...` | Optional BMKG weather via reviewed area mapping | BMKG administrative code, valid time, production time, attribution; unavailable when no mapping exists |
 | `GET /facilities?areaId=...` | Peer directory results | Provider record ID, verification time, services, unknown fields |
 | `GET /facilities/{id}/availability` | Peer operational information | Status, valid time, provider, simulation flag |
 | `GET /guidance?topic=...` | Reviewed published content if selected | Source, version, review status, applicability limits |
 
 Missing provider data must be represented as missing, not zero. A successful empty response is distinct from a timeout. Provider outages must preserve attribution of any cached content.
+
+## Provider Adapter Contract
+
+Recommended adapters and evidence are in [DATA_SOURCES.md](DATA_SOURCES.md) and [API_RESEARCH.md](API_RESEARCH.md). These are design changes, not deployed endpoints.
+
+- `openMeteoAirQuality`: normalized regional forecasts; no station-observation claim.
+- `openMeteoGeocoding`: manual place lookup; preserve provider ID namespace.
+- `bmkgWeather`: query only with a reviewed BMKG administrative-code mapping.
+- `openAqObservations`: optional, server-keyed station source after coverage audit.
+- `facilityDirectory`: contracted peer records and optionally reviewed OSM imports; availability remains a separate record.
+
+Provider endpoints are server configuration, not arbitrary URLs supplied by the client. Resolve internal area IDs through reviewed records. Environmental requests need area coordinates, not a resident's symptom history or account identity. Request coalescing and quota budgets are provider-specific.
+
+### Environmental Response Shape
+
+Illustrative normalized payload, not a captured response. Null values are intentional; do not invent measured values or model issue times.
+
+```json
+{
+  "areaId": "demo-pekanbaru",
+  "dataKind": "model_forecast",
+  "provider": "open-meteo",
+  "modelDomain": "cams_global",
+  "requestedCoordinates": {"latitude": 0.5071, "longitude": 101.4478},
+  "gridCoordinates": {"latitude": 0.5, "longitude": 101.399994},
+  "spatialResolutionKmApprox": 45,
+  "issuedAt": null,
+  "retrievedAt": null,
+  "freshness": "unknown",
+  "pollutant": "pm2_5",
+  "unit": "ug/m3",
+  "aqiStandard": null,
+  "uncertainty": null,
+  "series": [],
+  "attributions": ["Open-Meteo", "CAMS"],
+  "isSynthetic": true
+}
+```
+
+Each real series point has `validAt` in UTC and `value` as number or null. Successful upstream retrieval must set `retrievedAt`; `issuedAt` remains nullable unless provided by a documented source. `generationtime_ms` must never populate `issuedAt`. The sampled API grid coordinates differ from requested coordinates, so keep both.
+
+Freshness values are proposed as `fresh`, `stale`, `unknown`, or `unavailable`, derived by a provider-specific policy. A cache TTL is not a medical safety rule. A top-level partial-result response should identify which provider failed without erasing usable data from other providers.
+
+### Identifier and Facility Rules
+
+GeoNames ID, BMKG `adm4`, internal Avela area ID, and OSM element identity use separate namespaces. Never cast one into another. Facilities retain provider ID/type, coordinates, source retrieval time, and optional human verification time. Availability is `unknown` unless an appropriate operational source establishes it. OSM coordinates alone do not establish a clinical relationship.
+
+### Attribution and Licensing
+
+Pass attribution metadata to the app rather than hiding it in backend logs. Separate permissions for display, caching, redistribution, and paid use. Avela's peer-facing snapshots may expose only data whose redistribution is permitted; WAQI is not included as a silent cached fallback. Authentication of a source does not grant arbitrary reuse rights.
 
 ## Peer Integration Plan
 

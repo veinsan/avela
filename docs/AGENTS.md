@@ -21,12 +21,13 @@ This file is intentionally under `docs/`. Its automatic directory scope does not
 ## Project Structure
 
 ```text
-project-setup/   Supplied documentation skill; preserve unless changes are requested
 docs/           Requirements, plans, source register, and verification records
   skills/review-avela-readiness/SKILL.md
 ```
 
 Future application paths in ARCHITECTURE are planned, not existing folders. Do not create empty application scaffolds during documentation-only work.
+
+The original `project-setup/` package is currently deleted in the working tree by a pre-existing change. Do not restore or stage that deletion as a side effect of documentation updates. Its initial committed version is linked in REFERENCES.
 
 ## Code and Contract Conventions
 

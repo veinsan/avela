@@ -2,11 +2,31 @@
 
 **Date:** 10 November 2026.
 
-**Scope:** Markdown documentation setup only.
+**Scope:** Initial documentation setup and subsequent API/design refinement. No application implementation.
 
 **Status:** Documentation baseline verified. Product scope, operational service, and implementation remain unapproved/unimplemented as documented.
 
-## Checks
+## Latest Revision: API and Design Refinement
+
+The API shortlist was reviewed against provider-owned documentation after discovery through public-apis. Four bounded public requests returned HTTP 200; observed metadata and limits are in API_RESEARCH. This is a connectivity/schema check, not validation of forecast skill, all Indonesian locations, hospital access, or provider uptime.
+
+DESIGN now specifies light/dark roles, Android-aware navigation and touch behavior, per-screen hierarchy, forecast provenance, report authorship, and failure states. Impeccable was read from its official repository, version 4.8.2; its launcher was unavailable and no installation was performed. The result is a refined proposed specification, not a rendered interface.
+
+Read-only Python checks observed:
+
+- 19 Markdown files and 48 valid relative links.
+- All 29 design token references resolve; component properties use the documented token schema.
+- Eight canonical DESIGN sections remain in order.
+- All 21 architecture task IDs match TODO.
+- 22 selected light/dark text pairs meet 4.5:1; the lowest is disabledText/disabledSurface at approximately 4.51:1.
+- Four essential outline/focus pairs meet 3:1; the lowest is outline/surface at approximately 3.91:1.
+- `git diff --check` passes for tracked changes. Direct checks also inspect the new untracked API_RESEARCH file.
+
+These contrast checks evaluate opaque sRGB token pairs only. Actual compositing, platform font scaling, TalkBack, dark-mode rendering, and device layouts remain untested until an app exists. No new independent-agent review was performed for this revision.
+
+The pre-existing deletion of `project-setup/` was left untouched. Its former local reference was changed to the verified initial Git commit URL. No staging, commit, or push was performed for this revision; the earlier initial-documentation push remains a separate completed action.
+
+## Initial Baseline Checks
 
 - Required seven artifacts and additional README: present, with additional supporting specifications; 18 Markdown files total.
 - Product scope, confirmed decisions, and proposals: separated during authoring.
@@ -39,7 +59,7 @@ Git status showed untracked `docs/` and the pre-existing untracked `project-setu
 
 The reviewer confirmed both corrections against DECISIONS and COURSE_REQUIREMENTS.
 
-## Verification Limits
+## Initial Baseline Verification Limits
 
 No application code, tests, deployment, APK, live API audit, clinical service, or model training is included. No real patient information is used. Source documents were read earlier in this chat; provider links remain candidates unless explicitly noted in REFERENCES.
 
