@@ -27,7 +27,7 @@ docs/           Requirements, plans, source register, and verification records
 
 Future application paths in ARCHITECTURE are planned, not existing folders. Do not create empty application scaffolds during documentation-only work.
 
-The original `project-setup/` package is currently deleted in the working tree by a pre-existing change. Do not restore or stage that deletion as a side effect of documentation updates. Its initial committed version is linked in REFERENCES.
+The original `project-setup/` package was removed at the user's request. Its initial committed version is linked in REFERENCES; the maintained project instructions remain in `docs/`.
 
 ## Code and Contract Conventions
 
@@ -75,4 +75,4 @@ git commit -m "docs: establish Avela project documentation"
 git push origin main
 ```
 
-Do not include the pre-existing untracked `project-setup/` package in a commit without the user's choice. Do not change Git configuration or add unrelated files.
+Do not change Git configuration or add unrelated files.
