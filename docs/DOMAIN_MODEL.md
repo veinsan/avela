@@ -1,74 +1,87 @@
-# Domain Model and DDD Notes
+# Domain Model
 
-**Status:** Proposed model for discussion and the DDD assignment. Not a deployed schema or a submission-ready academic paper.
+**Updated:** 12 November 2026. This is the English working model behind [MAKALAH_DDD.md](MAKALAH_DDD.md). "Built" means the table and rules exist in `services/core`.
 
-## Domain and Core Contribution
+## Domain and Core
 
-Domain: resident health support during wildfire-smoke episodes. Proposed core subdomain: **care-episode coordination**, connecting resident reports to accountable staff review and follow-up. Environmental data provides context; it is not a diagnosis engine.
+Domain: resident health support during wildfire-smoke episodes.
 
-This gives Avela domain behavior beyond API aggregation: report ownership, state transitions, review responsibility, clarification cycles, publication, and correct delivery of results. This core choice depends on approval of the remote-review workflow.
+Core subdomain: **care-episode coordination**. It connects a resident's symptom report, with its exposure context, to an accountable staff review and follow-up. This is what Avela builds itself and what a public air-quality API cannot provide: report ownership, state transitions, reviewer responsibility, clarification cycles, and correct delivery of results.
 
 ## Ubiquitous Language
 
 | Term | Meaning |
 | --- | --- |
-| Environmental snapshot | Source-attributed observation or forecast for an area and time |
-| Exposure context | Environmental information relevant to a reported place/time; not measured personal dose |
-| Symptom report | Resident-authored account of complaints and history |
-| Care episode | A report plus updates, staff review, and associated follow-up |
-| Staff response | Authored, published instruction from an authorized reviewer; simulation labeled in demo |
-| Examination result | Versioned record of an onsite encounter, not AI-generated diagnosis |
-| Facility availability | Source-attributed operational information, not guaranteed capacity |
-| Escalation | Direction toward appropriate timely care; not proof that care was received |
+| Area | One of the pilot areas a resident reports from |
+| Area snapshot | The hourly PM2.5 forecast for an area, with source, valid times, and retrieval time |
+| Smoke advisory | The latest snapshot for an area with its category and age |
+| Symptom report | A resident's account of a complaint, its onset, and its course |
+| Exposure context | Mean and peak forecast PM2.5 for the report's area from onset to submission; an area value, never a personal dose |
+| Care episode | A report with its events, staff response, and examination result |
+| Staff response | A published instruction from the reviewer, with a disposition |
+| Disposition | Self-care, remote follow-up, or onsite assessment |
+| Examination result | A staff-authored record of an onsite examination, linked to a report |
+| Area health signal | Daily counts of reports per area with small counts hidden |
+| Peer key | An API key issued to one other group, limited by scope |
 
-## Subdomains and Bounded Contexts
+## Bounded Contexts
 
-| Context | Classification | Responsibility | Ownership proposal |
-| --- | --- | --- | --- |
-| Care Coordination | Core | Reports, review queue, transitions, response publication | Avela STB service |
-| Environmental Context | Supporting | Normalize pollutant data, source, timestamps, freshness | Off-STB integration adapter; persisted snapshots if needed |
-| Facility Discovery | Supporting | Read facility directory and availability | Peer provider with Avela adapter |
-| Clinical Encounter | Supporting / external context | Examination records and staff-authored results | Avela demo module or peer service; choose one owner |
-| Health Guidance | Supporting | Versioned reviewed content and source attribution | Avela content records or contracted peer |
-| Identity and Access | Generic | Authentication, ownership, facility membership, API keys | Avela service boundary |
-| Notifications | Generic | In-app unread state; later optional delivery channels | Avela initially |
+| Context | Type | Responsibility | Where it runs | State |
+| --- | --- | --- | --- | --- |
+| Care Coordination | Core | Reports, exposure context, review queue, transitions, responses | Core, `care.py` | Built, except exposure context |
+| Examination Results | Supporting | Draft and published results linked to a report's owner | Core, `results.py` | Built |
+| Area Health Signal | Supporting | Anonymous aggregate of reports per area | Core | Planned |
+| Environmental Context | Supporting | Fetch and normalize PM2.5 forecasts; push snapshots | Integration service; snapshots stored in the core | Planned |
+| Health Guidance | Supporting | Versioned guidance items with sources | Core | Planned |
+| Facility Directory | Supporting, peer-owned | Facility list, services, opening hours | Peer group A, through an adapter | Planned |
+| Second peer context | Supporting, peer-owned | Decided with the group chosen in Q-03 | Peer group B, through an adapter | Planned |
+| Identity and Access | Generic | Login, roles, facility membership, peer keys | Core, `security.py` | Built, except peer keys |
+| Notifications | Generic | Unread markers in the app | App | Planned |
 
-Logical bounded contexts do not require separate containers. Start with one core microservice and clear internal module boundaries. Split physical services only when justified by ownership or deployment constraints.
+The contexts are modules of one core microservice. They are split into separate containers only if deployment forces it.
 
 ## Context Map
 
-Environmental and peer services are upstream providers. Avela uses adapters to translate external contracts into its own domain terms. The mobile app consumes Avela and integration endpoints. Generic peer API keys grant explicit non-sensitive scopes; they are not clinical staff credentials.
+| Upstream | Downstream | Pattern | What flows |
+| --- | --- | --- | --- |
+| Identity and Access | Care Coordination, Examination Results | Customer-supplier | Account, role, facility membership |
+| Care Coordination | Examination Results | Customer-supplier | The responded report and its owner |
+| Environmental Context | Care Coordination | Customer-supplier | Area snapshot copied into the exposure context |
+| Care Coordination | Area Health Signal | Published read model | Report counts by area, day, and disposition |
+| Open-Meteo | Environmental Context | Conformist | PM2.5 forecast |
+| Peer group A | Facility Directory adapter | Anticorruption layer | Facilities, services, hours |
+| Peer group B | Its adapter | Anticorruption layer | Decided with Q-03 |
+| Area Health Signal, smoke advisory, Health Guidance | Other groups | Open host service | Non-sensitive area data |
 
-Any result-importing peer must have an explicit facility/account linkage and trusted publisher identity. Authentication of a peer server does not by itself authorize publication to every resident.
+## Entities and Invariants
 
-## Proposed Entities and Invariants
+| Entity | Key fields | Invariants | State |
+| --- | --- | --- | --- |
+| Account | ID, username, role, display name | The role is set on the server. | Built |
+| Membership | account, facility | Required to read or act on a facility's reports. | Built |
+| Facility | ID, name, area | A report can only target an existing facility. | Built; area link planned |
+| SymptomReport | ID, owner, facility, area, complaint, onset, course, state, version | Owner never changes. Creation is idempotent per owner and key. State changes are version-checked. | Built; area planned |
+| ExposureContext (value) | window, mean, peak, point count, source, retrieved time | Frozen at submission. Null with a reason when no snapshot covers the window. | Planned |
+| ReportEvent | report, author, kind, text, disposition, time | Append-only. Written in the same transaction as the state change. | Built |
+| ExaminationResult | owner, report, facility, author, content, status | Owner comes from the report, never from the request. Created only after a response. A draft is hidden from the owner. | Built |
+| Area | ID, name, province, coordinates | Fixed list of pilot areas. | Planned |
+| AreaSnapshot | area, points, unit, source, retrieved time | Valid time and retrieval time are separate. Only the integration service's key can write it. | Planned |
+| ApiKey | group, key hash, scopes, active | The plain key is shown once. A key reads only what its scope allows. | Planned |
 
-| Entity | Key fields | Invariants |
-| --- | --- | --- |
-| Account | ID, role memberships, status | Roles are granted server-side; client cannot self-assign staff. |
-| FacilityMembership | staff ID, facility ID, role, active | Required for reviewing that facility's reports. |
-| SymptomReport | ID, owner ID, facility ID, onset, complaint, state, version | Owner immutable; submission idempotent; transitions validated. |
-| ReportUpdate | ID, report ID, author ID, text, created time | Append-only; access follows parent report. |
-| StaffResponse | report ID, reviewer ID, disposition, text, published time, revision | Published response requires active reviewer membership. |
-| ExaminationResult | owner ID, encounter linkage, author, content, version | Correct account linkage established before publication. |
-| Attachment | report ID, private object key, MIME type, size | No public permanent URL; access follows report ownership. |
-| EnvironmentalSnapshot | location, value, unit, valid time, retrieved time, source, type | Retrieval time does not replace observation/forecast valid time. |
-| GuidanceVersion | source, reviewed by, review status, effective date | Draft content cannot appear as clinically approved. |
-| AuditEvent | actor, action, resource ID, time, request ID | No unnecessary symptom narrative or secrets in logs. |
+## Report States
+
+`submitted` -> `in_review` -> `awaiting_information` -> `in_review` -> `responded` -> `closed`, and `submitted` -> `cancelled`. The table with actors is in [PRODUCT_FLOWS.md](PRODUCT_FLOWS.md); the code is `transition()` in `services/core/app/care.py`.
+
+## Business Rules
+
+1. A submitted report is not a reviewed report. Only a published staff response moves it to `responded`.
+2. Only the staff member who claimed a report can ask for information, respond, or close it.
+3. A retry with the same idempotency key and the same payload returns the first report. A different payload under that key is rejected.
+4. A new complaint after `closed` or `cancelled` is a new report.
+5. A missing snapshot never blocks a report.
+6. The area health signal counts reports by area and day, leaves out cancelled reports, and hides counts from 1 to 4.
+7. A peer key never reads reports, accounts, or results.
 
 ## Transaction Boundaries
 
-Creating a report and recording its initial state should be atomic. Publishing a staff response and transitioning the report to `responded` should be atomic. Environmental fetches and external notifications must not hold core database write transactions open. External result ingestion needs deduplication and version handling.
-
-## Proposed Business Rules
-
-1. An unavailable environmental provider does not prevent a resident from accessing an existing response.
-2. Submission receipt is not staff review, emergency dispatch, or acceptance of clinical responsibility.
-3. Only the assigned facility can access its review queue; generic administrators do not automatically need narrative health access.
-4. A retry reuses the same idempotency key for the same payload; a different payload under that key is rejected.
-5. A closed episode remains readable by its owner; new symptoms create a new episode rather than rewriting history.
-6. Availability, forecast freshness, and clinical status are independently represented.
-
-## DDD Submission Preparation
-
-The course paper still needs its cover, author identities, requested paragraph counts, diagram, and selected peer contexts. Use this model as input after scope approval. Core/supporting/generic classification and context boundaries must match the final implementation rather than a hypothetical larger platform.
+Creating a report, freezing its exposure context, and writing its first event are one transaction. Publishing a response and moving the report to `responded` are one transaction. A snapshot push is its own transaction and never waits on a report write.

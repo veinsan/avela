@@ -1,41 +1,77 @@
 # Avela Task Tracker
 
-**Updated:** 10 November 2026. Status values: Pending, In progress, Blocked, Done. Done requires the completion criterion in ARCHITECTURE to be checked.
+**Updated:** 12 November 2026. Status values: Pending, In progress, Blocked, Done. A task is Done only after its completion criteria in [ARCHITECTURE.md](ARCHITECTURE.md) are checked.
+
+## Next Three Actions
+
+1. Reserve `avela` in the class API Registry (A-22). Names are first come, first served.
+2. Contact at least three groups about their APIs (A-03). The DDD paper needs their names by 22 November.
+3. Commit the current `services/`, `infra/`, and `docs/` work (A-22).
+
+## M0: Lock and align, by 15 November
 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
-| A-00 | Establish documentation baseline | Done | 18 Markdown files, 42 relative links, 20 shared task IDs, 20 token references checked; no dependency cycles; skill validator and independent review passed for documentation scope. |
-| A-19 | Refine API selection and design specification | Done | Official-source shortlist and four probes recorded; links, token schema, task IDs, 22 text contrast pairs and four outline/focus pairs checked. UI rendering remains untested. |
-| A-20 | Plan branching and collaboration | Done | 22 catalogue branch names accepted by git check-ref-format; task references and 50 local links checked. No branches created. |
-| A-01 | Select preliminary workflow and demo boundary | Pending | Select primary workflow, pilot candidate, and simulated staffing; final freeze is A-17. |
-| A-02 | Audit environmental data | In progress | Two pilot-candidate AQ probes, place search, and BMKG example passed; pilot mapping, station history, quotas/failure tests, and final source choice remain. |
-| A-03 | Agree peer integrations | Pending | Identify two distinct groups and write feature-level contracts. |
-| A-04 | Validate stack and STB | Pending | Inspect actual hardware/resources after scope choice; approve stack. |
-| A-16 | Prepare and submit the DDD milestone | Pending | Due end of Week 13; use approved A-01 scope and available A-03 peer context, not the final APK. |
-| A-17 | Approve final MVP scope and implementation readiness | Pending | Requires A-01/A-02/A-03/A-04 and all DECISIONS freeze criteria; get owner scope approval. |
-| A-05 | Scaffold app and core contract | Pending | Requires A-17 and implementation authorization. |
-| A-06 | Implement identity and ownership | Pending | Requires A-05; include negative access tests. |
-| A-07 | Implement environmental context | Pending | Requires A-02/A-05; verify stale/unavailable states. |
-| A-08 | Implement symptom reports | Pending | Requires A-06; verify persistence and retry idempotency. |
-| A-09 | Implement staff review | Pending | Requires A-08; professional/simulated authorship must be explicit. |
-| A-10 | Implement facility and result flow | Pending | Requires A-03/A-09; verify peer use and correct-patient delivery. |
-| A-11 | Implement optional attachments | Pending | Requires A-08 and Q-07; may be deferred out of MVP. |
-| A-12 | Review guidance and failure UX | Pending | Requires A-07/A-09; exact clinical protocol not yet selected. |
-| A-13 | Deploy public core on STB | Pending | Requires A-06/A-08; class, registry, hostname, hardware unknown. |
-| A-18 | Publish Registry and peer-access milestone | Pending | Requires A-13; due end of Week 14, before final APK packaging. |
-| A-14 | Release and test Android APK | Pending | Requires A-10/A-12/A-13. |
-| A-15 | Assemble final submission evidence | Pending | Requires A-14/A-16/A-18; Markdown docs alone do not satisfy submission formats. |
-| R-01 | Evaluate optional prediction model | Pending | Requires data audit and explicit research-scope choice; not mandatory MVP. |
+| A-00 | Establish documentation baseline | Done | Checked on 10 Nov. |
+| A-19 | Refine API selection and design specification | Done | Four probes recorded in API_RESEARCH; contrast pairs checked. |
+| A-20 | Plan branching and collaboration | Done | Branch names validated on 10 Nov; catalogue updated 12 Nov. |
+| A-01 | Select workflow and demo boundary | Done | D-06, D-14, D-15 confirmed on 12 Nov. |
+| A-21 | Realign documentation with decisions and built code | Done | 12 Nov: checks recorded in VALIDATION_REPORT. |
+| A-22 | Reserve the Registry name and commit the baseline | Pending | Owner reserves the name and runs the Git commands. |
+| A-03 | Agree peer integrations | Pending | Shortlist from the Registry; send the contract request in `skills/integrate-peer-api`. |
+| A-04 | Validate the stack on the STB | Pending | Needs the STB and A-22. Docker is not installed on the development machine, so the image build is untested. |
 
-## Known Dependencies
+## M1: DDD paper, core v0.2, app skeleton, by 22 November
 
-No live partner, peer contract, pilot region, clinical reviewer, or final stack is confirmed. Public documentation and bounded connectivity checks now support a provider shortlist, but do not complete data feasibility or validate forecast accuracy. Scope approval and the remaining source audit are next; do not begin by adding complex AI components.
+| ID | Task | Status | Next step or verification |
+| --- | --- | --- | --- |
+| A-16 | Submit the DDD paper | In progress | `MAKALAH_DDD.md` and the diagram updated 12 Nov for D-16 and D-17. Copy into the Google Doc, add peer names if known, export, submit. |
+| A-06 | Identity and ownership | Done | `test_health_and_login`, `test_resident_cannot_see_other_residents_data`, `test_staff_limited_to_own_facility` pass. |
+| A-08 | Symptom reports API | Done | `test_report_validation`, `test_retry_is_idempotent_and_conflicting_reuse_rejected`, `test_cancel_only_before_review` pass. |
+| A-09 | Staff review and results API | Done | `test_stale_version_loses`, `test_full_review_cycle_and_result_delivery` pass. Result corrections are not versioned yet. |
+| A-23 | Areas and snapshot ingestion | Pending | Add `areas`, `area_snapshots`, the push endpoint, and the advisory endpoint. |
+| A-24 | Exposure context on reports | Pending | Requires A-23. `areaId` becomes a required report field; update the tests. |
+| A-25 | Peer API keys and public endpoints | Pending | Requires A-23. Confirm P-04 first. |
+| A-05 | Scaffold the mobile app | Pending | Confirm P-01 (JavaScript), then create `apps/mobile`. |
+
+## M2: Public core, Registry, resident app, by 29 November
+
+| ID | Task | Status | Next step or verification |
+| --- | --- | --- | --- |
+| A-13 | Deploy the core on the STB | Pending | Requires A-04 and A-25. |
+| A-18 | Publish to the Registry and give peers access | Pending | Requires A-13. |
+| A-02 | Finish the data audit | In progress | Open-Meteo probes passed for both areas. Remaining: BMKG codes, quota against the push schedule, ISPU breakpoints (Q-13). |
+| A-07 | Environmental context end to end | Pending | Requires A-02, A-05, A-23. |
+| A-26 | Resident report flow in the app | Pending | Requires A-05 and A-24. |
+
+## M3: Peer integration, staff screens, resilience, by 6 December
+
+| ID | Task | Status | Next step or verification |
+| --- | --- | --- | --- |
+| A-10 | Integrate two peer services | Pending | Blocked on A-03 for real endpoints; use contract mocks, labelled, if a peer is late after 29 Nov. |
+| A-27 | Staff screens in the app | Pending | Requires A-05. |
+| A-12 | Guidance, emergency screen, failure states | Pending | Requires Q-08 for content sources. |
+| A-28 | Mobile test suite and test table | Pending | Requires A-10, A-26, A-27. |
+| A-29 | Peer support and uptime | Pending | Starts when A-18 is done. |
+
+## M4: Release and submission, by 13 December
+
+| ID | Task | Status | Next step or verification |
+| --- | --- | --- | --- |
+| A-14 | Release and test the APK | Pending | Requires A-12, A-13, A-28. |
+| A-15 | Assemble the submission | Pending | Internal freeze on 11 Dec. |
+
+## Stretch
+
+| ID | Task | Status | Next step or verification |
+| --- | --- | --- | --- |
+| A-11 | Photo attachments | Pending | Start only after M3 passes (P-03). |
+| R-01 | Custom PM2.5 forecast | Pending | Start only after M3 passes (P-03). |
 
 ## Verification Log
 
-| Date | Work | Evidence / result |
+| Date | Work | Result |
 | --- | --- | --- |
-| 2026-11-10 | Read setup package and inspected repository | Existing repository contained `.git/` and untracked `project-setup/`; branch main, origin observed. |
-| 2026-11-10 | Drafted project documentation | Product status and proposed choices separated; final checks recorded in VALIDATION_REPORT. |
-| 2026-11-10 | Validated documentation baseline | Link/token/task checks passed; independent findings on milestone timing and scope-freeze dependencies corrected and rechecked. |
-| 2026-11-10 | Researched API shortlist and refined design | Read public-apis plus official documentation; four HTTP 200 probes recorded in API_RESEARCH; Impeccable source guidance applied to DESIGN. |
+| 2026-11-10 | Documentation baseline, API shortlist, design refinement, branch plan | Link, token, and task-ID checks passed; details in VALIDATION_REPORT. |
+| 2026-11-11 | Core API v1 built | 8 pytest tests passed locally; a live smoke test created a report on a temporary database. |
+| 2026-11-12 | Documentation realigned (A-21) | `pytest -q` in `services/core`: 8 passed. Document checks in VALIDATION_REPORT. |

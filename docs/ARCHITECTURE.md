@@ -1,111 +1,178 @@
 # Architecture and Implementation Plan
 
-**Status:** Proposed; no runtime exists. Scope comes from [PRD.md](PRD.md), with approvals tracked in [DECISIONS.md](DECISIONS.md).
+**Updated:** 12 November 2026. Scope comes from [PRD.md](PRD.md); decisions are in [DECISIONS.md](DECISIONS.md).
 
 ## Technical Stack
 
-| Area | Choice / candidate | Status and rationale |
+| Area | Choice | Status |
 | --- | --- | --- |
-| Resident app | React Native + Expo | Assignment requirement; Android APK via EAS |
-| App language | TypeScript, strict mode | Proposed for typed contracts; preserve required ApiService.js boundary if course requires literal filename |
-| Core backend | FastAPI/Python | Proposed for explicit validation and potential data-tool compatibility; no version selected |
-| Database | SQLite on persistent STB volume | Proposed for low-complexity single-instance demo; verify concurrency and backup behavior |
-| Alternative backend | Express/TypeScript or PocketBase | Valid if team familiarity and domain/auth constraints favor it; not rejected |
-| Integration layer | Separate small service outside STB | Proposed; server/laptop/VM hosting to be selected |
-| Staff interface | Role-gated mobile screens or separate web console | Pending workflow and workload choice |
-| Gateway / public access | Nginx + Cloudflare Tunnel | Course deployment pattern; class domain pending |
-| Environmental API | Open-Meteo Air Quality adapter | Recommended after two public probes; provider forecasts, no custom model claim |
-| Place search / weather | Open-Meteo Geocoding and optional BMKG adapter | Recommended; separate ID namespaces and reviewed administrative mapping |
-| Station observations | OpenAQ v3 | Optional; API key and local observation coverage pending |
-| Mapping | Peer directory; optional reviewed OSM import; tile/library choice pending | List works without map; shared Overpass instances are not the production backend |
-| Testing | Jest for mobile; backend runner after stack selection | Jest required by coursework; backend choice pending |
-| AI | None required for first vertical slice | Optional off-STB summarization or forecast experiment only after justification |
-| Package manager / versions | Pending | Verify supported combinations when scaffolding is authorized |
+| Core service | Python 3.12, FastAPI 0.162.4, uvicorn 0.54.0, PyJWT 2.15.1 | Built in `services/core` |
+| Core database | SQLite in WAL mode on a Docker volume | Built |
+| Core tests | pytest 9.2.0 with httpx 0.28.1 | 8 tests pass |
+| Python tooling | uv for the virtual environment and installs | In use |
+| Gateway | Nginx 1.28 alpine with rate limits | Configured in `infra/stb`, not deployed |
+| Public access | Cloudflare Tunnel `k01-avela` to `https://avela.stei.fun` | Not created |
+| Integration service | FastAPI, same versions, outside the STB at `https://avela-int.stei.fun` | Planned; host open (Q-10) |
+| PM2.5 source | Open-Meteo Air Quality, `cams_global` domain | Probed on 10 Nov |
+| Mobile app | React Native with Expo, React Navigation (stack and bottom tabs), React Context | Planned; versions pinned at scaffold |
+| Mobile language | JavaScript with `ApiService.js` | Proposed (P-01) |
+| Mobile tests | Jest with `jest-expo` and React Native Testing Library | Planned |
+| Release | EAS Build, Android APK | Planned |
 
 ## System Structure
 
 ```text
-Resident Expo app -----> Avela core API on STB -----> Core database
-Staff interface ------->        |
-                                +-- report/review/result authorization
-
-Resident app ----------> Integration service outside STB
-                                |-- Avela core API as needed
-                                |-- Peer group A service
-                                |-- Peer group B service
-                                +-- Public environmental provider
-
-Optional research/model worker outside STB ---> versioned forecast artifacts
+                         Resident and staff app (Expo APK)
+                           |                         |
+                 JWT / open endpoints          facilities, peer feature
+                           v                         v
+  +---------------- STB (Docker) ---------------+   Integration service (off STB)
+  | tunnel -> gateway (Nginx) -> core (FastAPI) |     |-- Open-Meteo Air Quality
+  |                               |             |     |-- Peer group A
+  |                            SQLite volume    |     |-- Peer group B
+  +---------------------------------------------+     |
+        ^                         ^                   |
+        | X-API-Key               +--- PUT snapshot --+
+   Other groups' servers              (X-API-Key, scope snapshots:write)
 ```
 
-Public STB access goes through the gateway and tunnel. Do not expose the database to the internet. Core containers have CPU/memory limits and restart policies. Integration and any model computation run outside STB. The coursework prohibits frontend hosting and mobile builds on the STB.
+### Core service on the STB
 
-The mobile app may read/write its own core API directly and call the integration layer for composite views. Provider and peer secrets belong in server-side configuration. No server credential is bundled in an APK. If integration handling is placed in mobile instead, use only endpoints and credentials explicitly designed for public clients.
+Owns everything that needs authorization or domain rules. It never calls an outside API (D-20).
 
-## Component Responsibilities
+- **Identity and access:** login, JWT sessions, resident and staff roles, facility membership, peer API keys.
+- **Care coordination:** symptom reports, the review state machine, events, exposure context.
+- **Examination results:** draft and publish, linked to a responded report.
+- **Areas:** the two pilot areas and the PM2.5 snapshots pushed for them.
+- **Area health signal:** read-only aggregate of reports per area.
+- **Guidance:** versioned guidance items shipped with the service.
 
-- **Core API:** authentication, ownership, case lifecycle, staff review, versioned results, audit trail, and scoped peer API access.
-- **Integration service:** provider calls, schema translation, bounded timeouts, caching, and two peer-service adapters. It must enforce identity propagation rather than trusting caller-supplied resident IDs.
-- **Environmental adapter:** preserve units, valid times, retrieved times, spatial resolution, and provenance. Category mapping is a versioned reviewed configuration.
-- **Staff surface:** read assigned queue, request information, publish follow-up, and publish simulated results. Explicit demo and availability labels.
-- **Research worker:** if approved, train/evaluate outside STB and publish documented artifacts; no synchronous heavy processing in the report path.
+### Integration service outside the STB
 
-Provider selection is detailed in DATA_SOURCES, with request evidence in API_RESEARCH. All public-provider orchestration remains outside STB. Use shared area-based fetches, provider-specific quotas and permissions, and separate valid/retrieval/issue timestamps. A geography identifier is not a universal identifier: GeoNames results need an explicit crosswalk before BMKG lookup. Facility location, clinical availability, and map tiles are independent sources.
+- Fetches Open-Meteo for each pilot area on a schedule and pushes the snapshot to the core.
+- Calls the two peer groups through one adapter each and translates their models into Avela's terms.
+- Stops waiting after 10 seconds, caches the last good answer, and labels it stale.
+- Holds peer and service keys in its own `.env`. No key ships in the APK.
 
-## Planned Repository Layout
+### Mobile app
+
+One APK. After login, the role decides the tabs.
+
+- Resident tabs: Beranda, Laporan, Fasilitas, Akun.
+- Staff tabs: Antrean, Akun.
+- Stack screens: Masuk, Pilih Wilayah, Panduan, Darurat, Form Laporan, Detail Laporan, Detail Fasilitas, Hasil Pemeriksaan, Tinjau Laporan, Terbitkan Hasil.
+- `src/services/ApiService.js` is the only module that calls the core and the integration service.
+
+Screen behavior is in [PRODUCT_FLOWS.md](PRODUCT_FLOWS.md); endpoints are in [API_CONTRACT.md](API_CONTRACT.md).
+
+## Repository Layout
 
 ```text
-apps/mobile/          Resident app; optional role-gated staff screens
-apps/operator/        Only if a separate operator web interface is approved
-services/core/        Domain API and migrations
-services/integration/ Peer and public-provider adapters
-infra/stb/            Compose, gateway, and tunnel configuration
-contracts/            OpenAPI, peer contracts, example synthetic payloads
-tests/                Cross-service scenarios if needed
-docs/                 Existing documentation
+services/core/         Built. app/ (main, care, results, security, db, errors, seed), tests/, Dockerfile
+infra/stb/             Built. docker-compose.yml, nginx.conf, .env.example
+services/integration/  Planned. Provider and peer adapters, snapshot push job
+apps/mobile/           Planned. Expo app
+docs/                  Project documentation
+README.md, CLAUDE.md   Repository front page and agent entry point
 ```
 
-These paths are planned only. Avoid creating the optional operator folder until selected.
+## Data Design
 
-## Data and Security Design
+Tables that exist in `services/core/app/db.py`: `facilities`, `accounts`, `memberships`, `reports`, `report_events`, `results`.
 
-Use UTC ISO-8601 transport timestamps and local time labels in the UI. Store source valid time separately from fetch time. Derive owner identity from authentication. Keep writes transactional and idempotent. Enforce optimistic concurrency for staff state changes. Attachments, if approved, use private storage with size/type checks and authenticated retrieval.
+Planned additions for core v0.2:
 
-SQLite is a proposal, not a claim of production capacity. A realistic STB check must cover ARM compatibility, available RAM/disk, concurrent writes, persistent volumes, and backup restoration. If it fails, choose an alternative with evidence; do not silently increase platform complexity.
+| Table or column | Purpose |
+| --- | --- |
+| `areas` | ID, name, province, latitude, longitude, optional BMKG code |
+| `facilities.area_id` | Links a facility to its area |
+| `area_snapshots` | Area, hourly PM2.5 points, unit, source, model domain, retrieved time, pushed time |
+| `reports.area_id` | Area the resident reports from |
+| `reports.exposure_context` | JSON frozen at submission: window, mean, peak, point count, source, retrieved time; or null with a reason |
+| `api_keys` | Group name, key hash, scopes, active flag |
 
-## Failure and Recovery
+Rules that hold across the design:
 
-Environmental data can degrade to a clearly dated cache or unavailable state. Core case creation must fail honestly if persistence fails. Local drafts do not imply delivery and must be isolated by account. Provider failure should not block access to published results. Avoid indefinite retry loops; idempotent retries and bounded backoff are required for recoverable writes.
+- Timestamps travel as UTC ISO-8601. The app shows local time with its zone.
+- The owner of a report comes from the token, never from the request body.
+- A missing value stays null. It is never sent as zero.
+- A snapshot keeps the provider's valid time and the time it was retrieved as separate fields.
+- The health signal counts reports by area and day, excludes cancelled reports, and hides counts from 1 to 4.
 
-Backups and migration rollback procedures are required before sustained deployment. Retention, recovery objectives, and local sensitive-cache policy are pending decisions. Demo logs should contain request IDs and error codes rather than health narratives.
+## Failure Behavior
+
+| Failure | Behavior |
+| --- | --- |
+| Integration service stops pushing | Core serves the last snapshot with its age; the app marks it stale after 2 hours. |
+| No snapshot for an area | Advisory returns an unavailable state. Report submission still works; exposure context is null with a reason. |
+| Peer service down or slow | Integration service returns cached data marked stale, or an unavailable state. Reports and results are unaffected. |
+| Core database write fails | The request fails with an error. The app keeps the form contents and offers a retry with the same idempotency key. |
+| STB power loss | Containers restart (`unless-stopped`); data persists in the `core-data` volume. |
+
+A database backup and restore drill is part of A-13.
 
 ## Implementation Plan
 
-| ID | Step | Depends on | Completion criteria |
-| --- | --- | --- | --- |
-| A-00 | Establish documentation baseline | None | Required artifacts exist, links resolve, status is honest, validation recorded. |
-| A-19 | Refine API selection and design specification | A-00 | Official-source shortlist and bounded probe evidence recorded; DESIGN refined using Impeccable; links, tokens, contrast, and draft status checked. |
-| A-20 | Plan branching and collaboration | A-00 | Branch names, role ownership, dependencies, PR/release rules, and early course milestones documented and checked against this plan. |
-| A-01 | Select preliminary workflow and demo boundary | A-00 | Owner selects primary flow, candidate pilot, and simulated staffing plan for feasibility work; this is not final scope freeze. |
-| A-02 | Audit environmental data | A-00 | Pilot sample, timestamps, units, access terms, failures, and coverage documented. |
-| A-03 | Agree peer integrations | A-00 | Two named groups, written contracts, samples, feature mapping, and mock policy. |
-| A-04 | Validate stack and STB | A-01 | Architecture, resource limits, ARM support, package manager, and versions chosen. |
-| A-16 | Prepare and submit the DDD milestone | A-01; peer context information from A-03 | Cover, required paragraphs, and subdomain diagram complete by end of Week 13; any unfinished peer contract is explicitly identified. |
-| A-17 | Approve final MVP scope and implementation readiness | A-01, A-02, A-03, A-04 | DECISIONS freeze criteria met; clinical/demo boundary and conditional attachments/model work resolved; owner approves scope. |
-| A-05 | Scaffold app and core contract | A-17 | Minimal app navigation and health endpoint run; actual commands documented. |
-| A-06 | Implement identity and ownership | A-05 | Login and two-resident/two-facility negative access tests pass. |
-| A-07 | Implement environmental context | A-02, A-05 | Fresh/stale/unavailable/forecast states pass with provenance. |
-| A-08 | Implement symptom reports | A-06 | Validated persisted report, idempotent retry, and owner-only retrieval pass. |
-| A-09 | Implement staff review | A-08 | State transitions, clarification, authorship, and concurrency checks pass. |
-| A-10 | Implement facility and result flow | A-03, A-09 | Two peer services used meaningfully; correct-account result delivery verified. |
-| A-11 | Implement optional attachments | A-08; Q-07 resolved | Private access, bounded uploads, deletion policy, and failure cases pass. |
-| A-12 | Review guidance and failure UX | A-07, A-09 | Content provenance, emergency bypass, and unavailable staff states reviewed. |
-| A-13 | Deploy public core on STB | A-06, A-08 | HTTPS, limits, persistent storage, restart, rate limit, backup/restore evidenced. |
-| A-18 | Publish Registry and peer-access milestone | A-13 | Public URL, usable documentation, peer access instructions, and Registry entry complete by end of Week 14. |
-| A-14 | Release and test Android APK | A-10, A-12, A-13 | Installed APK passes critical device and integration scenarios. |
-| A-15 | Assemble final submission evidence | A-14, A-16, A-18 | Previously submitted DDD paper, README formats, testing report, registry, video, and URLs included in final package. |
-| R-01 | Evaluate optional prediction model | A-02; Q-05 resolved | Independent holdout and baseline results justify inclusion or rejection. |
+Tracks: TST (backend, graded in II3160), PWAM (mobile, graded in II3140), Both. The same IDs appear in [TODO.md](TODO.md).
 
-Work can overlap where dependencies permit, but no project implementation is currently authorized by this documentation-only request. The same task IDs appear in TODO.
+### M0: Lock and align, by 15 November
 
-The DDD paper is an early milestone, not work deferred until APK completion. Target A-16 by 22 November and A-13/A-18 by 29 November. Complete A-14/A-15 by 13 December. A-01 chooses a direction for feasibility; A-17 is the final scope gate after evidence and stack review. These are course-aligned planning targets, not demonstrated delivery commitments.
+| ID | Step | Track | Depends on | Completion criteria |
+| --- | --- | --- | --- | --- |
+| A-00 | Establish documentation baseline | Both | - | Done on 10 Nov. |
+| A-19 | Refine API selection and design specification | Both | A-00 | Done on 10 Nov. |
+| A-20 | Plan branching and collaboration | Both | A-00 | Done on 10 Nov. |
+| A-01 | Select workflow and demo boundary | Both | A-00 | Workflow, pilot areas, staff surface, and simulated staffing are recorded as confirmed decisions. |
+| A-21 | Realign documentation with decisions and built code | Both | A-01 | No document says the stack or workflow is undecided; link, token, and task-ID checks pass. |
+| A-22 | Reserve the Registry name and commit the baseline | Both | A-21 | `avela` is reserved in the class API Registry; `services/`, `infra/`, and `docs/` are committed; the assignment PDF is not tracked. |
+| A-03 | Agree peer integrations | Both | - | Two groups and one backup each have a written contract: endpoints, schema, rate limit, contact, test access. Names by 22 Nov, contracts by 29 Nov. |
+| A-04 | Validate the stack on the STB | TST | A-22 | The core image builds and starts on the STB; `docker stats` shows it inside its limits; data survives `docker compose restart`. |
+
+### M1: DDD paper, core v0.2, app skeleton, by 22 November
+
+| ID | Step | Track | Depends on | Completion criteria |
+| --- | --- | --- | --- | --- |
+| A-16 | Submit the DDD paper | TST | A-01 | Paper with cover, required paragraph counts, and diagram is exported to .docx or .pdf and submitted. |
+| A-06 | Identity and ownership | TST | - | Login, role checks, and facility scope pass negative tests with two residents and two facilities. |
+| A-08 | Symptom reports API | TST | A-06 | A valid report persists; a retry returns the same report; a conflicting retry is rejected; only the owner and facility staff read it. |
+| A-09 | Staff review and results API | TST | A-08 | Claim, information request, response, close, and result publication pass with version checks and reviewer attribution. |
+| A-23 | Areas and snapshot ingestion | TST | A-06 | Both areas are seeded; a push with the service key stores a snapshot; a push without the scope is rejected; the advisory endpoint returns the snapshot with its age. |
+| A-24 | Exposure context on reports | TST | A-08, A-23 | A new report stores mean and peak PM2.5 for its window; with no snapshot it stores null and a reason and still saves. |
+| A-25 | Peer API keys and public endpoints | TST | A-23 | Keys are created by a command and stored hashed; the public endpoints answer with a valid key, 401 without, 403 without the scope; counts from 1 to 4 are hidden. |
+| A-05 | Scaffold the mobile app | PWAM | A-06 | The Expo app runs on a device with stack and tab navigation, theme tokens from DESIGN, `ApiService.js`, a working login against the core, and one passing Jest test. |
+
+### M2: Public core, Registry, resident app on own API, by 29 November
+
+| ID | Step | Track | Depends on | Completion criteria |
+| --- | --- | --- | --- | --- |
+| A-13 | Deploy the core on the STB | TST | A-04, A-25 | `https://avela.stei.fun/health` returns 200; limits are set; a burst gets 429; a backup is restored once. |
+| A-18 | Publish to the Registry and give peers access | TST | A-13 | The Registry row has the base URL, documentation link, and auth type; Swagger UI is public; a README.pdf draft lists endpoints and how to get a key; a test account exists. |
+| A-02 | Finish the data audit | TST | - | BMKG codes for both areas are verified or the weather panel is dropped; Open-Meteo quota fits the push schedule; ISPU breakpoints are sourced (Q-13). |
+| A-07 | Environmental context end to end | Both | A-02, A-05, A-23 | The integration service pushes snapshots for both areas on a schedule; Beranda shows fresh, stale, and unavailable states with source and time. |
+| A-26 | Resident report flow in the app | PWAM | A-05, A-24 | Form validation, submit with retry, report list, detail with timeline and exposure context, reply to an information request, cancel, and result view work against the deployed core. |
+
+### M3: Peer integration, staff screens, resilience, by 6 December
+
+| ID | Step | Track | Depends on | Completion criteria |
+| --- | --- | --- | --- | --- |
+| A-10 | Integrate two peer services | Both | A-03, A-07 | Each peer's data appears in a named feature; request logs are captured; with either peer down the app shows an unavailable state and keeps working. |
+| A-27 | Staff screens in the app | PWAM | A-05, A-09 | A staff account reviews a report end to end on a device: queue, claim, ask, respond, close, publish result. |
+| A-12 | Guidance, emergency screen, failure states | PWAM | A-07, A-26 | Guidance shows sources; the emergency screen opens signed out; every data screen has loading, empty, error, and stale states. |
+| A-28 | Mobile test suite and test table | PWAM | A-10, A-26, A-27 | Jest unit tests cover `ApiService.js`, validation, and state mapping; the functional and integration test table is filled with results. |
+| A-29 | Peer support and uptime | TST | A-18 | From 29 Nov to grading: health checks are logged and peer issues get a first reply within 24 hours. |
+
+### M4: Release and submission, by 13 December
+
+| ID | Step | Track | Depends on | Completion criteria |
+| --- | --- | --- | --- | --- |
+| A-14 | Release and test the APK | PWAM | A-12, A-13, A-28 | `Aplikasi_Release.apk` from EAS, with icon and splash, installs on a device and passes the demo script over HTTPS. |
+| A-15 | Assemble the submission | Both | A-14, A-16, A-18 | README.pdf, README.txt, testing report PDF, repository README with run steps and demo accounts, and the YouTube video are linked in Edunex. Internal freeze on 11 Dec. |
+
+### Stretch
+
+| ID | Step | Track | Depends on | Completion criteria |
+| --- | --- | --- | --- | --- |
+| A-11 | Photo attachments | Both | A-26 | Private, size-limited upload with owner-only retrieval and failure handling. |
+| R-01 | Custom PM2.5 forecast | TST | A-02 | A holdout comparison against the provider forecast justifies or rejects it. |
+
+A-17 (scope-freeze gate) is retired; the decisions of 12 November replace it.

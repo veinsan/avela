@@ -1,0 +1,30 @@
+services:
+  core:
+    build: ../../services/core
+    restart: unless-stopped
+    env_file: .env          # secrets, never committed
+    volumes:
+      - core-data:/data     # SQLite survives restarts
+    mem_limit: 256m
+    cpus: 0.5
+
+  gateway:
+    image: nginx:1.28-alpine
+    restart: unless-stopped
+    depends_on: [core]
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports: ["127.0.0.1:8080:80"]   # local check only; public traffic arrives through the tunnel
+    mem_limit: 64m
+    cpus: 0.25
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    depends_on: [gateway]
+    mem_limit: 64m
+    cpus: 0.25
+
+volumes:
+  core-data:

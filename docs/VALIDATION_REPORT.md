@@ -1,12 +1,42 @@
 # Documentation Validation Report
 
-**Date:** 10 November 2026.
+**Date:** 12 November 2026 for the latest revision; earlier sections are dated 10 November 2026 and describe the repository as it was then.
 
-**Scope:** Initial documentation setup and subsequent API/design refinement. No application implementation.
+**Scope:** Documentation checks. The only code check is the existing core test suite.
 
-**Status:** Documentation baseline verified. Product scope, operational service, and implementation remain unapproved/unimplemented as documented.
+## Latest Revision: Realignment with Decisions and Built Code (12 November 2026)
 
-## Latest Revision: Branch Planning
+Task A-21. The documents were rewritten to match the decisions of 12 November (D-06, D-08, D-14 to D-21), the core service in `services/core`, and a full re-read of the assignment deck. No file in `services/` or `infra/` was changed.
+
+What changed:
+
+- PRD, ARCHITECTURE, TODO, AGENTS, WORKFLOW, DECISIONS, COURSE_REQUIREMENTS, DOMAIN_MODEL, API_CONTRACT, PRODUCT_FLOWS, TEST_PLAN, SAFETY_PRIVACY, DATA_SOURCES, BRANCH_PLAN, and the documentation index were rewritten. DESIGN and REFERENCES were edited in place.
+- New files: root `README.md`, root `CLAUDE.md` (imports `docs/AGENTS.md`), and `skills/integrate-peer-api/SKILL.md`.
+- `MAKALAH_DDD.md`, `diagrams/subdomain-avela.drawio`, and `diagrams/preview-makalah.html` were updated for the exposure context, the area health signal, and the pilot-area catalogue.
+- `.gitignore` now excludes the assignment PDF and the local `project-setup/` copy.
+
+Checks run from the repository root with an inline, read-only Python script (pathlib, re, PyYAML):
+
+- 26 Markdown files; 78 relative links; none broken.
+- DESIGN frontmatter parses; all 43 token references resolve; 11 components. New pairs: text on informationSurface 12.53:1, dark text on dark informationSurface 11.06:1.
+- 30 task IDs in ARCHITECTURE match the 30 in TODO; no duplicates, no unknown dependency, no cycle.
+- Every A, R, D, P, Q, C, T, US, FR, NFR, and G identifier used in a current document is defined. HANDOFF and this report were left out of that check because they quote old identifiers.
+- No current document contains the phrases "no runtime exists", "not selected", "No application", or "approval pending".
+- Both skill frontmatters have a matching `name` and a "Use when" description.
+- All 8 test names cited in TEST_PLAN and TODO exist in `services/core/tests/test_core.py`.
+- DDD paper: section A has 7 paragraphs of 5-6 sentences; B has 4 paragraphs of 5-6; C has 3 paragraphs of 5-6. All are inside the deck's limits. The diagram XML parses, with unique cell IDs and valid edge endpoints.
+- `pytest -q` in `services/core`: 8 passed.
+- `git check-ignore` confirms the PDF and `project-setup/` are ignored. No text file in the working tree contains the deck's shared credentials.
+
+Not checked:
+
+- The updated diagram and preview were not opened in a browser or in diagrams.net.
+- Nothing was rendered on a device; the contrast figures are computed from token values.
+- The Docker image was not built; Docker is not installed on the development machine.
+- The assistant chose two things while writing that the owner did not decide explicitly: geocoding is removed (D-13) and the BMKG weather panel is a stretch item. Both are visible in DECISIONS and PRD section 7.
+- The ISPU breakpoints and the guidance sources have not been read (Q-13, Q-08).
+
+## Earlier Revision: Branch Planning
 
 Added BRANCH_PLAN with one long-lived main branch, 22 on-demand branch names, role ownership, acceptance evidence, dependency ordering, early DDD/Registry milestones, PR conventions, and proposed milestone tags. No branch, tag, protection setting, PR, commit, or push was created for this task.
 

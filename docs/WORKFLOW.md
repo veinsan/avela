@@ -2,49 +2,51 @@
 
 ## Start or Resume
 
-1. Confirm the working directory is the Avela repository.
-2. Read AGENTS, TODO, and DECISIONS, then the relevant PRD requirements.
-3. Inspect actual files and Git status. Treat documentation about implementation as a claim requiring code evidence.
-4. Choose a task that is authorized and whose dependencies are satisfied.
+1. Read [TODO.md](TODO.md), starting with "Next Three Actions".
+2. Read [AGENTS.md](AGENTS.md) and the PRD stories for the task you pick.
+3. Run `git status --short` and the core tests. A document saying something works is a claim; the code and tests are the evidence.
+4. Pick a task whose dependencies in [ARCHITECTURE.md](ARCHITECTURE.md) are Done.
 
-## Proceed and Clarify
+## Proceed Within Scope
 
-Proceed autonomously on reversible, clear work within the request. Documentation cleanup, consistency repairs, and read-only inspection do not need repeated permission. Ask when choosing between materially different product flows, expanding scope, introducing real patient handling, or claiming a clinical partnership.
+Implementation is authorized for everything in scope in [PRD.md](PRD.md) section 7. Work without asking on tasks in the implementation plan, their tests, and the documents they affect.
 
-Current authorization covers complete documentation setup. It does not request application scaffolding, package installation, deployment, messages to hospitals, publication, or registration of a domain.
+Work in milestone order. Do not start a later milestone's task while an earlier milestone has an unblocked task, unless the owner says so. Stretch tasks wait until M3 passes.
 
-## Document Ownership
+## Ask First
 
-| Change | Primary document | Also check |
+- A change to PRD scope, or starting a stretch item.
+- Anything in the Proposed or Open tables of [DECISIONS.md](DECISIONS.md) that the task depends on.
+- A new dependency, service, or hosting choice.
+- Anything that touches a real person, a real facility, or a shared course account.
+- Deleting data, rewriting Git history, or deploying to the STB.
+
+## Verify Completion
+
+A task is Done when:
+
+1. Its completion criteria in ARCHITECTURE and the acceptance criteria of its PRD stories pass, including the failure cases.
+2. The tests or manual steps were actually run, and the command and result are written in the TODO row.
+3. Checks that could not be run are named in the same row.
+
+An HTTP 200 or a screenshot does not prove persistence, authorization, or a live peer integration. Use [the readiness-review skill](skills/review-avela-readiness/SKILL.md) for a feature that crosses the API and the app, a peer integration, or a release.
+
+Each milestone has a gate: every task in it is Done or explicitly moved, and the course deliverable for that week is submitted.
+
+## Keep Documents Current
+
+| Change | Update first | Then check |
 | --- | --- | --- |
-| Product behavior or scope | PRD | PRODUCT_FLOWS, TEST_PLAN, TODO |
-| Confirmed choice | DECISIONS | Affected specifications |
-| Technical boundary or stack | ARCHITECTURE | API_CONTRACT, DOMAIN_MODEL, TODO |
-| Visual rule | DESIGN | Future component implementation |
-| Data availability | DATA_SOURCES | REFERENCES, ARCHITECTURE, risk entries |
-| Clinical content or data access | SAFETY_PRIVACY | PRD, TEST_PLAN, operator flow |
-| Work result | TODO | VALIDATION_REPORT when documentation changes |
+| Scope or product behavior | PRD | PRODUCT_FLOWS, TEST_PLAN, TODO |
+| A decision | DECISIONS | The documents it affects |
+| Stack, structure, or task plan | ARCHITECTURE | TODO, AGENTS |
+| Endpoint or payload | API_CONTRACT | `services/core/README.md`, DOMAIN_MODEL |
+| Visual rule | DESIGN | The app theme module |
+| Provider or peer | DATA_SOURCES or API_CONTRACT | REFERENCES |
+| Task status | TODO | - |
 
-## Evidence Labels
+State facts plainly. Label a statement Proposed only when it is listed in DECISIONS as proposed. Clinical limits are written once, in [SAFETY_PRIVACY.md](SAFETY_PRIVACY.md).
 
-Use **Confirmed**, **Assignment requirement**, **Proposed**, **Unverified**, and **Observed** precisely. Do not promote a research-paper claim into independently verified clinical evidence. An API returning HTTP 200 proves neither suitable coverage nor safe use. A mock proves contract behavior only.
+## Hand Off
 
-## Feature Completion
-
-A feature is done when its architecture completion criterion and relevant PRD acceptance cases pass, including meaningful failure conditions. Record commands, environment, and results. Disclose unrun checks. An HTTP success code or screenshot alone is insufficient for persisted writes, authorization, staff authorship, or peer integration.
-
-Use the project-local readiness-review skill for consequential feature reviews. It separates implementation evidence, external dependencies, and draft assumptions.
-
-## Documentation Completion
-
-Read all newly written documents, check internal links and frontmatter, confirm status consistency, and ensure there are no invented runtime commands. Record what was checked and what remains pending. No application tests should be reported as passing when no implementation exists.
-
-## Clinical and Operational Changes
-
-Maintain professional review boundaries and truthful availability. Clinical guidance or escalation rules require sourced content and appropriate review before operational use. A demonstration uses synthetic cases and visibly simulated staff. Changes to response guarantees or medical decision-making are scope decisions, not routine UI edits.
-
-## Handoff
-
-Use [BRANCH_PLAN.md](BRANCH_PLAN.md) for the proposed short-lived branch and PR workflow. Create branches only when their work starts; do not treat the planned catalogue as existing branches or as implementation authorization. Feature tests ship with their feature. Keep unrelated working-tree changes outside the task.
-
-Summarize completed work, verification, and unresolved dependencies. Update TODO with the next concrete action. The user performs Git staging, commits, and pushes; provide commands matching the observed branch and remote when appropriate. Do not create live clinical or external-service commitments through documentation wording.
+End each task with a summary of what changed, what was verified, and what is still open. Update the TODO row. Then give the owner the Git commands from AGENTS with real paths, message, and branch. The owner stages, commits, and pushes unless the same message asks the agent to do it.

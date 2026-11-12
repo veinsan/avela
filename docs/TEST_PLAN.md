@@ -1,61 +1,83 @@
-# Verification and Evaluation Plan
+# Test Plan
 
-**Status:** Planned tests. No application exists and no application test has been run.
+**Updated:** 12 November 2026. Core tests exist and pass (8 of 8, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
 
 ## Layers
 
-1. Unit tests for domain transitions, schema validation, freshness logic, and adapter normalization.
-2. API integration tests for persistence, authentication, role scope, idempotency, and result linkage.
-3. Peer contract tests for schema agreement and failure behavior.
-4. End-to-end tests on an installed Android release build, including a staff review scenario.
-5. Manual usability and content review with explicit distinction between simulated and actual professional feedback.
+| Layer | Tool | Where | State |
+| --- | --- | --- | --- |
+| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 8 tests pass |
+| Integration service | pytest with stubbed upstream responses | `services/integration/tests` | Planned (A-07, A-10) |
+| Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
+| Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
+| Deployment | Commands on the STB | Evidence in README.pdf | Planned (A-13) |
 
-Jest is required for the mobile course deliverable. Backend and end-to-end tools remain pending stack selection. Record actual commands only after they exist.
+## Acceptance Scenarios
 
-## Mandatory Acceptance Scenarios
+Status: Pass (automated test passes), Partial, Planned, Stretch.
 
-| ID | Related requirement | Scenario and expected result |
-| --- | --- | --- |
-| T-01 | US-01, FR-02 | Location denied: manual area selection works. |
-| T-02 | US-01, NFR-04 | Provider timeout: dated stale cache or unavailable state; no fabricated current value. |
-| T-03 | FR-02 | Forecast has source, unit, valid time, issue time if available, and resolution note. |
-| T-04 | FR-03, NFR-09 | Emergency-access guidance reachable without submitting a report; no queue prerequisite. |
-| T-05 | US-03, FR-04 | Valid report survives restart and is visible only to its owner/permitted staff. |
-| T-06 | NFR-06 | Network retry creates one report; conflicting idempotency-key payload is rejected. |
-| T-07 | NFR-01 | Resident A cannot read/write Resident B's report, result, or attachment. |
-| T-08 | NFR-01 | Staff of Facility A cannot access Facility B's queue or publish its results. |
-| T-09 | FR-06 | Two reviewers claim/change the same version: only a valid transition succeeds. |
-| T-10 | FR-06, FR-07 | Clarification request and resident reply preserve authorship and history. |
-| T-11 | US-05 | Submission acknowledgment never appears as a clinician response; unavailable staff is explicit. |
-| T-12 | FR-09 | Published result is delivered to verified patient linkage; duplicate import does not duplicate result. |
-| T-13 | FR-05 | Optional upload fails or is omitted: report remains usable; unauthorized retrieval fails. |
-| T-14 | FR-10 | Two distinct peer groups supply meaningful features with recorded requests and user-visible use. |
-| T-15 | NFR-04 | Peer timeout/429/malformed payload produces clear degradation without app crash. |
-| T-16 | NFR-03 | STB restart preserves database; CPU/memory limits present; AI/integration not hosted on STB. |
-| T-17 | NFR-08 | Public HTTPS works, rate limits apply, secrets absent from bundle and repository. |
-| T-18 | NFR-07 | Large text, non-color status, form errors, and map-list alternative reviewed on Android. |
-| T-19 | Course | Release APK installed; login, four-plus screens, stack/tab navigation, validated form demonstrated. |
-| T-20 | NFR-02 | Fixtures, uploads, logs, screenshots, and video contain synthetic patient data only. |
-| T-21 | FR-02 | Provider adapter keeps model forecasts separate from observations, preserves grid/request coordinates, and does not use processing duration as issue time. |
-| T-22 | FR-02 | Missing BMKG code crosswalk yields optional-weather-unavailable; GeoNames identifiers are never substituted. |
-| T-23 | NFR-04 | Provider-specific cache permissions, quotas, 429 backoff, partial results, and attribution survive fallback. |
-| T-24 | NFR-07 | Light/dark themes, large text, TalkBack, Android Back, keyboard insets, and long staff responses verified on an actual Android build. |
-| T-25 | US-07 | Facility coordinates do not imply capacity or partnership; retrieval and operational-verification times remain distinct. |
+| ID | Scenario and expected result | Requirement | Status |
+| --- | --- | --- | --- |
+| T-01 | Location denied: the resident picks an area by hand. | US-01 | Planned, A-07 |
+| T-02 | No snapshot: advisory is unavailable and shows no value. | US-01, NFR-04 | Planned, A-23 |
+| T-03 | Advisory shows source, unit, valid time, and snapshot age. | FR-02 | Planned, A-23 |
+| T-04 | The emergency screen opens signed out, without a report. | US-05 | Planned, A-12 |
+| T-05 | A valid report is saved and visible only to its owner and facility staff. | US-03 | Pass: `test_resident_cannot_see_other_residents_data`. Restart survival is checked in A-13. |
+| T-06 | A retried submit creates one report; a different body under the same key is rejected. | NFR-06 | Pass: `test_retry_is_idempotent_and_conflicting_reuse_rejected` |
+| T-07 | Resident A cannot read or change Resident B's report or result. | NFR-01 | Pass: `test_resident_cannot_see_other_residents_data`, `test_full_review_cycle_and_result_delivery` |
+| T-08 | Staff of facility A cannot see facility B's queue, reports, or results. | NFR-01 | Pass: `test_staff_limited_to_own_facility` |
+| T-09 | Two actions on the same version: only the first succeeds. | NFR-06 | Pass: `test_stale_version_loses` |
+| T-10 | Information request and resident reply keep author and order. | US-06 | Pass: `test_full_review_cycle_and_result_delivery` |
+| T-11 | A submitted report never appears as reviewed. | US-05, G-03 | Partial: API state passes; screen copy in A-26 |
+| T-12 | A published result reaches only the report's owner; a draft stays hidden. | US-08 | Pass: `test_full_review_cycle_and_result_delivery` |
+| T-13 | Attachment upload fails or is skipped: the report still works. | FR-05 | Stretch |
+| T-14 | Two different peer groups each supply a visible feature, with request logs. | FR-10 | Planned, A-10 |
+| T-15 | Peer timeout, 429, or malformed body: the app shows an unavailable state and keeps working. | NFR-04 | Planned, A-10 |
+| T-16 | STB restart keeps the database; limits are set; no outbound provider call from the core. | NFR-03 | Planned, A-13 |
+| T-17 | HTTPS works; a burst gets 429; no secret is in the APK or the repository. | NFR-08 | Planned, A-13, A-14 |
+| T-18 | Large text, status without color, and form errors are usable on a device. | NFR-07 | Planned, A-12 |
+| T-19 | The release APK installs; login, 4+ screens, stack and tab navigation, and the validated form work. | C-07, C-11 | Planned, A-14 |
+| T-20 | Fixtures, logs, screenshots, and the video contain only synthetic people. | NFR-02 | Planned, A-15 |
+| T-21 | The Open-Meteo adapter keeps valid time and retrieval time separate and sends missing values as null. | FR-15 | Planned, A-07 |
+| T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Planned, A-07 |
+| T-24 | Light and dark themes, TalkBack labels, Android Back, and keyboard insets work on a device. | NFR-07 | Planned, A-12 |
+| T-25 | A facility with unknown opening status is shown as unknown. | US-07 | Planned, A-10 |
+| T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Planned, A-24 |
+| T-27 | A report submitted with no snapshot saves with a null exposure context and a reason. | US-10 | Planned, A-24 |
+| T-28 | A snapshot push without the `snapshots:write` scope is rejected. | FR-15 | Planned, A-23 |
+| T-29 | The health signal hides counts from 1 to 4, leaves out cancelled reports, and returns no text, account, or facility. | US-11, NFR-10 | Planned, A-25 |
+| T-30 | Public endpoints: no key gives 401, a key without the scope gives 403, a valid key gives 200. | US-09 | Planned, A-25 |
+| T-31 | A snapshot older than 2 hours is marked stale in the advisory and on Beranda. | US-01 | Planned, A-23, A-07 |
+| T-32 | A staff account completes queue, claim, ask, respond, close, and publish result on a device. | US-06, FR-16 | Planned, A-27 |
+| T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Planned, A-27 |
 
-## Evidence Record
+T-22 (BMKG code mapping) applies only if the weather panel is built.
 
-For each run record date, commit/worktree state, environment/device, test command or manual steps, expected/actual outcome, redacted evidence path, and known limitations. Do not mark a scenario passed merely because its test file exists. Avoid tests that only mirror implementation details.
+Also covered by passing tests without a scenario ID: wrong password and missing token return 401 (`test_health_and_login`); invalid fields, unknown facility, and future onset are rejected (`test_report_validation`); cancellation works only before review (`test_cancel_only_before_review`).
 
-## Product Evaluation
+## Jest Unit Test Targets
 
-Use synthetic task walkthroughs to test whether a resident understands data freshness, submits a report, identifies its review status, and finds a published response. Measure task completion, confusion points, and time. Set numerical targets after a pilot instead of inventing them.
+- `ApiService.js`: success, 401 leading to sign-out, timeout, 5xx from the core, peer-down envelope from the integration service, idempotency key reused on retry.
+- Form validation: empty complaint, future onset, missing area or facility.
+- Mapping functions: report state to label, disposition to label, freshness to label, snapshot age.
+- Role routing: resident and staff get their own tabs.
 
-Staff review should assess report completeness and usefulness. Actual clinical appropriateness requires a qualified reviewer and a suitable evaluation design; a teammate playing a clinician proves UI flow only. Compare a proposed AI summary with the original report for omissions and unsupported additions before deciding whether it adds value.
+## Functional Test Table for the Report
 
-## Optional Forecast Evaluation
+Use this layout in the testing report PDF. Each row is run on the installed APK against the deployed services.
 
-If R-01 is approved, use independent observations, temporal holdout, and suitable spatial holdout. Compare against persistence or a documented provider forecast using MAE/RMSE and breakdowns by station/time period. Validate interval coverage if uncertainty is displayed. Record missing-data handling, baseline parity, and leakage checks. Prediction errors do not establish clinical benefit or wildfire-source attribution.
+| No | Feature | Steps | Test data | Expected | Actual | Result |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | Login | Open Masuk, enter account, submit | `warga1` | Resident tabs appear | | |
+| 2 | Report form validation | Submit with an empty complaint | - | Error under the field; nothing sent | | |
+| 3 | Peer API outage | Stop peer A's adapter, open Fasilitas | - | Unavailable message; app keeps working | | |
+
+Rows cover every scenario above that touches the app, including the integration rows for both peers.
+
+## Evidence
+
+For each run, record the date, commit, device or environment, command or steps, and the result. A scenario is not passed because its test file exists; it is passed when the test ran and passed.
 
 ## Release Criteria
 
-All applicable mandatory scenarios pass; course deliverables exist; failure states are demonstrated; no unsupported clinician/partner claims remain; outstanding risks are documented. Skipping optional AI does not block a working product. Missing two-peer integration, an APK, or correct authorization does block the corresponding completion claim.
+Every scenario that is not Stretch passes. The course artifacts in [COURSE_REQUIREMENTS.md](COURSE_REQUIREMENTS.md) exist. Any peer mock is named as a mock.

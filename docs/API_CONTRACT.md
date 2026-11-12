@@ -1,146 +1,180 @@
-# Draft API and Integration Contracts
+# API and Integration Contracts
 
-**Status:** Design draft, not an implemented API, OpenAPI export, or agreement with another group. Base URL and versions remain pending.
+**Updated:** 12 November 2026. Base URL after deployment: `https://avela.stei.fun`. Application endpoints use the prefix `/api/v1`. The built endpoints are also listed in `services/core/README.md`; FastAPI serves the OpenAPI document at `/openapi.json` and Swagger UI at `/docs`.
 
 ## Conventions
 
-Proposed prefix `/api/v1`. JSON uses explicit schemas and ISO-8601 UTC timestamps. Server generates opaque resource IDs. Authenticate resident/staff sessions through a selected mechanism; JWT is a course example, not yet an installed implementation. Use separately scoped API keys for peer servers. Document pagination and errors in the eventual OpenAPI contract.
+- JSON bodies; timestamps in UTC ISO-8601; server-generated opaque IDs.
+- App users send `Authorization: Bearer <token>`. Other groups and the integration service send `X-API-Key`.
+- State-changing report actions send `expectedVersion`. A stale version returns `409 VERSION_CONFLICT`.
+- A resource the caller may not see returns `404 NOT_FOUND`.
+- Lists take `limit` (1-50, default 20) and `offset`.
 
-Error shape proposal:
+Every error has this shape:
 
 ```json
 {
   "error": {
-    "code": "SERVICE_UNAVAILABLE",
-    "message": "The selected service is currently unavailable.",
-    "requestId": "demo-request-001",
-    "retryable": true
+    "code": "VERSION_CONFLICT",
+    "message": "The resource changed or is not in a valid state for this action.",
+    "requestId": "9f1c0f6e-demo",
+    "retryable": false
   }
 }
 ```
 
-Do not return stack traces or patient information in errors. Distinguish authentication failure, forbidden access, validation failure, version conflict, upstream unavailability, and rate limits. A 404 policy may conceal unauthorized resource existence if applied consistently.
+Codes in use: `INVALID_CREDENTIALS`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_REVIEWER`, `NOT_FOUND`, `VALIDATION_FAILED`, `UNKNOWN_FACILITY`, `IDEMPOTENCY_CONFLICT`, `VERSION_CONFLICT`, `REPORT_NOT_RESPONDED`, `RATE_LIMITED`.
 
-## Proposed Core Endpoints
+## Built Core Endpoints
 
-| Method and path | Actor | Behavior |
+| Method and path | Caller | Behavior |
 | --- | --- | --- |
-| `GET /health` | Public, limited | Minimal service availability, no sensitive config |
-| `POST /auth/login` | Resident/staff | Authenticates an existing demo account |
-| `GET /me` | Authenticated | Returns own permitted profile and memberships |
-| `POST /reports` | Resident | Creates own report using an idempotency key |
-| `GET /reports` | Resident | Lists own reports with bounded pagination |
-| `GET /reports/{id}` | Owner or permitted facility staff | Returns authorized case detail |
-| `POST /reports/{id}/updates` | Owner or reviewer | Appends information according to case state |
-| `POST /reports/{id}/cancel` | Owner | Cancels an unreviewed report using expected version |
-| `GET /staff/reports` | Facility staff | Lists queue within server-authorized facility scope |
-| `POST /staff/reports/{id}/claim` | Facility staff | Claims review with optimistic concurrency |
-| `POST /staff/reports/{id}/information-requests` | Reviewer | Publishes clarification request |
-| `POST /staff/reports/{id}/responses` | Reviewer | Publishes attributed response and changes state atomically |
-| `POST /staff/reports/{id}/close` | Reviewer | Closes a responded case |
-| `POST /staff/results` | Authorized result publisher | Creates a result draft after verified patient linkage |
-| `POST /staff/results/{id}/publish` | Authorized publisher | Publishes a versioned result |
-| `GET /results/{id}` | Linked resident or permitted staff | Reads only an authorized published result |
+| `GET /health` | Anyone | Liveness |
+| `POST /api/v1/auth/login` | Anyone | Returns a bearer token valid for 12 hours |
+| `GET /api/v1/me` | Signed in | Own profile, role, and facilities |
+| `POST /api/v1/reports` | Resident | Creates a report; requires the `Idempotency-Key` header |
+| `GET /api/v1/reports` | Resident | Own reports |
+| `GET /api/v1/reports/{id}` | Owner or facility staff | Detail with the event timeline |
+| `POST /api/v1/reports/{id}/updates` | Owner | Adds information; a reply to an information request returns the report to review |
+| `POST /api/v1/reports/{id}/cancel` | Owner | Cancels a report that is still `submitted` |
+| `GET /api/v1/staff/reports?state=` | Staff | Queue for the caller's facilities |
+| `POST /api/v1/staff/reports/{id}/claim` | Staff | `submitted` to `in_review` |
+| `POST /api/v1/staff/reports/{id}/information-requests` | Reviewer | `in_review` to `awaiting_information` |
+| `POST /api/v1/staff/reports/{id}/responses` | Reviewer | Publishes a response with a disposition; `in_review` to `responded` |
+| `POST /api/v1/staff/reports/{id}/close` | Reviewer | `responded` to `closed` |
+| `POST /api/v1/staff/results` | Facility staff | Drafts a result for a responded report |
+| `POST /api/v1/staff/results/{id}/publish` | Facility staff | Publishes the draft |
+| `GET /api/v1/results`, `GET /api/v1/results/{id}` | Owner (published only) or facility staff | Examination results |
 
-Optional attachment endpoints must be specified after storage selection. Avoid a public `/uploads` directory. An external result-ingestion endpoint needs its own publisher authorization and linkage contract; it is not covered by generic peer API-key access.
-
-### Report Write Example
-
-Fictional payload; not a clinical questionnaire or approved triage protocol:
+Report body today, with fictional values:
 
 ```json
 {
   "facilityId": "demo-facility-001",
-  "complaint": "Synthetic demonstration complaint",
+  "complaint": "Keluhan fiktif untuk pengujian",
   "onsetAt": "2026-11-10T03:00:00Z",
   "course": "unchanged",
-  "additionalContext": "Fictional history for testing only",
+  "additionalContext": "Riwayat fiktif",
   "consentVersion": "demo-v1"
 }
 ```
 
-There is deliberately no client-selected owner ID or reviewer role. The server derives the owner from credentials, validates the facility, and persists consent metadata. The same idempotency key and same payload return the same logical report; conflicting reuse returns a documented conflict. No exact retention window is selected yet.
+`course` is `better`, `unchanged`, or `worse`. `disposition` is `self_care`, `remote_follow_up`, or `onsite_assessment`.
 
-## Proposed Integration Endpoints
+## Planned Core Endpoints (v0.2)
 
-| Endpoint | Function | Required metadata |
-| --- | --- | --- |
-| `GET /areas?query=...` | Indonesia-filtered manual place search | Internal area ID, provider ID namespace, label, coordinates, timezone; BMKG mapping optional |
-| `GET /environment?areaId=...` | Normalized environmental context | Source, unit, valid time, fetched time, observation/forecast type, freshness, resolution |
-| `GET /weather?areaId=...` | Optional BMKG weather via reviewed area mapping | BMKG administrative code, valid time, production time, attribution; unavailable when no mapping exists |
-| `GET /facilities?areaId=...` | Peer directory results | Provider record ID, verification time, services, unknown fields |
-| `GET /facilities/{id}/availability` | Peer operational information | Status, valid time, provider, simulation flag |
-| `GET /guidance?topic=...` | Reviewed published content if selected | Source, version, review status, applicability limits |
+| Method and path | Caller | Behavior | Task |
+| --- | --- | --- | --- |
+| `GET /api/v1/areas` | Anyone, rate limited | Lists the pilot areas | A-23 |
+| `GET /api/v1/areas/{areaId}/advisory` | Anyone, rate limited | Latest snapshot, category, age, and the 7-day community signal | A-23 |
+| `GET /api/v1/guidance` | Anyone, rate limited | Guidance items with sources and version | A-12 |
+| `PUT /api/v1/internal/areas/{areaId}/snapshot` | Integration service, scope `snapshots:write` | Stores a snapshot | A-23 |
+| `GET /api/v1/public/areas` | Peer key | Same data as `/areas` | A-25 |
+| `GET /api/v1/public/areas/{areaId}/advisory` | Peer key | Same data as the open advisory | A-25 |
+| `GET /api/v1/public/areas/{areaId}/health-signal?days=7` | Peer key, scope `signal:read` | Daily report counts and totals per disposition; `days` up to 30 | A-25 |
+| `GET /api/v1/public/facilities` | Peer key | Facilities that accept Avela reports, with area and review-service status | A-25 |
 
-Missing provider data must be represented as missing, not zero. A successful empty response is distinct from a timeout. Provider outages must preserve attribution of any cached content.
+Changes to built endpoints in v0.2:
 
-## Provider Adapter Contract
+- `POST /reports` adds the required field `areaId` (A-24).
+- Report detail adds `exposureContext` (A-24).
 
-Recommended adapters and evidence are in [DATA_SOURCES.md](DATA_SOURCES.md) and [API_RESEARCH.md](API_RESEARCH.md). These are design changes, not deployed endpoints.
+### Advisory response
 
-- `openMeteoAirQuality`: normalized regional forecasts; no station-observation claim.
-- `openMeteoGeocoding`: manual place lookup; preserve provider ID namespace.
-- `bmkgWeather`: query only with a reviewed BMKG administrative-code mapping.
-- `openAqObservations`: optional, server-keyed station source after coverage audit.
-- `facilityDirectory`: contracted peer records and optionally reviewed OSM imports; availability remains a separate record.
-
-Provider endpoints are server configuration, not arbitrary URLs supplied by the client. Resolve internal area IDs through reviewed records. Environmental requests need area coordinates, not a resident's symptom history or account identity. Request coalescing and quota budgets are provider-specific.
-
-### Environmental Response Shape
-
-Illustrative normalized payload, not a captured response. Null values are intentional; do not invent measured values or model issue times.
+Illustrative values, not a captured response.
 
 ```json
 {
-  "areaId": "demo-pekanbaru",
+  "areaId": "pekanbaru",
+  "areaName": "Pekanbaru",
   "dataKind": "model_forecast",
   "provider": "open-meteo",
   "modelDomain": "cams_global",
-  "requestedCoordinates": {"latitude": 0.5071, "longitude": 101.4478},
-  "gridCoordinates": {"latitude": 0.5, "longitude": 101.399994},
-  "spatialResolutionKmApprox": 45,
-  "issuedAt": null,
-  "retrievedAt": null,
-  "freshness": "unknown",
   "pollutant": "pm2_5",
   "unit": "ug/m3",
-  "aqiStandard": null,
-  "uncertainty": null,
-  "series": [],
+  "retrievedAt": "2026-11-20T02:00:00Z",
+  "freshness": "fresh",
+  "current": {"validAt": "2026-11-20T02:00:00Z", "value": 41.2},
+  "category": {"standard": "ISPU reference", "label": null},
+  "series": [{"validAt": "2026-11-20T02:00:00Z", "value": 41.2}],
+  "communitySignal": {"days": 7, "reportCount": 12, "suppressed": false},
   "attributions": ["Open-Meteo", "CAMS"],
+  "isSynthetic": false
+}
+```
+
+`freshness` is `fresh` up to 2 hours after `retrievedAt`, `stale` after that, and `unavailable` when no snapshot exists; in that case `current`, `series`, and `category` are null. `category.label` stays null until the breakpoints are sourced (Q-13).
+
+### Exposure context on a report
+
+```json
+{
+  "exposureContext": {
+    "areaId": "pekanbaru",
+    "windowStart": "2026-11-19T20:00:00Z",
+    "windowEnd": "2026-11-20T02:10:00Z",
+    "meanPm25": 38.4,
+    "peakPm25": 52.0,
+    "points": 7,
+    "unit": "ug/m3",
+    "provider": "open-meteo",
+    "dataKind": "model_forecast",
+    "retrievedAt": "2026-11-20T02:00:00Z"
+  },
+  "exposureContextReason": null
+}
+```
+
+The window runs from `onsetAt` to submission, limited to the last 48 hours. With no snapshot point in the window, `exposureContext` is null and `exposureContextReason` is `no_snapshot`.
+
+### Health signal response
+
+```json
+{
+  "areaId": "pekanbaru",
+  "days": 7,
+  "daily": [
+    {"date": "2026-11-19", "reportCount": 6, "suppressed": false},
+    {"date": "2026-11-20", "reportCount": null, "suppressed": true}
+  ],
+  "dispositions": {"self_care": 5, "remote_follow_up": null, "onsite_assessment": 6},
+  "suppressionRule": "Counts from 1 to 4 are hidden.",
   "isSynthetic": true
 }
 ```
 
-Each real series point has `validAt` in UTC and `value` as number or null. Successful upstream retrieval must set `retrievedAt`; `issuedAt` remains nullable unless provided by a documented source. `generationtime_ms` must never populate `issuedAt`. The sampled API grid coordinates differ from requested coordinates, so keep both.
+Dates are calendar days in WIB. Cancelled reports are not counted. A hidden count is null, never zero.
 
-Freshness values are proposed as `fresh`, `stale`, `unknown`, or `unavailable`, derived by a provider-specific policy. A cache TTL is not a medical safety rule. A top-level partial-result response should identify which provider failed without erasing usable data from other providers.
+## Peer Access
 
-### Identifier and Facility Rules
+- Each group gets one key, created with a command on the STB and shown once. The core stores its hash, the group name, and its scopes.
+- Default scopes for a peer: `areas:read`, `signal:read`. Only the integration service has `snapshots:write`.
+- A missing or unknown key returns `401 UNAUTHENTICATED`. A key without the scope returns `403 FORBIDDEN`.
+- One test account (a resident) is shared with peers so they can try the app-user endpoints.
+- Peers report problems as GitHub issues on `veinsan/avela`.
 
-GeoNames ID, BMKG `adm4`, internal Avela area ID, and OSM element identity use separate namespaces. Never cast one into another. Facilities retain provider ID/type, coordinates, source retrieval time, and optional human verification time. Availability is `unknown` unless an appropriate operational source establishes it. OSM coordinates alone do not establish a clinical relationship.
+## Integration Service Endpoints (planned)
 
-### Attribution and Licensing
+Base URL `https://avela-int.stei.fun`. The app calls these; the service calls the peers.
 
-Pass attribution metadata to the app rather than hiding it in backend logs. Separate permissions for display, caching, redistribution, and paid use. Avela's peer-facing snapshots may expose only data whose redistribution is permitted; WAQI is not included as a silent cached fallback. Authentication of a source does not grant arbitrary reuse rights.
+| Endpoint | Function | Notes |
+| --- | --- | --- |
+| `GET /facilities?areaId=` | Facility list from peer group A | Each item names its provider and retrieval time; unknown opening status stays unknown |
+| `GET /facilities/{id}` | Facility detail from peer group A | Flags facilities that accept Avela reports |
+| One endpoint for peer group B | Depends on the group chosen in Q-03 | Same envelope |
+| `GET /health` | Liveness | - |
 
-## Peer Integration Plan
+Every response carries `source`, `retrievedAt`, and `freshness` (`fresh`, `stale`, `unavailable`). An upstream call is abandoned after 10 seconds. The scheduled job pushes one snapshot per area to the core every 60 minutes.
 
-| Slot | Candidate service role | Example user-visible use | Status |
+## Peer Integration Slots
+
+Avela needs two different groups (Q-03). Public APIs such as Open-Meteo do not count.
+
+| Slot | What Avela needs | Good candidates in the Registry | Feature in the app |
 | --- | --- | --- | --- |
-| Peer A | Facility directory and service schedule | Resident finds a relevant examination location | No group selected or contacted |
-| Peer B | Appointment/examination demo service, or reviewed health-content service | Resident receives linked exam result or accesses sourced guidance | No group selected; choose scope after available contracts |
+| A | Facilities with location, services, and opening hours | A Health group with a facility or queue service | Fasilitas tab and Detail Fasilitas |
+| B, option 1 | Road or flood reports near a route | A Smart City group with citizen reports | Travel warning on Detail Fasilitas when staff advise an onsite visit |
+| B, option 2 | Health or safety learning content | An Education group with materials or quizzes | Extra reading under Panduan |
+| B, option 3 | Habit or symptom journal | Another Health group | Link from Akun to a personal log |
 
-These roles are suggestions, not claims that classmates provide them. Two APIs from the same group do not satisfy two-group integration. Public NASA/weather APIs do not count. If the chosen Peer B does not provide results, Avela can own simulated result publication while still integrating Peer B meaningfully elsewhere.
-
-## Avela API for Other Groups
-
-Candidate public offering: normalized, source-attributed environmental context and reviewed protection-information metadata for an area. The core server may serve persisted snapshots prepared by the off-STB integration service; it must not become an STB-hosted integration orchestrator. Confirm this offering is useful with actual peers.
-
-Peer consumers receive no generic access to symptom reports, patient identities, or examination results. Record consumer-specific keys, quotas, revocation process, contact, and examples. Secrets belong in configuration, never shared Markdown.
-
-## Agreement Checklist
-
-For each peer record: group identity, contact, base URL, schema/version, authentication scope, test account, synthetic fixtures, rate limit, timeout, cache allowance, error semantics, availability expectation, contract-change procedure, and README links on both sides. Capture request/response evidence without credentials or health details.
-
-Mock endpoints require explicit labels and an agreed schema. The assignment permits mocks when peers are late, with reporting to the assistant after the specified deadline; do not silently present a mock as a working live integration.
+Pick the options whose owners answer first and whose APIs are live. Record each agreement with [the peer-integration skill](skills/integrate-peer-api/SKILL.md). A mock built from a peer's contract is allowed when the peer is late after 29 November; it is labelled as a mock in the app, the README, and the video.

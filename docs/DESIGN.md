@@ -1,5 +1,5 @@
 ---
-version: 0.2-proposed
+version: 0.3
 name: Avela
 description: 'A calm resident companion: regional air context, a clear next step,
   and accountable care follow-up.'
@@ -136,11 +136,28 @@ components:
     textColor: '{colors.danger}'
     rounded: '{rounded.small}'
     padding: '{spacing.lg}'
+  exposurePanel:
+    backgroundColor: '{colors.informationSurface}'
+    textColor: '{colors.text}'
+    typography: '{typography.body}'
+    rounded: '{rounded.small}'
+    padding: '{spacing.lg}'
+  categoryChip:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.text}'
+    typography: '{typography.label}'
+    rounded: '{rounded.small}'
+    padding: '{spacing.sm}'
+  queueRow:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.text}'
+    typography: '{typography.body}'
+    padding: '{spacing.lg}'
 ---
 
 ## Overview
 
-**Status:** Refined design specification, not an implemented interface or user-approved final identity. This revision preserves Avela's teal, calm tone, resident journeys, and system-font foundation while replacing generic component instructions with concrete hierarchy and interaction rules.
+**Status:** Baseline for implementation (D-09), updated 12 November 2026 for the exposure context, the community signal, and the staff screens. No interface exists yet, so nothing here has been checked on a device. The mobile theme module mirrors the frontmatter; change a token here first.
 
 The direction is a clear personal health companion with the readability of a well-organized field guide: warm light surfaces, deep botanical text, restrained teal actions, and source/time information close to environmental values. Brand character comes from proportion, spacing, and precise language. It does not need smoke imagery, a medical mascot, gradients, glass effects, or a dashboard full of interchangeable cards.
 
@@ -169,6 +186,9 @@ Warning and danger indicate explicitly explained conditions, not decorative emph
 | Staff response available | Primary accent on the action, attributed response body | Tanggapan petugas plus author and time |
 | Urgent-access information | Danger text/container with direct navigation | Approved action wording, independent of report queue |
 | Synthetic service | Persistent small plain-language label | Simulasi tugas kuliah |
+| Exposure context on a report | Information panel, forecast icon | Prakiraan wilayah, bukan dosis pribadi |
+| Community signal | Plain caption row under the forecast | Jumlah laporan 7 hari, or Belum cukup data |
+| PM2.5 category | Neutral chip with text; no traffic-light fill | Category name and "mengacu ISPU"; hidden until the breakpoints are sourced |
 
 AQI colors and category names require a separate, named standard and review. Do not label US or European AQI as Indonesian ISPU. Raw PM2.5 concentration is not an AQI score. No invented health thresholds are encoded in this palette.
 
@@ -213,12 +233,15 @@ Honor safe areas, display cutouts, system navigation, and keyboard insets. All i
 | Facilities | Area and filters; readable service list; optional map toggle | Open facility details | Inferring capacity from a map marker or sorting as a guaranteed referral |
 | Examination result | Identity context; facility/author/date; result; follow-up | View the relevant next step | Automatically generated diagnosis presented as signed care |
 | Account | Profile, chosen area, privacy and session controls | Contextual save | Decorative statistics unrelated to care |
+| Queue (staff) | Facility name; state filter; reports oldest first with state and waiting time | Open a report | Color-only urgency, sorting that hides old reports |
+| Review (staff) | State; complaint; exposure context; timeline; action area | The one action valid for the current state | Showing respond and close together; hiding who claimed the report |
+| Publish result (staff) | Linked report and resident name; result text; preview | Publish | Publishing without a preview |
 
 Keep environmental data readable without signing in. Private reports and results require authentication. Preparation and urgent-access navigation must not be hidden by a permission request or mandatory onboarding carousel.
 
 ### Navigation and Adaptation
 
-Compact width uses four labeled destinations: Beranda, Laporan, Fasilitas, Akun. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
+Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
 
 At medium width (proposed 600-839 logical units), consider a navigation rail and preserve comfortable reading measure. At expanded width (840+), a staff queue may use master/detail panes if that surface is approved. Do not stretch paragraphs across the whole display. Width thresholds are implementation proposals to test, not evidence of tablet support.
 
@@ -248,11 +271,27 @@ These are planned component contracts. No component code exists yet.
 
 Include area, data kind, pollutant, unit, valid time, source, and freshness near the primary value. Put resolution details behind an accessible explanation, with a short visible regional qualifier. Do not use generationtime_ms as an issue timestamp. A missing issue time stays unknown. A station reading needs its station identity; the nearest station is not necessarily representative of the user.
 
+### Category Chip and Community Signal
+
+`categoryChip` sits beside the PM2.5 value and carries the category name in text. It has an outline in the outline role and no status fill, so the category never reads as a personal risk level. It is not rendered while the category is null.
+
+The community signal is one caption-size row under the forecast: the 7-day report count for the area and the words "data simulasi" in the coursework build. A hidden count reads "Belum cukup data". It is never a chart, a map, or a trend arrow.
+
+### Exposure Context
+
+`exposurePanel` appears in report detail for both the resident and the reviewer. It shows mean and peak PM2.5 with units, the window start and end in local time, the source, and the fixed label "Prakiraan wilayah, bukan dosis pribadi". When the context is missing, the panel says "Konteks paparan tidak tersedia" and gives no numbers. It never uses warning or danger colors: it is context for the reviewer, not a verdict.
+
+### Staff Queue and Review
+
+`queueRow` shows the complaint's first line, the state in text, and how long the report has waited. Rows are separated by dividers, not cards. The review screen shows exactly one primary action for the current state: claim, then ask or respond, then close. A version conflict shows an inline message and reloads the report. Every staff screen carries the "Simulasi tugas kuliah" label.
+
 ### Guidance and Next Step
 
 Use a short heading and a small number of readable actions, linking to the fuller reviewed source. Show review status where appropriate. A preparation link and a symptom-report link serve different needs; do not turn the latter into an automated diagnosis promise. Exact clinical wording requires review and remains outside this visual specification.
 
 ### Form and Attachment
+
+Attachments are a stretch item (A-11); the attachment rules below apply only if it is built.
 
 Use persistent labels, optional markers, inline errors, preserved values, and a clear submission preview. On invalid submission focus the first invalid field and expose its message to assistive technology. File type/size limits must be visible before selection. Failed uploads show retry/remove actions. Screen-reader reading order follows the form, including validation and attachment status.
 

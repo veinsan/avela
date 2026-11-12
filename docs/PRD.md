@@ -1,109 +1,123 @@
 # Avela Product Requirements Document
 
-**Status:** Draft for scope review, not an approved implementation specification.
+**Status:** Approved for the coursework MVP on 12 November 2026. Goal targets are proposed (P-05 in [DECISIONS.md](DECISIONS.md)).
 
-**Owner:** Project owner; two student implementers, names and role assignment pending.
+**Owner:** Riantama Putra. **Team:** Mishael Gilland, Riantama Putra.
 
-**Updated:** 10 November 2026.
-
-**Sources:** [REFERENCES.md](REFERENCES.md). Decision status is maintained in [DECISIONS.md](DECISIONS.md).
+**Updated:** 12 November 2026.
 
 ## 1. Problem Statement
 
-Residents in areas affected by wildfire smoke may have environmental information without a clear path from that information to protective action or professional help. Traveling for every concern may be undesirable during a smoke episode, but delayed assessment can also be harmful. Avela explores how to connect environmental awareness, symptom reporting, professional review, and onsite follow-up.
+During a wildfire-smoke (karhutla) episode, residents get an air-quality number and nothing else. The number does not say what to do, and when a cough or tight chest starts, the resident has to decide alone whether to travel to a clinic through the smoke. An unnecessary trip adds exposure. A delayed one can let a serious condition get worse. The gap is wider outside big cities, where facilities are farther away.
 
-The user wants two connected phases: before exposure, understand outdoor conditions and prepare; after exposure or symptoms, understand the next step and access care. The user has proposed both receiving results after onsite assessment and submitting symptoms from home for staff review. A remote-first pathway with onsite escalation is the current assistant recommendation, not a confirmed clinical service arrangement.
+Staff who do receive a complaint see symptoms without the environmental context around them, and nobody sees how many residents in an area are reporting smoke-related complaints.
 
-No demand interviews, local dataset audit, staffing agreement, or clinical validation has been completed. Orange skies, photographs, hotspot proximity, and coarse model forecasts must not be treated as measurements of an individual's lung condition.
+Avela connects these pieces in one loop: area smoke forecast, a symptom report that carries its exposure context, review by facility staff, onsite examination when needed, and an anonymous area signal that other services can use.
 
 ## 2. Goals
 
-| ID | Intended outcome | Evaluation method | Target status |
+| ID | Outcome | Metric | Proposed target |
 | --- | --- | --- | --- |
-| G-01 | Residents understand environmental conditions and data limitations | Scenario-based comprehension questions | Numerical target pending usability pilot |
-| G-02 | Residents submit an understandable symptom history | Completion, missing fields, and staff assessment of synthetic cases | Threshold pending form review |
-| G-03 | Residents understand whether their report has been reviewed | Status comprehension and unavailable-service scenarios | No simulated case falsely claims staff review |
-| G-04 | Staff can review and respond to the correct report | End-to-end synthetic case tests and authorization checks | All mandatory acceptance cases pass |
-| G-05 | Coursework integration is demonstrable | APK, public core API, and two peer-service feature scenarios | All mandatory course requirements evidenced |
-| G-06 | Optional prediction improves useful information | Independent temporal evaluation against a baseline | Research hypothesis; no model superiority claim yet |
+| G-01 | Residents read the area's smoke conditions correctly. | Five test users answer three questions on the Home screen: which area, forecast or measurement, how old. | At least 4 of 5 answer all three correctly. |
+| G-02 | Residents can submit a complete symptom report. | Time for a first-time test user from opening the form to a submitted report. | 3 minutes or less; no invalid report accepted. |
+| G-03 | Residents never mistake a submitted report for a reviewed one. | Copy audit of every report state on every screen. | Zero screens show review, monitoring, or a response time that did not happen. |
+| G-04 | Staff review the right report with its context. | Mandatory scenarios in [TEST_PLAN.md](TEST_PLAN.md). | All pass. |
+| G-05 | The coursework is fully evidenced. | Requirements C-01 to C-17 in [COURSE_REQUIREMENTS.md](COURSE_REQUIREMENTS.md). | All have evidence by 13 December. |
+| G-06 | Other groups can use Avela's API easily. | Health checks from 29 November to grading; time to answer a peer's GitHub issue. | 95% of checks succeed; first reply within 24 hours. |
 
-Reduced unnecessary travel and faster access to appropriate care are long-term hypotheses. A classroom demo cannot establish improved health outcomes.
+Fewer unnecessary trips and faster care are long-term hypotheses. A classroom demo with fictional data cannot measure them.
 
 ## 3. Target Users
 
-- **Primary: residents** in a selected smoke-affected pilot area. Region, adult-only versus caregiver accounts, and accessibility needs require validation.
-- **Secondary: healthcare staff** at a proposed partner facility who review reports and publish follow-up. No named hospital or puskesmas is a confirmed partner.
-- **Supporting: facility operator** who maintains service availability and directory details. This is a proposed role, not a real staffed service.
-- **Project owner and student team:** select scope, secure peer integrations, implement, and demonstrate the system.
-- **Agent/developer:** works from this draft without converting proposals into approved scope.
-
-For coursework, use fictional adult residents and simulated authorized staff. Caregiver/minor workflows require a separate decision before implementation.
+- **Residents (primary):** adults in Pekanbaru and Palangka Raya during smoke episodes. In the coursework they are fictional accounts.
+- **Facility staff (secondary):** reviewers at a facility that accepts Avela reports. In the coursework they are simulated accounts, labelled as such.
+- **Peer groups:** other student teams that consume Avela's public API.
+- **Project owner and team:** decide scope, secure two peer integrations, build, and present.
+- **Coding agent:** builds from this document and [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 4. User Stories
 
 | ID | Story | Acceptance criteria |
 | --- | --- | --- |
-| US-01 | As a resident, I want conditions for my selected area so that I understand the outdoor environment. | Displays pollutant, unit, valid time, source, data type, and freshness; denied location permission permits manual selection. |
-| US-02 | As a resident, I want preparation guidance so that I can plan activity. | Guidance has a source and review status; no deterministic disease prediction or unsupported personal risk percentage. |
-| US-03 | As a resident, I want to report symptoms from home so that staff can review my concern. | Validated report contains onset, course, complaint, and permitted context; submission returns a persisted identifier; retries do not duplicate it. |
-| US-04 | As a resident, I want to add supporting information so that staff have context. | An optional attachment can be omitted; permitted types and size are explained; failed upload does not falsely mark the attachment saved. |
-| US-05 | As a resident, I want to know whether someone has reviewed my report so that I do not confuse submission with monitoring. | Status and service availability are explicit; no invented response-time guarantee; emergency guidance is accessible without queue completion. |
-| US-06 | As staff, I want to request more information or publish follow-up so that the resident knows the next step. | Facility-scoped authorization, version-checked transitions, reviewer attribution, and audit events are enforced server-side. |
-| US-07 | As a resident, I want facility information so that I can find an appropriate service. | Shows available source details, last verification, and unknown availability honestly; map has a list alternative. |
-| US-08 | As a resident, I want my examination results so that I can follow professional instructions. | Only results linked to my verified account are visible; published result includes author, facility, time, and revision status. |
-| US-09 | As a peer team, I want a documented Avela API so that I can use its non-sensitive service in my application. | Contract, key, test account where relevant, errors, sample responses, and availability expectations are documented; patient reports are not shared through generic peer keys. |
+| US-01 | As a resident, I want the smoke conditions for my area so that I know what is outside. | I pick an area from a list or the app picks the nearest pilot area from my location. The screen shows PM2.5 value, unit, valid time, source, the label "Prakiraan model", and the snapshot's age. A snapshot older than 2 hours is marked stale. With no snapshot, the screen says the data is unavailable and shows no value. |
+| US-02 | As a resident, I want protection guidance so that I can prepare before going out. | Each guidance item shows its source. No item states a disease probability. |
+| US-03 | As a resident, I want to report symptoms from home so that staff can review them. | The form validates complaint, onset, course, area, and facility. A successful submit returns a report ID and the state "Terkirim, belum ditinjau". Retrying the same submit does not create a second report. |
+| US-05 | As a resident, I want to see whether someone has reviewed my report so that I do not wait on a false assumption. | The report shows its state and a timeline with each author's role and time. Emergency information opens without signing in and without submitting a report. |
+| US-06 | As staff, I want to claim a report, ask for more information, and publish a response from my phone so that the resident knows the next step. | A staff account sees a Queue tab limited to its facility. Each action sends the report's current version; a stale version is rejected. The response records the reviewer and a disposition: self-care, remote follow-up, or onsite assessment. |
+| US-07 | As a resident, I want facility information so that I can find where to go. | The list comes from a peer group's service and names that source. An unknown opening status is shown as unknown. When the peer is down, the screen says so and the rest of the app keeps working. |
+| US-08 | As a resident, I want my examination result so that I can follow the instructions. | Only the owner sees a published result. It shows author, facility, and publication time. |
+| US-09 | As a peer group, I want a documented API and a key so that I can use Avela's data in my app. | Swagger UI and an OpenAPI file are public. Each group gets its own key and a test account. A missing or wrong key returns 401. |
+| US-10 | As staff, I want the area's smoke forecast around the time symptoms started so that I read the complaint in context. | Report detail shows mean and peak PM2.5 for the window from onset to submission, the source, and the label "Prakiraan wilayah, bukan dosis pribadi". When no snapshot covers the window, it says the context is unavailable and the report stays reviewable. |
+| US-11 | As a peer group, I want anonymous counts of smoke-related reports per area so that my app can show where complaints are rising. | With a valid key, the endpoint returns daily counts for up to 30 days and totals per disposition. Counts from 1 to 4 are hidden. The payload has no complaint text, account, or facility. |
+| US-12 | As a resident, I want to know whether others in my area are reporting complaints so that I take the conditions seriously. | Home shows the number of reports from the area in the last 7 days, or "Belum cukup data" when the count is hidden. |
+
+US-04 (optional photo attachment) is a stretch item; see section 7.
 
 ## 5. Functional Requirements
 
-All requirements below describe the proposed implementation; none are currently delivered.
+| ID | Requirement | Stories | State on 12 Nov |
+| --- | --- | --- | --- |
+| FR-01 | Authenticate residents and staff; limit staff to their facility. | US-03, US-06, US-08 | Core API built and tested |
+| FR-02 | Serve the latest PM2.5 snapshot per area with unit, valid time, source, and age. | US-01 | Planned |
+| FR-03 | Serve guidance with sources and separate emergency information. | US-02, US-05 | Planned |
+| FR-04 | Persist symptom reports and append-only updates. | US-03 | Core API built and tested |
+| FR-06 | Staff queue, claim, information request, response with disposition, close. | US-06 | Core API built and tested; screens planned |
+| FR-07 | Show report state and timeline to the resident. | US-05 | Core API built; screens planned |
+| FR-08 | Show facilities from a peer service with honest availability. | US-07 | Planned |
+| FR-09 | Publish examination results to the report's owner. | US-08 | Core API built and tested; screen planned |
+| FR-10 | Use the services of at least two other groups in visible features. | US-07 | Planned; groups not chosen (Q-03) |
+| FR-11 | Publish an API with documentation, per-group keys, and a test account. | US-09 | Planned |
+| FR-12 | Handle loading, empty, stale, unavailable, and retry states on every data screen. | All | Planned |
+| FR-13 | Freeze an exposure context onto each report at submission. | US-10 | Planned |
+| FR-14 | Publish the area health signal with small-count suppression. | US-11, US-12 | Planned |
+| FR-15 | Accept PM2.5 snapshots pushed by the integration service. | US-01, US-10 | Planned |
+| FR-16 | Show staff screens only to staff accounts in the same app. | US-06 | Planned |
 
-| ID | Requirement | Priority / relation |
-| --- | --- | --- |
-| FR-01 | Support authenticated resident accounts and facility-scoped staff roles. | Proposed MVP; US-03 to US-08 |
-| FR-02 | Retrieve normalized environmental context with timestamps, units, source, and resolution notes. | Proposed MVP; US-01 |
-| FR-03 | Present sourced protection content and distinct emergency-access content. | Proposed MVP; US-02, US-05 |
-| FR-04 | Persist a structured symptom report and append-only updates. | Proposed MVP; US-03 |
-| FR-05 | Support optional private attachments after the upload design is validated. | Conditional MVP; US-04 |
-| FR-06 | Provide staff queue, claim/review, information requests, and signed follow-up. | Proposed remote-first MVP; US-06 |
-| FR-07 | Show report status, unread response indicators, and service availability. | Proposed MVP; US-05 |
-| FR-08 | Discover relevant facilities with honest availability metadata. | Proposed MVP; US-07 |
-| FR-09 | Publish simulated onsite results to the correct resident account. | Proposed MVP; US-08 |
-| FR-10 | Consume at least two other student groups' APIs in meaningful user-visible features. | Course requirement; exact providers pending |
-| FR-11 | Expose a useful, documented Avela API to peer groups. | Course requirement; US-09 |
-| FR-12 | Implement loading, empty, stale, unavailable, offline, and retry behavior. | Course requirement and all journeys |
-
-Push notifications, booking, pharmacy orders, video consultation, and continuous monitoring are not implied by these requirements. In-app status updates can demonstrate the initial follow-up journey.
+FR-05 (attachments) is a stretch item. Push notifications, booking, pharmacy orders, and video consultation are not part of the product.
 
 ## 6. Non-Functional Requirements
 
 | ID | Requirement | How to verify |
 | --- | --- | --- |
-| NFR-01 | No cross-resident report, result, or attachment access; staff restricted to assigned facility. | Negative authorization tests across two residents and two facilities |
-| NFR-02 | Use synthetic patient data for coursework; secrets remain outside tracked files. | Fixture and repository inspection |
-| NFR-03 | Core service runs in Docker on STB with CPU and memory limits; no AI workload on STB. | Compose inspection and device resource observation |
-| NFR-04 | Peer/provider failures do not crash navigation or erase reports. | Fault injection: timeout, 429, malformed response, and outage |
-| NFR-05 | Bounded requests with explicit pending states; proposed integration deadline 10 seconds, configurable after provider audit. | Timeout tests; threshold is a design proposal |
-| NFR-06 | Retry-sensitive writes are idempotent and published clinical responses are traceable. | Duplicate submission and audit-history tests |
-| NFR-07 | Interface communicates status without color alone and supports text enlargement. | Device accessibility review; design details in DESIGN |
-| NFR-08 | HTTPS public API, authenticated writes, bounded uploads, and rate limits. | Deployment and API tests |
-| NFR-09 | No feature promises diagnosis, clinician availability, or continuous monitoring without the corresponding service. | Copy review and unavailable-service tests |
+| NFR-01 | No resident reads another resident's report or result. Staff read only their facility's reports. Unauthorized reads return 404. | Negative tests with two residents and two facilities (passing in `services/core/tests`) |
+| NFR-02 | All personal and clinical data is synthetic. Secrets stay in `.env`. | Fixture and repository inspection |
+| NFR-03 | STB containers run within limits: core 256 MB and 0.5 CPU; gateway and tunnel 64 MB and 0.25 CPU each. The core makes no outbound provider calls. | Compose file; `docker stats` on the STB |
+| NFR-04 | A peer or provider failure never crashes the app or blocks reports and results. | Fault injection: timeout, 429, malformed body, outage |
+| NFR-05 | The integration service gives up on an upstream call after 10 seconds and answers with cached data marked stale, or with an unavailable state. | Timeout tests |
+| NFR-06 | Report creation is idempotent. State changes are version-checked. Every event records its author and time. | Duplicate-submit and stale-version tests (passing) |
+| NFR-07 | Status is never conveyed by color alone. Text scales with the system setting. Touch targets are at least 48 by 48. | Device review; see [DESIGN.md](DESIGN.md) |
+| NFR-08 | Public traffic uses HTTPS. The gateway allows 10 requests per second per client and 5 logins per minute. Sessions last 12 hours. | Deployment tests; `infra/stb/nginx.conf` |
+| NFR-09 | No screen promises a diagnosis, a response time, or continuous monitoring. | Copy audit (G-03) |
+| NFR-10 | The area health signal never exposes a count from 1 to 4, free text, an account, or a facility. | Suppression test |
 
-Capacity, latency, storage retention, backup recovery targets, and environmental freshness thresholds must be set from device/provider evidence before release. No load benchmark exists yet.
+Read latency and peer-key quotas are set after the first STB measurement (A-04, A-13).
 
 ## 7. Scope
 
-### Proposed In Scope
+**In scope**
 
-One pilot area; resident mobile app; staff review surface; environmental context; sourced guidance; symptom case management; facility discovery; simulated examination results; core STB service; two peer integrations; synthetic end-to-end demo; required course artifacts.
+- Two pilot areas with pushed PM2.5 snapshots and a referenced category.
+- Guidance with sources and an emergency screen that needs no account.
+- Symptom report with exposure context, timeline, clarification, and cancellation.
+- Staff queue, review, response, and examination result in the same APK.
+- Facility list from a peer service, and one more feature from a second peer.
+- Public API: areas, smoke advisory, area health signal, facility review status.
+- Core on the STB, integration service off the STB, release APK, and all course artifacts.
 
-### Conditional Scope
+**Stretch, only after M3 passes**
 
-Attachments depend on storage and access validation. Remote review depends on selection of the workflow and a clearly simulated staff role for the demo. A forecasting experiment depends on usable historical observations, access terms, and an evaluation plan. A separate operator web application depends on workload and deadline review.
+- US-04 / FR-05 photo attachments (A-11).
+- Custom PM2.5 forecast model with a baseline comparison (R-01).
+- BMKG weather panel if the area codes are verified.
 
-### Out of Scope for the Initial Proposal
+**Out of scope**
 
-Autonomous diagnosis or prescribing; guaranteed emergency response; prediction of individual disease from air quality or a photograph; automated evacuation orders; safe-route guarantees; shelter logistics and food distribution; billing; real hospital record integration; real patient data; validated clinical deployment; nationwide rollout; source attribution; methane-centered health scoring; complex atmospheric simulation; 3D digital twins; a mandatory multi-agent LLM pipeline.
+Diagnosis or prescribing by software; emergency dispatch; real patient data or hospital record exchange; evacuation orders and route safety; shelter and logistics; billing; a staff web console; geocoding search; nationwide coverage; 3D visuals; a multi-agent LLM pipeline.
 
-### Freeze and Change Control
+**Changes**
 
-The brand is confirmed. Product scope is not frozen. Resolve the critical decisions in DECISIONS before implementation. Update this document, architecture dependencies, tests, and TODO together when an approved scope change occurs.
+| Date | Change |
+| --- | --- |
+| 2026-11-12 | Scope approved. Added exposure context (US-10), area health signal (US-11, US-12), in-app staff screens, and two pilot areas. Attachments and custom forecasting moved to stretch. Geocoding removed. |
+
+Change scope here first, then update ARCHITECTURE, TEST_PLAN, and TODO in the same change.

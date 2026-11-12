@@ -1,64 +1,71 @@
 # Decisions and Open Questions
 
-**Updated:** 10 November 2026. Confirmed means explicitly established in the conversation or assignment, not inferred from silence.
+**Updated:** 12 November 2026. Confirmed means the project owner said so or the assignment requires it. Proposed means the assistant recommends it and the owner has not objected or agreed yet.
 
-## Decision Register
+## Confirmed
 
-| ID | Decision | Status | Basis / consequence |
+| ID | Decision | Basis | Consequence |
 | --- | --- | --- | --- |
-| D-01 | Product name is Avela. | Confirmed by user | Replace former working name in active product material. |
-| D-02 | Workspace is `C:\Users\riant\Projects\avela`; project Markdown belongs in `docs/`. | Confirmed by user | Keep setup package intact; no application scaffold requested. |
-| D-03 | Theme is Health & Wellbeing with wildfire-smoke context. | Confirmed direction | Preserve connection to health access rather than generic fire detection. |
-| D-04 | Primary experience serves residents, with before-exposure and after-exposure/symptom journeys. | Confirmed direction | Healthcare personnel support the resident journey. |
-| D-05 | Explore symptom entry, optional photos, professional review, and onsite follow-up. | User-proposed requirements | Exact fields, clinical workflow, and attachment scope are pending. |
-| D-06 | Remote review first, onsite examination when needed. | Assistant recommendation; approval pending | Do not describe this workflow as an already agreed operational service. |
-| D-07 | React Native/Expo APK, core STB Docker service, and >=2 peer groups. | Assignment requirement | Website alone does not satisfy the course. |
-| D-08 | Backend framework, database, package manager, versions, and hosting. | Pending | Architecture candidates are proposals only. |
-| D-09 | Visual identity and design tokens. | Refined proposal using Impeccable | Light/dark roles and screen hierarchy specified; no implemented or visually validated UI. |
-| D-10 | PM2.5-focused environmental information; original forecast ambition 6-24 hours. | Prior brainstorming direction, feasibility pending | No independent model or prediction horizon committed. |
-| D-11 | A real hospital or puskesmas partnership. | Unconfirmed | Santosa was an example, not an agreement or API grant. |
-| D-12 | Staging, commits, and pushes are performed by the user. | Project-setup rule | Agent leaves changes unstaged and provides commands when useful. |
-| D-13 | Open-Meteo forecast/geocoding, optional BMKG weather, optional OpenAQ observations. | Evidence-backed recommendation | Official docs and four public probes reviewed; not final pilot/production validation. |
+| D-01 | Product name is Avela. | Owner, 10 Nov | Use it for the app, repository, and Registry name. |
+| D-02 | Project Markdown lives in `docs/`. Two root files are exceptions: `README.md` (repository front page) and `CLAUDE.md` (imports `docs/AGENTS.md`). | Owner, 10 Nov; exceptions approved 12 Nov | `project-setup/` is a local, git-ignored copy and is not part of the repository. |
+| D-03 | Theme is Health & Wellbeing, in the wildfire-smoke (karhutla) context. | Owner, 10 Nov | Features serve health access, not fire detection. |
+| D-04 | Residents are the primary users; facility staff support their journey. | Owner, 10 Nov | Resident screens come first in scope and design. |
+| D-05 | Residents report symptoms, staff review them, and an onsite examination follows when needed. | Owner, 10 Nov | Photo attachments are a stretch item (P-03). |
+| D-06 | The primary workflow is remote review first, with onsite follow-up. | Owner authorized the core build on 11 Nov; the DDD paper and code use it | `services/core` implements this state machine. |
+| D-07 | React Native (Expo) APK, core microservice in Docker on the STB, and integration with at least two other groups. | Assignment | See [COURSE_REQUIREMENTS.md](COURSE_REQUIREMENTS.md). |
+| D-08 | Core stack: Python 3.12, FastAPI, SQLite in WAL mode, PyJWT, uv, pytest. The integration service uses the same stack. | Owner, 11 Nov; `services/core/requirements.txt` | No second backend language. |
+| D-09 | [DESIGN.md](DESIGN.md) tokens are the baseline for implementation. | Owner requested the refinement on 10 Nov | Change tokens there first, then the app theme. |
+| D-10 | PM2.5 is the pollutant shown. Values come from a provider forecast. | Owner, 10 Nov | A custom forecast model is a stretch item (P-03). |
+| D-11 | No real hospital or puskesmas is a partner. | Owner, 10 Nov | Facilities and staff are simulated and labelled in the app. |
+| D-12 | The owner stages, commits, and pushes. The agent does so only when the owner asks in that message. | Project-setup rule; owner practice on 10 Nov | The agent ends each task with the Git commands to run. |
+| D-13 | Open-Meteo Air Quality is the PM2.5 source. BMKG weather is optional. OpenAQ is not used in the MVP. | Evidence in [API_RESEARCH.md](API_RESEARCH.md) | Geocoding is dropped: two pilot areas need a pick list, not a search. |
+| D-14 | Pilot areas are Pekanbaru (primary) and Palangka Raya (secondary). | Owner, 12 Nov | Seed data, BMKG codes, and facility samples cover both. |
+| D-15 | Staff use role-gated screens inside the same APK. | Owner, 12 Nov | No separate web console. |
+| D-16 | Each symptom report stores an exposure context: the area's PM2.5 forecast around symptom onset, frozen at submission. | Owner, 12 Nov | Staff see symptoms next to environmental context. |
+| D-17 | The core publishes an area health signal to other groups: anonymous report counts per area. | Owner, 12 Nov | This is Avela's main offering in the API Registry. |
+| D-18 | Class K01. Public core URL `https://avela.stei.fun`; integration service `https://avela-int.stei.fun`; tunnel name `k01-avela`. | Owner, 12 Nov; deck slides 12-13 | The Registry name `avela` still has to be reserved (A-22). |
+| D-19 | Team: Mishael Gilland (18224005) and Riantama Putra (18224061). Riantama leads both the backend and the mobile track. | DDD paper cover; owner, 12 Nov | Mishael's tasks are open (Q-11). |
+| D-20 | The STB core makes no outbound calls to public or peer APIs. The integration service pushes PM2.5 snapshots to it. | Deck slide 11; follows from D-16 and D-17 | The core serves the last pushed snapshot with its age. |
+| D-21 | App users authenticate with a JWT bearer token. Other groups and the integration service use one `X-API-Key` each, stored hashed and limited by scope. | Deck slide 17 | A peer key never opens reports, identities, or results. |
+
+## Proposed
+
+| ID | Proposal | Why | Confirm by |
+| --- | --- | --- | --- |
+| P-01 | Write the mobile app in JavaScript with the practicum pattern: Context, `ApiService.js`, Jest. | The deck names `ApiService.js` and says to reuse the KatalogKu pattern. | 16 Nov, before A-05 |
+| P-02 | Show a PM2.5 category that refers to the ISPU concentration breakpoints, labelled as a reference and not an official ISPU reading. | Raw µg/m³ alone does not tell a resident what to do. | 29 Nov; breakpoints must be read from the KLHK regulation first (Q-13) |
+| P-03 | Photo attachments (A-11) and a custom forecast model (R-01) are stretch items, started only after M3 passes. | Neither is needed for a graded requirement. | 6 Dec |
+| P-04 | The area health signal hides any count from 1 to 4. | Small counts can point to one person. | 22 Nov, before A-25 |
+| P-05 | Goal targets in [PRD.md](PRD.md) section 2. | The targets are the assistant's estimates. | 22 Nov |
+
+## Open Questions
+
+| ID | Decision needed | Owner | Due |
+| --- | --- | --- | --- |
+| Q-03 | Which two groups Avela integrates, plus one backup. | Riantama | Names 22 Nov; written contracts 29 Nov |
+| Q-08 | Sources for the protection guidance and the verified local emergency contact. | Riantama | 29 Nov |
+| Q-10 | Where the integration service runs: an always-on host or a laptop with a tunnel. | Riantama | 29 Nov |
+| Q-11 | Which tasks Mishael owns. Individual grades follow each member's GitHub contribution, and both members present in the video. | Both | 15 Nov |
+| Q-12 | STB hardware: architecture, RAM, disk, and whether the image builds on it. | Riantama | 22 Nov (A-04) |
+| Q-13 | ISPU PM2.5 breakpoints and averaging period, read from the regulation. | Riantama | 29 Nov |
+
+Resolved: Q-01 (D-06), Q-02 (D-14), Q-04 (simulated staff accounts `petugas1` and `petugas2`), Q-06 (D-08, D-15), Q-09 (D-18, D-19). Deferred with P-03: Q-05 (custom forecasting), Q-07 (attachments).
 
 ## Alternatives Considered
 
-| Alternative | Strength | Cost or limitation | Current position |
-| --- | --- | --- | --- |
-| Onsite-first with digital results | Simpler staff process and fewer remote-service assumptions | Does not support pre-visit professional review from home | Valid alternative awaiting choice |
-| Remote review with onsite follow-up | Matches the user's desire to assess concerns before unnecessary travel | Requires a real queue, availability communication, accountable reviewers, and escalation | Recommended draft |
-| Autonomous AI symptom diagnosis | Could appear fast in a demo | Unvalidated clinical inference and treatment claims; unnecessary for requested human review | Excluded from proposed MVP |
-| Population-priority dashboard for health workers | Supports area-level planning | Primary user differs from the resident direction | Historical exploration, not current scope |
-
-## Questions Required Before Scope Freeze
-
-| ID | Decision needed | Evidence to prepare | Owner |
-| --- | --- | --- | --- |
-| Q-01 | Choose onsite-first or remote-first primary workflow. | One concrete resident and staff walkthrough | Project owner |
-| Q-02 | Choose pilot area and fictional demo population. | Provider coverage samples and accessible facility information | Team |
-| Q-03 | Identify two student-group service providers. | Named contacts, written endpoints, sample responses, rate limits | Team |
-| Q-04 | Define who reviews reports and when. | Simulated demo staffing plan; real partner interview if available | Project owner / clinical contact |
-| Q-05 | Decide forecast reuse versus custom modeling. | Historical data availability, baseline, holdout plan | Team |
-| Q-06 | Approve stack and operator interface. | STB architecture/resources and a bounded workload estimate | Team |
-| Q-07 | Decide attachment scope and retention. | Upload/storage budget and role-based access design | Team |
-| Q-08 | Approve reviewed content and escalation policy. | Source register and qualified review where clinical advice is shown | Clinical reviewer, not yet assigned |
-| Q-09 | Assign team roles, class, registry name, and domain. | Team agreement and registry entry | Team |
-
-## Freeze Criteria
-
-- One primary workflow, target population, and pilot area are selected.
-- Every essential data source has a successful relevant sample or an explicit labeled demo fallback.
-- Core domain behavior is defined beyond proxying a public API.
-- Two peer integration contracts have owners and demonstrable feature uses.
-- Clinical scope, staff availability, emergency bypass, and simulated-versus-real service boundaries are explicit.
-- Stack and deployment split fit the STB and two-person schedule.
-- Mandatory features have acceptance cases; deferred work is named.
-- The owner approves the resulting scope. Documentation creation alone is not approval of its proposals.
+| Alternative | Why it was not chosen |
+| --- | --- |
+| Onsite-first with digital results only | Does not let a resident get a review before travelling in smoke. |
+| Autonomous AI symptom diagnosis | Unvalidated clinical inference; the product is built around human review. |
+| Separate staff web console | A second app, deployment, and test surface in four weeks. |
+| Core calls Open-Meteo directly | The deck keeps integration off the STB. |
+| Population dashboard for health workers | The primary user is the resident. The area health signal covers the area-level view. |
 
 ## Change History
 
-| Date | Change | Evidence |
-| --- | --- | --- |
-| 2026-11-10 | Avela selected as final name. | Explicit user message |
-| 2026-11-10 | Documentation setup requested in Avela workspace. | Explicit user message |
-| 2026-11-10 | Draft baseline records resident journeys, options, and unresolved dependencies. | Documentation work; does not freeze implementation |
-| 2026-11-10 | API recommendations and design refined at user request. | Public-apis discovery, provider documentation, bounded probes, and Impeccable source guidance |
+| Date | Change |
+| --- | --- |
+| 2026-11-10 | Name, workspace, theme, and resident direction set. Documentation baseline created. |
+| 2026-11-10 | API shortlist researched and design refined. |
+| 2026-11-11 | Owner authorized the core build with FastAPI and SQLite. |
+| 2026-11-12 | D-06 and D-08 confirmed. D-14 to D-21 added. Scope-freeze gate A-17 retired. |

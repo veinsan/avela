@@ -1,61 +1,95 @@
 # TST and PWAM Coursework Requirements
 
-**Source:** Supplied 28-page assignment deck; see [REFERENCES.md](REFERENCES.md), S-01. This is a reading of that deck, not a claim that course rules have not changed since publication.
+**Source:** the 28-page assignment deck (S-01 in [REFERENCES.md](REFERENCES.md)), re-read in full on 12 November 2026. Later official instructions from either course override this reading. The deck's shared account credentials are not copied here.
 
-## Mandatory Deliverables
+## Requirements and Evidence
 
-| ID | Requirement | Source pages | Avela mapping / evidence needed |
+| ID | Requirement | Slide | Task | Evidence to produce |
+| --- | --- | --- | --- | --- |
+| C-01 | Two members with backend and mobile responsibilities; both understand the whole system. Individual grades follow each member's role and GitHub contribution. | 3-5, 25, 27 | Q-11 | Commits from both members; both explain the system in the video |
+| C-02 | DDD paper: system description, bounded contexts, subdomain decomposition with diagram | 19 | A-16 | Submitted .docx or .pdf with cover |
+| C-03 | Core microservice in Docker on the STB, publicly reachable, with memory and CPU limits | 20, 23 | A-04, A-13 | `https://avela.stei.fun/health`; compose file; `docker stats` capture |
+| C-04 | Public API with OpenAPI or Postman documentation, one API key per peer group, and one test account | 14, 17 | A-25, A-18 | Swagger UI link; key issue log; test account |
+| C-05 | Use the services of at least two other groups in real features | 14, 21 | A-03, A-10 | Feature screenshots and request logs per peer |
+| C-06 | Integration runs outside the STB or in the mobile app | 11, 21 | A-07, A-10 | Integration service URL; architecture diagram |
+| C-07 | React Native (Expo) app with at least four screens, stack and tab navigation, login, and a validated form | 22 | A-05, A-26, A-27 | APK walkthrough |
+| C-08 | `ApiService.js` calls the own microservice and the peer APIs, directly or through the integration service | 22 | A-05, A-10 | Source file; unit tests |
+| C-09 | Loading, error, empty, and peer-outage states; the app does not crash | 22 | A-12 | Failure demonstrations in the test table and video |
+| C-10 | Testing report: Jest unit tests and a functional test table that includes API integration tests | 22 | A-28 | Testing report PDF |
+| C-11 | `Aplikasi_Release.apk` built with EAS, themed icon and splash, HTTPS API URLs | 22 | A-14 | APK file in the app repository |
+| C-12 | Backend repository with README.pdf (architecture, endpoint list, how to get access, example requests); integration service with README.txt | 20-21, 26 | A-18, A-15 | Both files |
+| C-13 | YouTube video with both members presenting: the services, the integration, and a response to the two chosen groups' designs | 21, 26 | A-15 | Video link |
+| C-14 | All final links in Edunex; URLs still live when graded | 26 | A-15, A-29 | Submission confirmation; health-check log |
+| C-15 | Peer assessment: other groups rate how easy Avela's API is to use (documentation, uptime, replies to issues) | 25 | A-18, A-29 | Issue replies within 24 hours; uptime log |
+| C-16 | Written agreement with each peer (endpoints, data format, call limits, contact) recorded in both groups' READMEs | 14 | A-03 | Agreement section in README.pdf |
+| C-17 | App repository README with run steps and a demo account | 22 | A-15 | README in the app directory |
+
+One repository and one demo serve both courses (slide 4). Avela keeps the backend and the app in one repository.
+
+## Deadlines
+
+| Milestone | Date | Deliverable | Avela milestone |
 | --- | --- | --- | --- |
-| C-01 | Two members, backend/business and mobile responsibilities | 3-5 | Named role assignment pending; both understand the complete system |
-| C-02 | DDD paper: description, bounded contexts, subdomain decomposition | 19 | DOMAIN_MODEL input; final formatted paper and cover still required |
-| C-03 | Core microservice in Docker on publicly accessible STB | 20, 23 | Deployment, resource limits, endpoint evidence |
-| C-04 | Provide documented API, peer keys, and test account | 14, 17 | OpenAPI/Postman, access instructions, synthetic account |
-| C-05 | Consume services from at least two other groups in real features | 14, 21 | Two written agreements, feature mapping, logs/screenshots/video |
-| C-06 | Integration outside STB, or in mobile application | 11, 21 | Architecture and deployment evidence |
-| C-07 | React Native/Expo application; at least four screens, stack + tab, login, validated form | 22 | Installed release APK walkthrough |
-| C-08 | ApiService.js calls own API and peer APIs directly or through integration | 22 | Required service boundary; resolve literal filename if using TypeScript |
-| C-09 | Loading, error, empty, and peer-outage handling | 22 | Failure demonstrations and tests |
-| C-10 | Jest unit tests plus functional and integration test table | 22 | Test outputs and PDF testing report |
-| C-11 | Aplikasi_Release.apk via EAS, branded icon/splash, HTTPS | 22 | Downloadable/installable release artifact |
-| C-12 | Backend repository and README.pdf; integration README.txt | 20-21, 26 | These Markdown docs are inputs, not substitutes for required formats |
-| C-13 | Video on YouTube with both members presenting | 21, 26 | Explain services, integration, and responses to selected peer designs |
-| C-14 | Final links submitted in Edunex; endpoints remain live for grading | 26 | Submission confirmation and availability check |
+| Week 12 | 9-15 November 2026 | Group, theme, domain | M0 |
+| End of Week 13 | 22 November 2026 | DDD paper; app skeleton with navigation | M1 |
+| End of Week 14 | 29 November 2026 | Microservice URL and documentation in the API Registry; screens, login, own API | M2 |
+| Week 15 | 30 November - 6 December 2026 | Integration service; two peer APIs in the app; tests | M3 |
+| End of Week 16 | 13 December 2026, 23:59 WIB | Everything, linked in Edunex | M4 |
+
+A group that misses the Registry deadline lets others use a mock of its contract instead. If a peer is late after Week 14, use a mock built from its contract and report it to the assistant.
 
 ## DDD Paper Format
 
-- System description: 4-8 paragraphs, each 5-6 sentences.
-- Bounded contexts: 2-4 paragraphs, each 4-6 sentences.
-- Subdomain decomposition: diagram plus 2-4 paragraphs, each 4-6 sentences; classify core/supporting/generic.
-- Cover contains both members' identities; submit in an accepted document format.
-
-The Markdown domain model does not yet satisfy the final paper's cover, paragraph, diagram, or selected-partner requirements.
-
-## Dates in the Deck
-
-| Milestone | Date / interval | Required outcome |
+| Part | Content | Length |
 | --- | --- | --- |
-| Week 12 | 9-15 November 2026 | Team, theme, domain, initial app structure planning |
-| End of Week 13 | 22 November 2026 | DDD paper |
-| End of Week 14 | 29 November 2026 | Public microservice base URL and documentation in API Registry |
-| Week 15 | 30 November-6 December 2026 | Integration and end-to-end testing |
-| Final | 13 December 2026, 23:59 WIB (UTC+7) | All final artifacts in Edunex |
+| a) System description | Use cases of the integrated system | 4-8 paragraphs of 5-6 sentences |
+| b) Bounded contexts | Boundaries and relations, including the other groups' contexts | 2-4 paragraphs of 4-6 sentences |
+| c) Subdomain decomposition | Diagram of subdomains and sub-subdomains, each marked core, supporting, or generic | 2-4 paragraphs of 4-6 sentences |
 
-The calendar end dates for Weeks 13/14 follow the deck's displayed week ranges. No separate time-of-day cutoff is stated for those milestones in the extracted requirements.
+The file is .doc, .docx, or .pdf with a cover carrying both members' identities. Member A writes the domain model; member B contributes user stories and feature needs.
 
-## STB and Access Constraints
+## STB Rules
 
-Only microservice-related containers run on the STB. Set CPU and memory limits and restart policies. Do not run frontend, mobile builds, or AI models there. Keep credentials in untracked configuration and do not expose the database publicly. Use synthetic personal data.
+- Only microservice containers run on the STB: core, auth, gateway, tunnel.
+- Every container has `mem_limit` and `cpus`, and `restart: unless-stopped`.
+- Secrets live in `.env`. The database port is never opened to the internet.
+- No frontend, mobile build, or AI model on the STB.
+- Back up the database regularly and watch load with `docker stats` and `free -h`.
+- Use test data only. Every API has a call limit.
+- If the STB breaks, report it to the assistant; a lab Proxmox VM may be used with permission.
 
-K01 uses `namakelompok.stei.fun`; K02 uses `namakelompok.stei.site`. Reserve a unique 3-20 character lowercase/number/hyphen group name in the Registry. Avela's course class, registry reservation, and actual hostname are not confirmed.
+## Domain and Registry
 
-The deck includes shared-access credentials. They are intentionally not copied into project documentation, source code, or examples.
+- Class K01 uses `<name>.stei.fun`. Avela's gateway is `avela.stei.fun`; the optional integration host is `avela-int.stei.fun`. Do not use `api.avela.stei.fun`: the free certificate covers one subdomain level.
+- A name is 3-20 characters of lowercase letters, digits, and hyphens, and matches the repository and app name. Names are reserved through the API Registry, first come, first served.
+- The tunnel is named `k01-avela` in the class Cloudflare account. Change only this group's tunnel and hostname, keep the token out of Git, and log out afterwards.
+- The Registry row lists group, class, theme, base URL, documentation, auth type, and status.
 
-## Integration and Authentication Nuance
+## Authentication
 
-Two public providers are not two student groups. Each selected peer must supply a meaningful feature, written endpoint/schema/rate-limit agreement, and evidence in both groups' README files. When a peer is late, the deck allows contract-based mocks and instructs reporting delays after Week 14; mock use must be explicit.
+| Caller | Method |
+| --- | --- |
+| App user | JWT in `Authorization: Bearer` |
+| Another group's server | `X-API-Key`, one key per group |
+| Public data | No auth, rate limited |
 
-TST authentication/authorization is described as a bonus, while the mobile login and inter-group access arrangements are still required. Avela's private reports make access control part of the proposed product baseline regardless of bonus grading.
+Authentication and authorization in the microservice earn the TST bonus. The core already has both.
 
-## Grading Caveat
+## Grading Map
 
-The deck labels its weights as proposed. It lists TST DDD 25%, service/deployment 30%, integration 25%, documentation/video 20%, with an authentication bonus; PWAM functionality/integration 35%, usability 15%, code/testing 20%, branding/release/docs 15%, demo 15%. Follow later official course instructions if they supersede these values.
+The deck calls these weights proposed.
+
+| Course | Component | Weight | Avela work |
+| --- | --- | --- | --- |
+| TST | DDD paper | 25% | A-16 |
+| TST | Microservice, Docker, STB deployment | 30% | A-06 to A-09, A-23 to A-25, A-04, A-13 |
+| TST | Integration with two groups and the new service | 25% | A-03, A-07, A-10 |
+| TST | README and video | 20% | A-18, A-15 |
+| TST | Bonus: authentication and authorization | +10% | A-06, A-25 |
+| PWAM | Functionality and API integration in the app | 35% | A-26, A-27, A-10 |
+| PWAM | Appearance and ease of use | 15% | A-05, A-12, DESIGN |
+| PWAM | Code quality, testing, debugging | 20% | A-28 |
+| PWAM | Branding, release APK, README | 15% | A-14, A-15 |
+| PWAM | Demo and video | 15% | A-15 |
+
+An AI API is allowed if it is called from the backend or the integration service with its key in `.env`. Avela's MVP does not use one.

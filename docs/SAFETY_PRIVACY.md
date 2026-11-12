@@ -1,60 +1,70 @@
-# Clinical Boundaries, Privacy, and Operational Integrity
+# Clinical Boundaries, Privacy, and Secrets
 
-**Status:** Product design requirements for a synthetic coursework prototype. This document is not a clinical protocol, legal compliance assessment, or authorization to operate a telemedicine service.
+**Updated:** 12 November 2026. This is the one place where Avela's clinical and privacy limits are written. Other documents link here.
 
-## Clinical Responsibility
+Avela is a coursework prototype with fictional people. It is not a clinical protocol, a legal compliance assessment, or a telemedicine service.
 
-Environmental data describes an area and period, not a person's diagnosis or measured dose. Resident-entered symptoms and photographs are supporting information, not conclusive evidence of a disease. Clinical assessments, medication instructions, and examination findings must be attributed to an appropriately authorized professional in any real service.
+## Clinical Boundaries
 
-For the demo, staff identities and cases are fictional and clearly labeled. AI-generated summaries, if later added, remain drafts for review and must preserve uncertainty and resident wording. Do not label them doctor's advice or claim a photograph shows lung condition.
+- Software never diagnoses, prescribes, or rates a person's health. Assessments and instructions come from staff.
+- Environmental data describes an area and a period. The exposure context on a report is an area forecast, labelled "Prakiraan wilayah, bukan dosis pribadi".
+- A submitted report is a receipt. It is not review, monitoring, or emergency help, and the app says so on the form and on the report.
+- The app promises no response time.
+- Staff, facilities, and cases are simulated and labelled "Simulasi tugas kuliah".
+- A real pilot would need clinical ownership, reviewer credentials, approved content, and an escalation process. None exists.
 
-## Emergency Access and Waiting
+## Emergency Access
 
-Emergency-access information must be visible before and during the reporting flow and available without completing registration or waiting for staff. Exact prompts and screening rules require qualified review. The app must not tell users they are safe because an automated check did not flag a concern.
+The Darurat screen opens from every screen, signed in or not, and never requires a report. Its contact details must be verified for Indonesia before they are shown (Q-08). Do not copy emergency numbers from foreign sources. The app never tells a resident they are safe because nothing was flagged.
 
-Official smoke guidance identifies breathing difficulty and chest pain as reasons for urgent help; see the source in REFERENCES. This is rationale for bypassing a message queue, not a complete triage algorithm. Do not hard-code foreign emergency numbers from source documents into an Indonesian interface. Verify local channels before display.
+A smoke forecast is not an evacuation order and does not make a route or a home safe.
 
-Do not equate staying indoors with safety under every circumstance or contradict official evacuation instructions. No smoke forecast is an evacuation order, safe-route certificate, or guarantee that a household is protected.
-
-## Staff Operations
-
-Publish real service hours only when established. A submitted report is an acknowledgment of receipt, not a promise that a clinician is watching it. Display waiting, unavailable service, and unanswered reports honestly. Do not promise a response time without staffing capacity and an agreed service process.
-
-Before any operational pilot, assign clinical ownership, escalation responsibility, approved content, reviewer credentials, outage handling, and user support. These are currently absent; the coursework prototype should not accept real consultations.
-
-## Data Classification
+## Data Classes
 
 | Class | Examples | Handling |
 | --- | --- | --- |
-| Public context | Source-attributed environmental data | Cache only under provider terms; preserve timestamps |
-| Public directory | Facility address and source-published services | Attribute and display verification age |
-| Sensitive case data | Reports, attachments, results, relevant health history | Synthetic only in course; private, owner/facility scoped |
-| Operational metadata | Request IDs, error categories, state-change times | Minimize personal content |
-| Secrets | Passwords, tokens, peer keys, tunnel credentials | Environment/config secrets; never Markdown, Git, or APK |
+| Public context | PM2.5 snapshots, guidance | Stored with source and time; shown with attribution |
+| Public directory | Facility name, services, hours from a peer | Shown with its source and retrieval time |
+| Sensitive case data | Reports, events, results | Synthetic only; owner and facility staff only |
+| Aggregate signal | Report counts per area and day | Published under the rules below |
+| Operational data | Request IDs, error codes | No complaint text in logs |
+| Secrets | Passwords, JWT secret, peer keys, tunnel token | `.env` only; never in Git, Markdown, or the APK |
 
-## Access and Identity
+## Access Rules
 
-- Derive resident identity from authentication; reject client attempts to select another owner.
-- Enforce facility membership on staff reads and writes.
-- Link external examination records to the correct account through a verified mapping process.
-- Scope peer API keys to intended non-sensitive services. Clinical publishing requires separate authorization.
-- Enforce attachment access at retrieval time; random filenames are not authorization.
-- Audit publication and correction with actor, time, version, and resource identifier.
+- The acting account comes from the token. A request cannot name another owner.
+- Staff read and act only on their facility's reports. Only the claiming reviewer can respond or close.
+- A result's owner comes from its report.
+- A resource the caller may not see returns 404.
+- Peer keys read area data and the aggregate signal only.
 
-## Minimization and Retention
+## Area Health Signal Rules
 
-Collect only fields needed for the agreed demo journey. Avoid national identifiers, exact household locations, and unrelated history. Manual area selection should be possible. Real patient photographs must not be used as demo fixtures.
+- It contains counts by area, day, and disposition. It contains no complaint text, account, facility, or time of day.
+- A count from 1 to 4 is hidden and sent as null (P-04). Zero is sent as zero.
+- Cancelled reports are not counted.
+- The payload says whether its data is synthetic.
+- It is not an outbreak detector and is not presented as one.
 
-Define retention periods, account deletion behavior, correction history, backup expiry, and private local-cache behavior before implementing attachments or a real pilot. No retention duration is approved yet. Offline drafts should not persist across account logout without a documented design.
+## Secrets and Shared Credentials
 
-## Attachments
+- The assignment PDF contains the class's shared Cloudflare account credentials. It is git-ignored. Do not commit it, quote the credentials, or paste them into any document, issue, or chat log.
+- In the shared account, change only the `k01-avela` tunnel and its hostname, and log out afterwards.
+- Peer keys are shown once when created and stored hashed. Revoke a key by deactivating it.
+- Rotate `AVELA_JWT_SECRET` and the demo password if either appears in a commit, screenshot, or video.
 
-Treat uploaded files as untrusted. Validate allowed size, MIME/content type, and storage bounds; prevent executable serving; remove unnecessary metadata where feasible; use private access. Explain that attachments are optional and do not guarantee remote diagnosis. Do not send images or health narratives to an external AI provider without a separately reviewed need and data policy.
+## Data Minimization
 
-## Content Governance
+Collect only what the demo journey needs: complaint, onset, course, optional context, area, facility. No national ID, home address, or exact location is stored; the area is one of two cities. Screenshots and the video show only fictional accounts.
 
-Each published guidance item needs source title/link, source date if known, content version, reviewer/review status, and applicability limits. Unreviewed text may appear in a labeled design fixture but must not masquerade as operational advice. Keep environmental interpretation separate from staff-authored personalized instructions.
+## Guidance Content
 
-## Release Boundaries
+Each guidance item carries its source title and link, version, and review status. Unreviewed text is labelled as such in the app.
 
-A successful classroom demo establishes software behavior under synthetic scenarios. It does not establish diagnostic accuracy, safety in actual emergencies, hospital integration permission, clinical staffing, regulatory compliance, or health benefit. Document these limitations beside the demo and in its handoff.
+## Stretch: Attachments
+
+If A-11 starts: files are untrusted, size and type are checked, storage is private, retrieval checks ownership, and no real photo is used as a fixture. No image or complaint text is sent to an external AI service.
+
+## What a Successful Demo Shows
+
+It shows that the software behaves as specified with fictional data. It does not show diagnostic accuracy, safety in a real emergency, staffing, hospital integration, or a health benefit.
