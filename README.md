@@ -18,7 +18,7 @@ Available now, in the core API:
 - Staff claim a report, ask for more information, publish a response, and close it.
 - Staff publish an examination result that only the report's owner can read.
 
-Planned for the 13 December release: area PM2.5 forecast, exposure context on each report, an anonymous area health signal for other groups, the Android app, and integration with two other groups' services. Progress is in [docs/TODO.md](docs/TODO.md).
+Planned for the 13 December release: area PM2.5 forecast, exposure context on each report, an anonymous area health signal for other groups, a simulated facility directory, versioned examination results, the Android app, and integration with Veriqu (protective products) and FlowGanic (waste recap per area). The domain follows the DDD paper submitted on 16 November, [docs/Makalah_DDD.docx](docs/Makalah_DDD.docx). Progress is in [docs/TODO.md](docs/TODO.md).
 
 All accounts, staff, and cases are fictional. Avela does not diagnose and is not a clinical service.
 

@@ -1,10 +1,36 @@
 # Documentation Validation Report
 
-**Date:** 12 November 2026 for the latest revision; earlier sections are dated 10 November 2026 and describe the repository as it was then.
+**Date:** 17 November 2026 for the latest revision; earlier sections keep their own dates and describe the repository as it was then.
 
 **Scope:** Documentation checks. The only code check is the existing core test suite.
 
-## Latest Revision: Realignment with Decisions and Built Code (12 November 2026)
+## Latest Revision: Alignment with the Submitted DDD Paper (17 November 2026)
+
+The DDD paper was submitted on 16 November as `Makalah_DDD.docx`. The owner made it the source of truth (D-22), moved the M2 deadline to 23 November, kept M3 and M4 as they were, and took on all backend, integration, and mobile work with Mishael helping on the front-end redesign (D-19). No file in `services/` or `infra/` was changed.
+
+What changed:
+
+- Removed: `MAKALAH_DDD.md`, `HANDOFF_CHAT_2026-11-10.md`, `diagrams/subdomain-avela.drawio`, and `diagrams/preview-makalah.html`. The draft and diagram were older than the submitted paper.
+- DOMAIN_MODEL was rewritten from the paper: ten bounded contexts, the paper's context map, and its subdomain decomposition.
+- New decisions D-22 to D-27 record what the paper fixes: Veriqu and FlowGanic as partners, a facility directory Avela builds itself, area picked from a list, versioned results, and guidance in the public API. P-06 proposes how the paper's identity verification works in the prototype.
+- PRD gained US-13, US-14, and FR-17. ARCHITECTURE and TODO gained A-30 (facility directory) and A-31 (versioned results) in M3. TEST_PLAN gained T-34 to T-36.
+- API_CONTRACT, PRODUCT_FLOWS, DATA_SOURCES, SAFETY_PRIVACY, DESIGN, BRANCH_PLAN, AGENTS, REFERENCES, the peer-integration skill, and both README files now follow the paper.
+
+Checks run from the repository root with an inline, read-only Python script (pathlib, re):
+
+- 24 Markdown files; 79 relative links; none broken.
+- 32 task IDs in ARCHITECTURE match the 32 in TODO.
+- Every A, R, D, P, Q, C, T, US, FR, NFR, G, and S identifier used in a current document is defined or listed as resolved.
+- No current document mentions peer group A, the old peer slots, a location permission, the public facility endpoint, the old paper draft, or the 22 and 29 November dates.
+- `pytest -q` in `services/core`: 8 passed.
+
+Not checked:
+
+- The paper's text was read from the .docx XML; its embedded diagram image was not inspected.
+- Veriqu's and FlowGanic's real endpoints and schemas are unknown until the contracts are written (Q-03), so the adapter descriptions are Avela's side only.
+- The core does not yet do what D-24, D-26, and D-27 describe; A-30, A-31, and A-25 cover that work.
+
+## Earlier Revision: Realignment with Decisions and Built Code (12 November 2026)
 
 Task A-21. The documents were rewritten to match the decisions of 12 November (D-06, D-08, D-14 to D-21), the core service in `services/core`, and a full re-read of the assignment deck. No file in `services/` or `infra/` was changed.
 
@@ -12,7 +38,7 @@ What changed:
 
 - PRD, ARCHITECTURE, TODO, AGENTS, WORKFLOW, DECISIONS, COURSE_REQUIREMENTS, DOMAIN_MODEL, API_CONTRACT, PRODUCT_FLOWS, TEST_PLAN, SAFETY_PRIVACY, DATA_SOURCES, BRANCH_PLAN, and the documentation index were rewritten. DESIGN and REFERENCES were edited in place.
 - New files: root `README.md`, root `CLAUDE.md` (imports `docs/AGENTS.md`), and `skills/integrate-peer-api/SKILL.md`.
-- `MAKALAH_DDD.md`, `diagrams/subdomain-avela.drawio`, and `diagrams/preview-makalah.html` were updated for the exposure context, the area health signal, and the pilot-area catalogue.
+- `MAKALAH_DDD.md`, `diagrams/subdomain-avela.drawio`, and `diagrams/preview-makalah.html` were updated for the exposure context, the area health signal, and the pilot-area catalogue. All three were removed on 17 November after the paper was submitted.
 - `.gitignore` now excludes the assignment PDF and the local `project-setup/` copy.
 
 Checks run from the repository root with an inline, read-only Python script (pathlib, re, PyYAML):

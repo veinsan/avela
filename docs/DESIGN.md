@@ -157,7 +157,7 @@ components:
 
 ## Overview
 
-**Status:** Baseline for implementation (D-09), updated 12 November 2026 for the exposure context, the community signal, and the staff screens. No interface exists yet, so nothing here has been checked on a device. The mobile theme module mirrors the frontmatter; change a token here first.
+**Status:** Baseline for implementation (D-09), updated 12 November 2026 for the exposure context, the community signal, and the staff screens, and 17 November 2026 for the DDD paper (partner sections, facility directory, area list). No interface exists yet, so nothing here has been checked on a device. The mobile theme module mirrors the frontmatter; change a token here first.
 
 The direction is a clear personal health companion with the readability of a well-organized field guide: warm light surfaces, deep botanical text, restrained teal actions, and source/time information close to environmental values. Brand character comes from proportion, spacing, and precise language. It does not need smoke imagery, a medical mascot, gradients, glass effects, or a dashboard full of interchangeable cards.
 
@@ -226,12 +226,12 @@ Honor safe areas, display cutouts, system navigation, and keyboard insets. All i
 
 | Surface | Reading order | Primary action | Avoid |
 | --- | --- | --- | --- |
-| Home | Location/context; environmental value and provenance; timeline; preparation summary; latest report status | View preparation, or open latest staff response when one exists | Multiple equally dominant buttons, health score gauges, decorative full-screen maps |
+| Home | Chosen area; environmental value and provenance; timeline; community signal; FlowGanic waste recap; preparation summary; latest report status | View preparation, or open latest staff response when one exists | Multiple equally dominant buttons, health score gauges, decorative full-screen maps |
 | Reports | Availability banner; ongoing report; chronological history | Start a report when appropriate | Claiming unread/submitted reports are monitored |
 | Report form | Purpose and availability; grouped questions; optional attachment; review and submit | Continue or send, one step at a time | Hiding required labels, resetting valid input on error |
 | Report detail | Current state; latest attributed response; timeline; submitted information | Reply if information was requested, otherwise read follow-up | A progress bar suggesting guaranteed clinical resolution |
-| Facilities | Area and filters; readable service list; optional map toggle | Open facility details | Inferring capacity from a map marker or sorting as a guaranteed referral |
-| Examination result | Identity context; facility/author/date; result; follow-up | View the relevant next step | Automatically generated diagnosis presented as signed care |
+| Facilities | Area and service filter; simulation label; readable list with services and schedule | Open facility details | Inferring capacity from a map marker or sorting as a guaranteed referral |
+| Examination result | Identity context; facility/author/date; result; next steps; version history when corrected | View the relevant next step | Automatically generated diagnosis presented as signed care |
 | Account | Profile, chosen area, privacy and session controls | Contextual save | Decorative statistics unrelated to care |
 | Queue (staff) | Facility name; state filter; reports oldest first with state and waiting time | Open a report | Color-only urgency, sorting that hides old reports |
 | Review (staff) | State; complaint; exposure context; timeline; action area | The one action valid for the current state | Showing respond and close together; hiding who claimed the report |
@@ -289,6 +289,12 @@ The community signal is one caption-size row under the forecast: the 7-day repor
 
 Use a short heading and a small number of readable actions, linking to the fuller reviewed source. Show review status where appropriate. A preparation link and a symptom-report link serve different needs; do not turn the latter into an automated diagnosis promise. Exact clinical wording requires review and remains outside this visual specification.
 
+Protective products from Veriqu sit below the guidance text, never above it. Each shows the product name, the rating summary in text, and "Sumber: Veriqu". They are catalogue entries, not prescriptions, and the section disappears into one unavailable line when Veriqu is down.
+
+### Partner Environment Section
+
+FlowGanic's waste recap is a short list on Beranda below the community signal: waste type and managed volume with its unit, the period, and "Sumber: FlowGanic". It uses no status color and makes no claim about smoke or health.
+
 ### Form and Attachment
 
 Attachments are a stretch item (A-11); the attachment rules below apply only if it is built.
@@ -315,7 +321,7 @@ Distinguish submitted, in review, awaiting information, responded, and closed. E
 
 ### Facility List
 
-Show facility name, relevant services, area/distance basis, and last operational verification when known. Separate unknown opening status from closed. Display straight-line distance only as approximate distance, not travel time or safe-route ranking. Provide attribution; map, geocoding, and facility availability have separate providers and freshness rules.
+Show facility name, relevant services, area, and opening schedule. Separate unknown opening status from closed. The directory is simulated (D-24), so the list carries the simulation label. No distance, map, or route ranking: the app does not know the resident's location (D-25).
 
 ### Copy and Failure States
 
@@ -327,7 +333,7 @@ Show facility name, relevant services, area/distance basis, and last operational
 | Forecast context | Prakiraan model untuk wilayah ini, not a sensor claim |
 | Staff unavailable | Layanan peninjauan sedang tidak tersedia. |
 | No reports | Belum ada laporan. Explain what submitting does before offering the action. |
-| Optional location denied | Pilih wilayah secara manual. |
+| Partner data unavailable | Data mitra sedang tidak tersedia. |
 | Demo | Simulasi tugas kuliah, not a clinical service promise |
 
 Do not display reassuring medical copy as a default empty state. A successful submit toast is supplementary; the persistent report state provides evidence. Existing results remain readable when an unrelated public API fails.

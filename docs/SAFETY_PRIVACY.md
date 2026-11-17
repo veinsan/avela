@@ -24,7 +24,8 @@ A smoke forecast is not an evacuation order and does not make a route or a home 
 | Class | Examples | Handling |
 | --- | --- | --- |
 | Public context | PM2.5 snapshots, guidance | Stored with source and time; shown with attribution |
-| Public directory | Facility name, services, hours from a peer | Shown with its source and retrieval time |
+| Public directory | Simulated facility name, services, schedule | Labelled as simulation |
+| Partner data | Veriqu products, FlowGanic waste recap | Shown with the group's name and retrieval time; a product is not medical advice; no resident data is sent to partners |
 | Sensitive case data | Reports, events, results | Synthetic only; owner and facility staff only |
 | Aggregate signal | Report counts per area and day | Published under the rules below |
 | Operational data | Request IDs, error codes | No complaint text in logs |

@@ -67,17 +67,20 @@ Report body today, with fictional values:
 | --- | --- | --- | --- |
 | `GET /api/v1/areas` | Anyone, rate limited | Lists the pilot areas | A-23 |
 | `GET /api/v1/areas/{areaId}/advisory` | Anyone, rate limited | Latest snapshot, category, age, and the 7-day community signal | A-23 |
-| `GET /api/v1/guidance` | Anyone, rate limited | Guidance items with sources and version | A-12 |
+| `GET /api/v1/guidance` | Anyone, rate limited | Guidance items with source, version, and review status | A-12 |
+| `GET /api/v1/facilities?areaId=` | Anyone, rate limited | Simulated facility directory with services and opening schedule | A-30 |
+| `GET /api/v1/facilities/{id}` | Anyone, rate limited | One facility; unknown hours are null | A-30 |
 | `PUT /api/v1/internal/areas/{areaId}/snapshot` | Integration service, scope `snapshots:write` | Stores a snapshot | A-23 |
 | `GET /api/v1/public/areas` | Peer key | Same data as `/areas` | A-25 |
 | `GET /api/v1/public/areas/{areaId}/advisory` | Peer key | Same data as the open advisory | A-25 |
 | `GET /api/v1/public/areas/{areaId}/health-signal?days=7` | Peer key, scope `signal:read` | Daily report counts and totals per disposition; `days` up to 30 | A-25 |
-| `GET /api/v1/public/facilities` | Peer key | Facilities that accept Avela reports, with area and review-service status | A-25 |
+| `GET /api/v1/public/guidance` | Peer key, scope `guidance:read` | Avela's own guidance items with sources; no peer data | A-25 |
 
 Changes to built endpoints in v0.2:
 
 - `POST /reports` adds the required field `areaId` (A-24).
 - Report detail adds `exposureContext` (A-24).
+- Correcting a published result creates a new version linked to the previous one; result reads return the latest version and its history (A-31).
 
 ### Advisory response
 
@@ -148,7 +151,7 @@ Dates are calendar days in WIB. Cancelled reports are not counted. A hidden coun
 ## Peer Access
 
 - Each group gets one key, created with a command on the STB and shown once. The core stores its hash, the group name, and its scopes.
-- Default scopes for a peer: `areas:read`, `signal:read`. Only the integration service has `snapshots:write`.
+- Default scopes for a peer: `areas:read`, `signal:read`, `guidance:read`. Only the integration service has `snapshots:write`.
 - A missing or unknown key returns `401 UNAUTHENTICATED`. A key without the scope returns `403 FORBIDDEN`.
 - One test account (a resident) is shared with peers so they can try the app-user endpoints.
 - Peers report problems as GitHub issues on `veinsan/avela`.
@@ -159,22 +162,19 @@ Base URL `https://avela-int.stei.fun`. The app calls these; the service calls th
 
 | Endpoint | Function | Notes |
 | --- | --- | --- |
-| `GET /facilities?areaId=` | Facility list from peer group A | Each item names its provider and retrieval time; unknown opening status stays unknown |
-| `GET /facilities/{id}` | Facility detail from peer group A | Flags facilities that accept Avela reports |
-| One endpoint for peer group B | Depends on the group chosen in Q-03 | Same envelope |
+| `GET /guidance/products` | Protective products from Veriqu's catalogue, with rating summary | Shown in Panduan; the source is named |
+| `GET /areas/{areaId}/waste` | FlowGanic's managed waste volume per waste type, mapped to the pilot area | Shown on Beranda; an unmapped area returns `unavailable` |
 | `GET /health` | Liveness | - |
 
 Every response carries `source`, `retrievedAt`, and `freshness` (`fresh`, `stale`, `unavailable`). An upstream call is abandoned after 10 seconds. The scheduled job pushes one snapshot per area to the core every 60 minutes.
 
-## Peer Integration Slots
+## Peer Integrations
 
-Avela needs two different groups (Q-03). Public APIs such as Open-Meteo do not count.
+The two groups are fixed by the DDD paper (D-23). Public APIs such as Open-Meteo do not count.
 
-| Slot | What Avela needs | Good candidates in the Registry | Feature in the app |
-| --- | --- | --- | --- |
-| A | Facilities with location, services, and opening hours | A Health group with a facility or queue service | Fasilitas tab and Detail Fasilitas |
-| B, option 1 | Road or flood reports near a route | A Smart City group with citizen reports | Travel warning on Detail Fasilitas when staff advise an onsite visit |
-| B, option 2 | Health or safety learning content | An Education group with materials or quizzes | Extra reading under Panduan |
-| B, option 3 | Habit or symptom journal | Another Health group | Link from Akun to a personal log |
+| Group | Their context | What Avela takes | Translation in the adapter | Feature in the app |
+| --- | --- | --- | --- | --- |
+| Veriqu | Katalog Produk | Products with rating summaries | Product to protective-product item: name, category, rating summary, link | Product recommendations in Panduan |
+| FlowGanic | Koordinasi Distribusi Sampah | Managed waste volume per RW or kelurahan and waste type | Their area code to Avela's pilot area through the agreed mapping; volumes summed per waste type | Waste section in the environment part of Beranda |
 
-Pick the options whose owners answer first and whose APIs are live. Record each agreement with [the peer-integration skill](skills/integrate-peer-api/SKILL.md). A mock built from a peer's contract is allowed when the peer is late after 23 November; it is labelled as a mock in the app, the README, and the video.
+No resident data is sent to either group. Their endpoint paths, limits, and keys go in the contract (Q-03). Record each agreement with [the peer-integration skill](skills/integrate-peer-api/SKILL.md). A mock built from a peer's contract is allowed when the peer is late after 23 November; it is labelled as a mock in the app, the README, and the video.

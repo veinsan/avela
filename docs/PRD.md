@@ -4,7 +4,7 @@
 
 **Owner:** Riantama Putra. **Team:** Mishael Gilland, Riantama Putra.
 
-**Updated:** 12 November 2026.
+**Updated:** 17 November 2026. The submitted DDD paper is the source of truth (D-22).
 
 ## 1. Problem Statement
 
@@ -32,30 +32,32 @@ Fewer unnecessary trips and faster care are long-term hypotheses. A classroom de
 - **Residents (primary):** adults in Pekanbaru and Palangka Raya during smoke episodes. In the coursework they are fictional accounts.
 - **Facility staff (secondary):** reviewers at a facility that accepts Avela reports. In the coursework they are simulated accounts, labelled as such.
 - **Peer groups:** other student teams that consume Avela's public API.
-- **Project owner and team:** decide scope, secure two peer integrations, build, and present.
+- **Project owner and team:** decide scope, secure the Veriqu and FlowGanic integrations, build, and present.
 - **Coding agent:** builds from this document and [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 4. User Stories
 
 | ID | Story | Acceptance criteria |
 | --- | --- | --- |
-| US-01 | As a resident, I want the smoke conditions for my area so that I know what is outside. | I pick an area from a list or the app picks the nearest pilot area from my location. The screen shows PM2.5 value, unit, valid time, source, the label "Prakiraan model", and the snapshot's age. A snapshot older than 2 hours is marked stale. With no snapshot, the screen says the data is unavailable and shows no value. |
-| US-02 | As a resident, I want protection guidance so that I can prepare before going out. | Each guidance item shows its source. No item states a disease probability. |
-| US-03 | As a resident, I want to report symptoms from home so that staff can review them. | The form validates complaint, onset, course, area, and facility. A successful submit returns a report ID and the state "Terkirim, belum ditinjau". Retrying the same submit does not create a second report. |
+| US-01 | As a resident, I want the smoke conditions for my area so that I know what is outside. | I pick Pekanbaru or Palangka Raya from a list; the app does not ask for my location. The screen shows PM2.5 value, unit, valid time, source, the label "Prakiraan model", and the snapshot's age. A snapshot older than 2 hours is marked stale. With no snapshot, the screen says the data is unavailable and shows no value. |
+| US-02 | As a resident, I want protection guidance so that I can prepare before going out. | Each guidance item shows its source and review status. Protective products from Veriqu's catalogue appear with their rating summary and "Veriqu" as the source; when Veriqu is down, the guidance still shows. No item states a disease probability. |
+| US-03 | As a resident, I want to report symptoms from home so that staff can review them. | The form validates complaint, onset, course, relevant history, area, and facility. A successful submit returns a report ID and the state "Terkirim, belum ditinjau". Retrying the same submit does not create a second report. |
 | US-05 | As a resident, I want to see whether someone has reviewed my report so that I do not wait on a false assumption. | The report shows its state and a timeline with each author's role and time. Emergency information opens without signing in and without submitting a report. |
 | US-06 | As staff, I want to claim a report, ask for more information, and publish a response from my phone so that the resident knows the next step. | A staff account sees a Queue tab limited to its facility. Each action sends the report's current version; a stale version is rejected. The response records the reviewer and a disposition: self-care, remote follow-up, or onsite assessment. |
-| US-07 | As a resident, I want facility information so that I can find where to go. | The list comes from a peer group's service and names that source. An unknown opening status is shown as unknown. When the peer is down, the screen says so and the rest of the app keeps working. |
-| US-08 | As a resident, I want my examination result so that I can follow the instructions. | Only the owner sees a published result. It shows author, facility, and publication time. |
+| US-07 | As a resident, I want to find a facility with its services and opening schedule so that I know where to go. | The list is Avela's simulated facility directory and is labelled as simulation. An unknown schedule is shown as unknown. |
+| US-08 | As a resident, I want my examination result so that I can follow the instructions. | Only the owner sees a published result. It shows the staff member, facility, time, and next steps. A correction appears as a new version and the earlier version stays readable. |
 | US-09 | As a peer group, I want a documented API and a key so that I can use Avela's data in my app. | Swagger UI and an OpenAPI file are public. Each group gets its own key and a test account. A missing or wrong key returns 401. |
 | US-10 | As staff, I want the area's smoke forecast around the time symptoms started so that I read the complaint in context. | Report detail shows mean and peak PM2.5 for the window from onset to submission, the source, and the label "Prakiraan wilayah, bukan dosis pribadi". When no snapshot covers the window, it says the context is unavailable and the report stays reviewable. |
 | US-11 | As a peer group, I want anonymous counts of smoke-related reports per area so that my app can show where complaints are rising. | With a valid key, the endpoint returns daily counts for up to 30 days and totals per disposition. Counts from 1 to 4 are hidden. The payload has no complaint text, account, or facility. |
 | US-12 | As a resident, I want to know whether others in my area are reporting complaints so that I take the conditions seriously. | Home shows the number of reports from the area in the last 7 days, or "Belum cukup data" when the count is hidden. |
+| US-13 | As a resident, I want to see how waste is managed in my area so that I understand local environmental conditions. | Beranda shows FlowGanic's managed waste volume per waste type for the area, with source and time. With no data for the area, or with FlowGanic down, the section says so and the rest of Beranda works. |
+| US-14 | As a peer group, I want Avela's smoke advisory and protection guidance so that my app can warn its users. | With a valid key, the advisory and guidance endpoints return non-sensitive data only. |
 
 US-04 (optional photo attachment) is a stretch item; see section 7.
 
 ## 5. Functional Requirements
 
-| ID | Requirement | Stories | State on 12 Nov |
+| ID | Requirement | Stories | State on 17 Nov |
 | --- | --- | --- | --- |
 | FR-01 | Authenticate residents and staff; limit staff to their facility. | US-03, US-06, US-08 | Core API built and tested |
 | FR-02 | Serve the latest PM2.5 snapshot per area with unit, valid time, source, and age. | US-01 | Planned |
@@ -63,15 +65,16 @@ US-04 (optional photo attachment) is a stretch item; see section 7.
 | FR-04 | Persist symptom reports and append-only updates. | US-03 | Core API built and tested |
 | FR-06 | Staff queue, claim, information request, response with disposition, close. | US-06 | Core API built and tested; screens planned |
 | FR-07 | Show report state and timeline to the resident. | US-05 | Core API built; screens planned |
-| FR-08 | Show facilities from a peer service with honest availability. | US-07 | Planned |
-| FR-09 | Publish examination results to the report's owner. | US-08 | Core API built and tested; screen planned |
-| FR-10 | Use the services of at least two other groups in visible features. | US-07 | Planned; groups not chosen (Q-03) |
-| FR-11 | Publish an API with documentation, per-group keys, and a test account. | US-09 | Planned |
+| FR-08 | Serve the simulated facility directory with services and opening schedule. | US-07 | Facility ID and name built; directory planned (A-30) |
+| FR-09 | Publish examination results to the report's owner; store a correction as a new version. | US-08 | Publication built and tested; versioning planned (A-31); screen planned |
+| FR-10 | Use Veriqu's product catalogue and FlowGanic's waste recap in visible features. | US-02, US-13 | Planned; contracts pending (Q-03) |
+| FR-11 | Publish an API with documentation, per-group keys, and a test account. | US-09, US-14 | Planned |
 | FR-12 | Handle loading, empty, stale, unavailable, and retry states on every data screen. | All | Planned |
 | FR-13 | Freeze an exposure context onto each report at submission. | US-10 | Planned |
 | FR-14 | Publish the area health signal with small-count suppression. | US-11, US-12 | Planned |
 | FR-15 | Accept PM2.5 snapshots pushed by the integration service. | US-01, US-10 | Planned |
 | FR-16 | Show staff screens only to staff accounts in the same app. | US-06 | Planned |
+| FR-17 | Show an in-app update marker when a report changes state or a result is published. | US-05, US-08 | Planned (A-26) |
 
 FR-05 (attachments) is a stretch item. Push notifications, booking, pharmacy orders, and video consultation are not part of the product.
 
@@ -97,11 +100,13 @@ Read latency and peer-key quotas are set after the first STB measurement (A-04, 
 **In scope**
 
 - Two pilot areas with pushed PM2.5 snapshots and a referenced category.
-- Guidance with sources and an emergency screen that needs no account.
+- Guidance with sources, Veriqu protective products, and an emergency screen that needs no account.
 - Symptom report with exposure context, timeline, clarification, and cancellation.
 - Staff queue, review, response, and examination result in the same APK.
-- Facility list from a peer service, and one more feature from a second peer.
-- Public API: areas, smoke advisory, area health signal, facility review status.
+- FlowGanic waste recap for the area on Beranda.
+- Simulated facility directory with services and schedule.
+- Versioned examination results and in-app update markers.
+- Public API: areas, smoke advisory, area health signal, protection guidance.
 - Core on the STB, integration service off the STB, release APK, and all course artifacts.
 
 **Stretch, only after M3 passes**
@@ -112,12 +117,13 @@ Read latency and peer-key quotas are set after the first STB measurement (A-04, 
 
 **Out of scope**
 
-Diagnosis or prescribing by software; emergency dispatch; real patient data or hospital record exchange; evacuation orders and route safety; shelter and logistics; billing; a staff web console; geocoding search; nationwide coverage; 3D visuals; a multi-agent LLM pipeline.
+Diagnosis or prescribing by software; emergency dispatch; real patient data or hospital record exchange; evacuation orders and route safety; shelter and logistics; billing; a staff web console; device location and geocoding search; nationwide coverage; 3D visuals; a multi-agent LLM pipeline.
 
 **Changes**
 
 | Date | Change |
 | --- | --- |
+| 2026-11-17 | Aligned with the submitted DDD paper (D-22 to D-27): partners are Veriqu and FlowGanic; Avela builds the facility directory; the area comes from a list only; result corrections are versioned; in-app update markers; guidance joins the public API. Added US-13, US-14, FR-17. |
 | 2026-11-12 | Scope approved. Added exposure context (US-10), area health signal (US-11, US-12), in-app staff screens, and two pilot areas. Attachments and custom forecasting moved to stretch. Geocoding removed. |
 
 Change scope here first, then update ARCHITECTURE, TEST_PLAN, and TODO in the same change.

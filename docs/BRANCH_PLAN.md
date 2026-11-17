@@ -39,6 +39,8 @@ Create a branch when its work starts.
 | `feat/integration-environment` | A-02, A-07 | M2 |
 | `feat/mobile-reports` | A-26 | M2 |
 | `feat/peer-integrations` | A-10 | M3 |
+| `feat/facility-directory` | A-30 | M3 |
+| `feat/result-versions` | A-31 | M3 |
 | `feat/mobile-staff` | A-27 | M3 |
 | `feat/mobile-guidance-states` | A-12 | M3 |
 | `chore/mobile-tests` | A-28 | M3 |
@@ -70,7 +72,7 @@ Both members need visible commits: individual grades follow GitHub contribution 
 | Tag | Meaning |
 | --- | --- |
 | `v0.1.0` | Core public on the STB and listed in the Registry (M2) |
-| `v0.2.0` | Resident and staff flow integrated with two peers (M3) |
+| `v0.2.0` | Resident and staff flow integrated with Veriqu and FlowGanic (M3) |
 | `v1.0.0` | Submission build (M4) |
 
 Record the commit deployed to the STB, to the integration host, and built into the APK.

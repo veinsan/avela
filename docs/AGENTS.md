@@ -2,7 +2,7 @@
 
 Avela is a mobile companion for residents in wildfire-smoke areas: area smoke forecast, symptom reports reviewed by facility staff, and onsite examination results. It is the joint coursework for II3160 (TST) and II3140 (PWAM), due 13 December 2026.
 
-Read [TODO.md](TODO.md) and [WORKFLOW.md](WORKFLOW.md) before starting. Scope is in [PRD.md](PRD.md); the plan is in [ARCHITECTURE.md](ARCHITECTURE.md); decisions are in [DECISIONS.md](DECISIONS.md).
+Read [TODO.md](TODO.md) and [WORKFLOW.md](WORKFLOW.md) before starting. The submitted DDD paper, [Makalah_DDD.docx](Makalah_DDD.docx), is the source of truth for the domain and partners; [DOMAIN_MODEL.md](DOMAIN_MODEL.md) is its English copy. Scope is in [PRD.md](PRD.md); the plan is in [ARCHITECTURE.md](ARCHITECTURE.md); decisions are in [DECISIONS.md](DECISIONS.md).
 
 The root `CLAUDE.md` imports this file. Agents that do not read `CLAUDE.md` must open this file themselves.
 
@@ -61,7 +61,9 @@ One bounded context per module in `services/core/app`. A new context gets its ow
 - [x] Examination result: draft, publish, owner-only read.
 - [x] Gateway configuration with rate limits and container limits.
 - [ ] Areas, pushed PM2.5 snapshots, exposure context on reports.
-- [ ] Peer API keys and public endpoints.
+- [ ] Peer API keys and public endpoints (advisory, health signal, guidance).
+- [ ] Facility directory with services and schedule.
+- [ ] Versioned examination results.
 - [ ] Integration service.
 - [ ] Mobile app.
 - [ ] Deployment on the STB.

@@ -18,7 +18,7 @@
 | A-01 | Select workflow and demo boundary | Done | D-06, D-14, D-15 confirmed on 12 Nov. |
 | A-21 | Realign documentation with decisions and built code | Done | 12 Nov: checks recorded in VALIDATION_REPORT. |
 | A-22 | Reserve the Registry name and commit the baseline | Pending | Owner reserves the name and runs the Git commands. |
-| A-03 | Agree peer integrations | In progress | Veriqu and FlowGanic are named in the paper. Send each the contract request in `skills/integrate-peer-api`; pick a backup. |
+| A-03 | Agree peer integrations | In progress | Veriqu and FlowGanic are fixed by the paper (D-23). Send each the contract request in `skills/integrate-peer-api`, agree FlowGanic's area codes, pick a backup. |
 | A-04 | Validate the stack on the STB | Pending | Needs the STB and A-22. Docker is not installed on the development machine, so the image build is untested. |
 
 ## M1: DDD paper, core v0.2, app skeleton, by 16 November
@@ -30,7 +30,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | A-16 | Submit the DDD paper | Done | Submitted 16 Nov as `Makalah_DDD.docx`. |
 | A-06 | Identity and ownership | Done | `test_health_and_login`, `test_resident_cannot_see_other_residents_data`, `test_staff_limited_to_own_facility` pass. |
 | A-08 | Symptom reports API | Done | `test_report_validation`, `test_retry_is_idempotent_and_conflicting_reuse_rejected`, `test_cancel_only_before_review` pass. |
-| A-09 | Staff review and results API | Done | `test_stale_version_loses`, `test_full_review_cycle_and_result_delivery` pass. Result corrections are not versioned yet. |
+| A-09 | Staff review and results API | Done | `test_stale_version_loses`, `test_full_review_cycle_and_result_delivery` pass. Result versioning is A-31. |
 | A-23 | Areas and snapshot ingestion | Pending | Add `areas`, `area_snapshots`, the push endpoint, and the advisory endpoint. |
 | A-24 | Exposure context on reports | Pending | Requires A-23. `areaId` becomes a required report field; update the tests. |
 | A-25 | Peer API keys and public endpoints | Pending | Requires A-23. Confirm P-04 first. |
@@ -50,10 +50,12 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
-| A-10 | Integrate two peer services | Pending | Blocked on A-03 for real endpoints; use contract mocks, labelled, if a peer is late after 23 Nov. |
+| A-10 | Integrate Veriqu and FlowGanic | Pending | Blocked on A-03 for real endpoints; use contract mocks, labelled, if a peer is late after 23 Nov. |
 | A-27 | Staff screens in the app | Pending | Requires A-05. |
 | A-12 | Guidance, emergency screen, failure states | Pending | Requires Q-08 for content sources. |
 | A-28 | Mobile test suite and test table | Pending | Requires A-10, A-26, A-27. |
+| A-30 | Facility directory | Pending | Requires A-23. Add area, services, and schedule to `facilities` and a list endpoint (D-24). |
+| A-31 | Versioned examination results | Pending | Confirm P-06, then add result versions (D-26). |
 | A-29 | Peer support and uptime | Pending | Starts when A-18 is done. |
 
 ## M4: Release and submission, by 13 December
@@ -78,3 +80,4 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | 2026-11-11 | Core API v1 built | 8 pytest tests passed locally; a live smoke test created a report on a temporary database. |
 | 2026-11-12 | Documentation realigned (A-21) | `pytest -q` in `services/core`: 8 passed. Document checks in VALIDATION_REPORT. |
 | 2026-11-17 | DDD paper submitted (A-16); M2 moved to 23 Nov; task split updated (D-19) | Paper drafts and diagram removed; `Makalah_DDD.docx` is the record. |
+| 2026-11-17 | Documents aligned with the submitted paper (D-22 to D-27); A-30 and A-31 added | Checks in VALIDATION_REPORT; `pytest -q`: 8 passed. |

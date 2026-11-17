@@ -12,6 +12,7 @@
 
 | Question | Document |
 | --- | --- |
+| What is the domain, which contexts exist, and who are the partner groups? | [Makalah_DDD.docx](Makalah_DDD.docx), the DDD paper submitted on 16 November (D-22) |
 | What are we building and for whom? | [PRD.md](PRD.md) |
 | How is it built and in what order? | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | What is the status of each task? | [TODO.md](TODO.md) |
@@ -19,21 +20,20 @@
 | How should it look and behave? | [DESIGN.md](DESIGN.md) |
 | What does the course require, and where is the evidence? | [COURSE_REQUIREMENTS.md](COURSE_REQUIREMENTS.md) |
 
-When two documents disagree, the one in this table wins and the other gets fixed.
+When two documents disagree, the one in this table wins and the other gets fixed. The paper wins over every other document; [DOMAIN_MODEL.md](DOMAIN_MODEL.md) is its English working copy.
 
 ## Supporting Documents
 
 | Document | Purpose |
 | --- | --- |
 | [PRODUCT_FLOWS.md](PRODUCT_FLOWS.md) | Resident and staff journeys, report states, navigation, demo script |
-| [DOMAIN_MODEL.md](DOMAIN_MODEL.md) | Bounded contexts, entities, and rules |
-| [API_CONTRACT.md](API_CONTRACT.md) | Built and planned endpoints, peer integration slots |
+| [DOMAIN_MODEL.md](DOMAIN_MODEL.md) | English working copy of the paper: contexts, context map, subdomains, entities, rules |
+| [API_CONTRACT.md](API_CONTRACT.md) | Built and planned endpoints, Veriqu and FlowGanic integrations |
 | [DATA_SOURCES.md](DATA_SOURCES.md) | Provider choices and the remaining audit |
 | [API_RESEARCH.md](API_RESEARCH.md) | Provider requests run on 10 November |
 | [SAFETY_PRIVACY.md](SAFETY_PRIVACY.md) | Clinical boundaries, synthetic data, access, and secrets |
 | [TEST_PLAN.md](TEST_PLAN.md) | Acceptance scenarios and their status |
 | [BRANCH_PLAN.md](BRANCH_PLAN.md) | Branch names and merge rules |
-| [Makalah_DDD.docx](Makalah_DDD.docx) | DDD paper for Tugas 1 as submitted on 16 November; read-only record |
 | [REFERENCES.md](REFERENCES.md) | Sources and what each one supports |
 | [VALIDATION_REPORT.md](VALIDATION_REPORT.md) | Checks run on the documentation |
 | [skills/review-avela-readiness/SKILL.md](skills/review-avela-readiness/SKILL.md) | Review a feature or demo before calling it done |

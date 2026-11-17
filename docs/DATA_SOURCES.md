@@ -1,18 +1,19 @@
 # Data Sources
 
-**Updated:** 12 November 2026. Providers are chosen (D-13); the requests behind the choice are in [API_RESEARCH.md](API_RESEARCH.md). No adapter is built yet. Public providers do not count toward the two-group integration requirement.
+**Updated:** 17 November 2026. Providers are chosen (D-13); the requests behind the choice are in [API_RESEARCH.md](API_RESEARCH.md). No adapter is built yet. Public providers do not count toward the two-group integration requirement.
 
 ## Chosen Sources
 
 | Need | Source | Used for | State |
 | --- | --- | --- | --- |
 | Area PM2.5 forecast | Open-Meteo Air Quality, `cams_global` | Smoke advisory, exposure context | Probed for both pilot areas on 10 Nov; adapter planned (A-07) |
-| Facilities | Peer group A's service | Fasilitas tab | Group not chosen (Q-03) |
-| Second peer feature | Peer group B's service | See slots in [API_CONTRACT.md](API_CONTRACT.md) | Group not chosen (Q-03) |
+| Protective products | Veriqu's product catalogue | Product recommendations in Panduan | Contract pending (Q-03) |
+| Managed waste recap | FlowGanic's waste distribution service | Waste section on Beranda | Contract and area codes pending (Q-03) |
+| Facilities | Avela's simulated facility directory (D-24) | Fasilitas tab | ID and name seeded; services and schedule planned (A-30) |
 | Guidance | Text written from authoritative publications, with sources | Panduan, Darurat | Sources not chosen (Q-08) |
 | Local weather | BMKG village forecast | Optional weather panel | Stretch; needs verified area codes |
 
-Not used in the MVP: Open-Meteo Geocoding (two areas need a pick list), OpenAQ station observations (only needed for R-01).
+Not used in the MVP: Open-Meteo Geocoding and device location (the resident picks one of two areas from a list, D-25), OpenAQ station observations (only needed for R-01).
 
 ## Pilot Areas
 
@@ -40,9 +41,13 @@ The app shows a category next to the value only after the ISPU concentration bre
 
 [Specification](https://data.bmkg.go.id/prakiraan-cuaca/): three-day village forecasts at three-hour steps, 60 requests a minute per IP, BMKG attribution required. It needs the `adm4` code of a village in each pilot area. The only request run so far used BMKG's own Jakarta example. Weather does not measure PM2.5.
 
+## Partner Data
+
+Veriqu's products and FlowGanic's waste recap are shown with the group's name and the retrieval time. A product recommendation is a catalogue entry, not medical advice. FlowGanic reports by RW or kelurahan; the integration service maps those codes to the two pilot areas with the agreed mapping and drops a code it cannot map. No resident data goes to either group.
+
 ## Facilities
 
-Facility data comes from a peer group, not from OpenStreetMap or a public geocoder. A facility's existence in a list says nothing about staffing or capacity; opening status is shown as given, or as unknown. Shared Overpass servers and public Nominatim are not used as an app backend; their policies discourage it.
+Facility data is Avela's own simulated list (D-24), not OpenStreetMap or a public geocoder. A facility's existence in a list says nothing about staffing or capacity; opening status is shown as given, or as unknown. Shared Overpass servers and public Nominatim are not used as an app backend; their policies discourage it.
 
 ## Considered and Not Used
 

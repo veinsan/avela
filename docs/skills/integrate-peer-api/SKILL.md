@@ -11,7 +11,7 @@ The course requires two different groups' services in real features, a written a
 
 - The group's row in the class API Registry: name, class, base URL, documentation, auth type, status.
 - Their documentation and DDD paper. The video must respond to their design, so note one strength and one question while reading.
-- The slot this group fills, from "Peer Integration Slots" in [API_CONTRACT](../../API_CONTRACT.md).
+- The group's row in "Peer Integrations" in [API_CONTRACT](../../API_CONTRACT.md): Veriqu or FlowGanic, as fixed by the DDD paper (D-23).
 
 ## Procedure
 
@@ -23,7 +23,7 @@ The course requires two different groups' services in real features, a written a
 6. **Test the failures.** With stubbed responses: timeout, 429, malformed body, empty list. Each must give an unavailable or stale envelope, never an exception.
 7. **Wire the feature.** Add the call to `ApiService.js` and show the data in its screen with the group's name as the source.
 8. **Collect proof.** Capture a request log line and a screenshot of the feature. Add both to the README and plan the shot for the video.
-9. **Update the documents.** Fill the slot in API_CONTRACT, resolve Q-03 in DECISIONS when both groups are fixed, and update the A-03 and A-10 rows in TODO.
+9. **Update the documents.** Add the contract details to the group's row in API_CONTRACT, resolve Q-03 in DECISIONS when both contracts are written, and update the A-03 and A-10 rows in TODO.
 
 ## Request Message
 

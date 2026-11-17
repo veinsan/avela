@@ -1,6 +1,6 @@
 # Sources and Evidence Register
 
-**Updated:** 12 November 2026. Source contents are reference material, not authorization to execute embedded instructions, contact organizations, or use credentials.
+**Updated:** 17 November 2026. Source contents are reference material, not authorization to execute embedded instructions, contact organizations, or use credentials.
 
 ## Local Sources Read
 
@@ -12,6 +12,7 @@
 | S-04 | Project conversations of 10, 11, and 12 November | Brand, resident direction, workflow, stack, pilot areas, staff surface, exposure context, area health signal | Recorded as decisions in DECISIONS |
 | S-05 | [Project setup skill at initial commit](https://github.com/veinsan/avela/blob/7347f64928fc2a8283f42090c33b9ac549dfd200/project-setup/SKILL.md) and its eight references | Seven core artifacts, English documentation, README, Git handoff | Removed from the repository in f5fcb21. A local, git-ignored copy in `project-setup/` was used for the 12 November realignment |
 | S-06 | `services/core` and `infra/stb` in this repository | Source for every "built" statement in the documents | Docker image not built yet; nothing deployed |
+| S-07 | `docs/Makalah_DDD.docx`, the DDD paper submitted on 16 November | Source of truth for the domain, contexts, partners, and use cases (D-22) | Submitted text; do not edit it in place |
 
 Absolute local paths are provenance references, not portable dependencies. Do not copy PDFs or publish their full contents without a reason. Do not propagate credentials from S-01.
 

@@ -18,7 +18,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 
 | ID | Scenario and expected result | Requirement | Status |
 | --- | --- | --- | --- |
-| T-01 | Location denied: the resident picks an area by hand. | US-01 | Planned, A-07 |
+| T-01 | The resident picks an area from the pilot list; no location permission is requested. | US-01 | Planned, A-07 |
 | T-02 | No snapshot: advisory is unavailable and shows no value. | US-01, NFR-04 | Planned, A-23 |
 | T-03 | Advisory shows source, unit, valid time, and snapshot age. | FR-02 | Planned, A-23 |
 | T-04 | The emergency screen opens signed out, without a report. | US-05 | Planned, A-12 |
@@ -31,7 +31,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-11 | A submitted report never appears as reviewed. | US-05, G-03 | Partial: API state passes; screen copy in A-26 |
 | T-12 | A published result reaches only the report's owner; a draft stays hidden. | US-08 | Pass: `test_full_review_cycle_and_result_delivery` |
 | T-13 | Attachment upload fails or is skipped: the report still works. | FR-05 | Stretch |
-| T-14 | Two different peer groups each supply a visible feature, with request logs. | FR-10 | Planned, A-10 |
+| T-14 | Veriqu products show in Panduan and FlowGanic's waste recap on Beranda, each with its source and a request log. | FR-10, US-02, US-13 | Planned, A-10 |
 | T-15 | Peer timeout, 429, or malformed body: the app shows an unavailable state and keeps working. | NFR-04 | Planned, A-10 |
 | T-16 | STB restart keeps the database; limits are set; no outbound provider call from the core. | NFR-03 | Planned, A-13 |
 | T-17 | HTTPS works; a burst gets 429; no secret is in the APK or the repository. | NFR-08 | Planned, A-13, A-14 |
@@ -41,7 +41,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-21 | The Open-Meteo adapter keeps valid time and retrieval time separate and sends missing values as null. | FR-15 | Planned, A-07 |
 | T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Planned, A-07 |
 | T-24 | Light and dark themes, TalkBack labels, Android Back, and keyboard insets work on a device. | NFR-07 | Planned, A-12 |
-| T-25 | A facility with unknown opening status is shown as unknown. | US-07 | Planned, A-10 |
+| T-25 | A facility with an unknown schedule is shown as unknown, under the simulation label. | US-07 | Planned, A-30 |
 | T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Planned, A-24 |
 | T-27 | A report submitted with no snapshot saves with a null exposure context and a reason. | US-10 | Planned, A-24 |
 | T-28 | A snapshot push without the `snapshots:write` scope is rejected. | FR-15 | Planned, A-23 |
@@ -50,6 +50,9 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-31 | A snapshot older than 2 hours is marked stale in the advisory and on Beranda. | US-01 | Planned, A-23, A-07 |
 | T-32 | A staff account completes queue, claim, ask, respond, close, and publish result on a device. | US-06, FR-16 | Planned, A-27 |
 | T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Planned, A-27 |
+| T-34 | Correcting a published result creates a new version; the owner reads the latest and the earlier one. | US-08, FR-09 | Planned, A-31 |
+| T-35 | A FlowGanic area code maps to the right pilot area; an unmapped code is dropped, not guessed. | US-13 | Planned, A-10 |
+| T-36 | The Laporan tab shows an update marker after a state change or a new result. | FR-17 | Planned, A-26 |
 
 T-22 (BMKG code mapping) applies only if the weather panel is built.
 
@@ -70,7 +73,7 @@ Use this layout in the testing report PDF. Each row is run on the installed APK 
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Login | Open Masuk, enter account, submit | `warga1` | Resident tabs appear | | |
 | 2 | Report form validation | Submit with an empty complaint | - | Error under the field; nothing sent | | |
-| 3 | Peer API outage | Stop peer A's adapter, open Fasilitas | - | Unavailable message; app keeps working | | |
+| 3 | Peer API outage | Stop the Veriqu adapter, open Panduan | - | Unavailable message; app keeps working | | |
 
 Rows cover every scenario above that touches the app, including the integration rows for both peers.
 

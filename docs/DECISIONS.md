@@ -18,7 +18,7 @@
 | D-10 | PM2.5 is the pollutant shown. Values come from a provider forecast. | Owner, 10 Nov | A custom forecast model is a stretch item (P-03). |
 | D-11 | No real hospital or puskesmas is a partner. | Owner, 10 Nov | Facilities and staff are simulated and labelled in the app. |
 | D-12 | The owner stages, commits, and pushes. The agent does so only when the owner asks in that message. | Project-setup rule; owner practice on 10 Nov | The agent ends each task with the Git commands to run. |
-| D-13 | Open-Meteo Air Quality is the PM2.5 source. BMKG weather is optional. OpenAQ is not used in the MVP. | Evidence in [API_RESEARCH.md](API_RESEARCH.md) | Geocoding is dropped: two pilot areas need a pick list, not a search. |
+| D-13 | Open-Meteo Air Quality is the PM2.5 source. BMKG weather is optional. OpenAQ is not used in the MVP. | Evidence in [API_RESEARCH.md](API_RESEARCH.md) | Geocoding and device location are dropped: the resident picks a pilot area from a list (D-25). |
 | D-14 | Pilot areas are Pekanbaru (primary) and Palangka Raya (secondary). | Owner, 12 Nov | Seed data, BMKG codes, and facility samples cover both. |
 | D-15 | Staff use role-gated screens inside the same APK. | Owner, 12 Nov | No separate web console. |
 | D-16 | Each symptom report stores an exposure context: the area's PM2.5 forecast around symptom onset, frozen at submission. | Owner, 12 Nov | Staff see symptoms next to environmental context. |
@@ -26,6 +26,12 @@
 | D-18 | Class K01. Public core URL `https://avela.stei.fun`; integration service `https://avela-int.stei.fun`; tunnel name `k01-avela`. | Owner, 12 Nov; deck slides 12-13 | The Registry name `avela` still has to be reserved (A-22). |
 | D-19 | Team: Mishael Gilland (18224005) and Riantama Putra (18224061). Riantama does the backend, integration, and mobile work. Mishael helps redesign the front end. | DDD paper cover; owner, 17 Nov | Mishael's commits come from the redesign; both present in the video. |
 | D-20 | The STB core makes no outbound calls to public or peer APIs. The integration service pushes PM2.5 snapshots to it. | Deck slide 11; follows from D-16 and D-17 | The core serves the last pushed snapshot with its age. |
+| D-22 | The DDD paper submitted on 16 November, `Makalah_DDD.docx`, is the source of truth for the domain, the bounded contexts, the partner groups, and the use cases. | Owner, 17 Nov | Every other document follows it; DOMAIN_MODEL is its English copy. |
+| D-23 | The two partner groups are Veriqu (Katalog Produk) and FlowGanic (Koordinasi Distribusi Sampah). Veriqu's protective products, with rating summaries, appear inside the guidance. FlowGanic's managed waste volume per area and waste type appears in the environment section. Both go through an anticorruption layer in the integration service. | DDD paper, section B | FlowGanic's RW or kelurahan codes map to the pilot areas through an agreed code. Contracts are still needed (Q-03). |
+| D-24 | The facility directory is Avela's own simulated list of facilities with services and opening schedule, served by the core. No peer provides it. | DDD paper, sections A and C | Labelled as simulation in the app (D-11). |
+| D-25 | The resident picks the area from the pilot-area list. The app does not ask for location. | DDD paper, sections A and C | No location permission and no geocoding. |
+| D-26 | A published examination result shows the staff member, the facility, the time, and the next steps. Only its owner reads it. A correction is stored as a new version. | DDD paper, section A | Result versioning is new work (A-31). |
+| D-27 | Avela's open host service offers other groups the smoke advisory, the area health signal, and non-sensitive guidance. | DDD paper, sections A and B | The public facility endpoint is dropped. |
 | D-21 | App users authenticate with a JWT bearer token. Other groups and the integration service use one `X-API-Key` each, stored hashed and limited by scope. | Deck slide 17 | A peer key never opens reports, identities, or results. |
 
 ## Proposed
@@ -35,14 +41,15 @@
 | P-01 | Write the mobile app in JavaScript with the practicum pattern: Context, `ApiService.js`, Jest. | The deck names `ApiService.js` and says to reuse the KatalogKu pattern. | Before A-05 |
 | P-02 | Show a PM2.5 category that refers to the ISPU concentration breakpoints, labelled as a reference and not an official ISPU reading. | Raw µg/m³ alone does not tell a resident what to do. | 23 Nov; breakpoints must be read from the KLHK regulation first (Q-13) |
 | P-03 | Photo attachments (A-11) and a custom forecast model (R-01) are stretch items, started only after M3 passes. | Neither is needed for a graded requirement. | 6 Dec |
-| P-04 | The area health signal hides any count from 1 to 4. | Small counts can point to one person. | 23 Nov, before A-25 |
+| P-04 | The area health signal hides any count from 1 to 4. | The paper says small counts are hidden; 1 to 4 is the proposed threshold. | 23 Nov, before A-25 |
 | P-05 | Goal targets in [PRD.md](PRD.md) section 2. | The targets are the assistant's estimates. | 23 Nov |
+| P-06 | The "agreed identity verification" in the paper works like this in the prototype: at the facility the resident shows the report in the app, staff confirm the name, and the result is drafted against that report, so its owner comes from the report. | No real identity check exists; the report already ties the result to the right account. | Before A-31 |
 
 ## Open Questions
 
 | ID | Decision needed | Owner | Due |
 | --- | --- | --- | --- |
-| Q-03 | Written contracts with Veriqu (product catalogue) and FlowGanic (waste recap per area), the groups named in the DDD paper, plus one backup. | Riantama | 23 Nov |
+| Q-03 | Written contracts with Veriqu and FlowGanic (D-23), including FlowGanic's area codes for both pilot areas, plus one backup group. | Riantama | 23 Nov |
 | Q-08 | Sources for the protection guidance and the verified local emergency contact. | Riantama | 23 Nov |
 | Q-10 | Where the integration service runs: an always-on host or a laptop with a tunnel. | Riantama | 23 Nov |
 | Q-12 | STB hardware: architecture, RAM, disk, and whether the image builds on it. | Riantama | 23 Nov (A-04) |
