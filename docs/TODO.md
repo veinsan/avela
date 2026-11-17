@@ -19,7 +19,7 @@
 | A-21 | Realign documentation with decisions and built code | Done | 12 Nov: checks recorded in VALIDATION_REPORT. |
 | A-22 | Reserve the Registry name and commit the baseline | Pending | Owner reserves the name and runs the Git commands. |
 | A-03 | Agree peer integrations | In progress | Veriqu and FlowGanic are fixed by the paper (D-23). Send each the contract request in `skills/integrate-peer-api`, agree FlowGanic's area codes, pick a backup. |
-| A-04 | Validate the stack on the STB | Pending | Needs the STB and A-22. Docker is not installed on the development machine, so the image build is untested. |
+| A-04 | Validate the stack on the STB | Pending | STB is set up from the Week 7 practicum (Q-12): ARM64, Docker and Compose installed. Avela's gateway moved to local port 8081 to avoid KatalogKu's 8080. Next: clone, build, check `docker stats` and free memory. Cloudflare Tunnel was never set up. |
 
 ## M1: DDD paper, core v0.2, app skeleton, by 16 November
 
@@ -31,7 +31,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | A-06 | Identity and ownership | Done | `test_health_and_login`, `test_resident_cannot_see_other_residents_data`, `test_staff_limited_to_own_facility` pass. |
 | A-08 | Symptom reports API | Done | `test_report_validation`, `test_retry_is_idempotent_and_conflicting_reuse_rejected`, `test_cancel_only_before_review` pass. |
 | A-09 | Staff review and results API | Done | `test_stale_version_loses`, `test_full_review_cycle_and_result_delivery` pass. Result versioning is A-31. |
-| A-23 | Areas and snapshot ingestion | Pending | Add `areas`, `area_snapshots`, the push endpoint, and the advisory endpoint. |
+| A-23 | Areas and snapshot ingestion | Done | 17 Nov: `test_environment.py` (4 tests) passes: both areas seeded, push rejected without key (401) and without scope (403), stored with `snapshots:write`, advisory fresh/stale/unavailable with age, keys stored hashed. `app.keys` CLI smoke-tested. Not run: Docker build (A-04). `communitySignal` stays null until A-25. |
 | A-24 | Exposure context on reports | Pending | Requires A-23. `areaId` becomes a required report field; update the tests. |
 | A-25 | Peer API keys and public endpoints | Pending | Requires A-23. Confirm P-04 first. |
 | A-05 | Scaffold the mobile app | Pending | Confirm P-01 (JavaScript), then create `apps/mobile`. |
@@ -81,3 +81,4 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | 2026-11-12 | Documentation realigned (A-21) | `pytest -q` in `services/core`: 8 passed. Document checks in VALIDATION_REPORT. |
 | 2026-11-17 | DDD paper submitted (A-16); M2 moved to 23 Nov; task split updated (D-19) | Paper drafts and diagram removed; `Makalah_DDD.docx` is the record. |
 | 2026-11-17 | Documents aligned with the submitted paper (D-22 to D-27); A-30 and A-31 added | Checks in VALIDATION_REPORT; `pytest -q`: 8 passed. |
+| 2026-11-17 | A-23 areas, snapshot push, advisory, API key mechanism (`app.keys`) | `pytest -q` in `services/core`: 12 passed. |

@@ -45,6 +45,22 @@ Codes in use: `INVALID_CREDENTIALS`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_REVIEW
 | `POST /api/v1/staff/results` | Facility staff | Drafts a result for a responded report |
 | `POST /api/v1/staff/results/{id}/publish` | Facility staff | Publishes the draft |
 | `GET /api/v1/results`, `GET /api/v1/results/{id}` | Owner (published only) or facility staff | Examination results |
+| `GET /api/v1/areas` | Anyone, rate limited | Lists the pilot areas |
+| `GET /api/v1/areas/{areaId}/advisory` | Anyone, rate limited | Latest snapshot with freshness and `ageMinutes`; `communitySignal` is null until A-25 |
+| `PUT /api/v1/internal/areas/{areaId}/snapshot` | Integration service, scope `snapshots:write` | Stores a snapshot (A-23) |
+
+Snapshot push body, with illustrative values. `isSynthetic` marks a hand-made test push; `value` may be null for a provider gap; `retrievedAt` more than 5 minutes in the future is rejected.
+
+```json
+{
+  "provider": "open-meteo",
+  "modelDomain": "cams_global",
+  "retrievedAt": "2026-11-20T02:00:00Z",
+  "attributions": ["Open-Meteo", "CAMS"],
+  "isSynthetic": false,
+  "points": [{"validAt": "2026-11-20T02:00:00Z", "value": 41.2}]
+}
+```
 
 Report body today, with fictional values:
 
@@ -65,18 +81,17 @@ Report body today, with fictional values:
 
 | Method and path | Caller | Behavior | Task |
 | --- | --- | --- | --- |
-| `GET /api/v1/areas` | Anyone, rate limited | Lists the pilot areas | A-23 |
-| `GET /api/v1/areas/{areaId}/advisory` | Anyone, rate limited | Latest snapshot, category, age, and the 7-day community signal | A-23 |
 | `GET /api/v1/guidance` | Anyone, rate limited | Guidance items with source, version, and review status | A-12 |
 | `GET /api/v1/facilities?areaId=` | Anyone, rate limited | Simulated facility directory with services and opening schedule | A-30 |
 | `GET /api/v1/facilities/{id}` | Anyone, rate limited | One facility; unknown hours are null | A-30 |
-| `PUT /api/v1/internal/areas/{areaId}/snapshot` | Integration service, scope `snapshots:write` | Stores a snapshot | A-23 |
 | `GET /api/v1/public/areas` | Peer key | Same data as `/areas` | A-25 |
 | `GET /api/v1/public/areas/{areaId}/advisory` | Peer key | Same data as the open advisory | A-25 |
 | `GET /api/v1/public/areas/{areaId}/health-signal?days=7` | Peer key, scope `signal:read` | Daily report counts and totals per disposition; `days` up to 30 | A-25 |
 | `GET /api/v1/public/guidance` | Peer key, scope `guidance:read` | Avela's own guidance items with sources; no peer data | A-25 |
 
 Changes to built endpoints in v0.2:
+
+- The advisory fills `communitySignal` (7-day report count for the area) once reports carry an area (A-25).
 
 - `POST /reports` adds the required field `areaId` (A-24).
 - Report detail adds `exposureContext` (A-24).

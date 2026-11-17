@@ -21,7 +21,7 @@ Demo accounts (password from `AVELA_DEMO_PASSWORD`): `warga1`, `warga2` (residen
 cd infra/stb && cp .env.example .env   # fill in secrets
 docker compose up -d --build
 docker compose exec core python -m app.seed
-curl http://127.0.0.1:8080/health
+curl http://127.0.0.1:8081/health
 ```
 
 Limits: core 256 MB / 0.5 CPU, gateway and tunnel 64 MB / 0.25 CPU each. Nginx rate-limits the API (10 r/s) and login (5 r/min). The database lives in the `core-data` volume and is never exposed.
@@ -44,7 +44,23 @@ Limits: core 256 MB / 0.5 CPU, gateway and tunnel 64 MB / 0.25 CPU each. Nginx r
 | `POST /staff/reports/{id}/close` | Reviewer | `responded` to `closed` |
 | `POST /staff/results`, `POST /staff/results/{id}/publish` | Facility staff | Draft and publish result linked to a responded report |
 | `GET /results`, `GET /results/{id}` | Owner (published) / facility staff | Examination results |
+| `GET /areas` | Public | The two pilot areas |
+| `GET /areas/{areaId}/advisory` | Public | Latest PM2.5 snapshot with freshness (`fresh` up to 2 h, then `stale`; `unavailable` if none) |
+| `PUT /internal/areas/{areaId}/snapshot` | `X-API-Key` with `snapshots:write` | Integration service pushes a snapshot |
+
+## API keys
+
+Server callers (peer groups, the integration service) send `X-API-Key`. Keys are created on the server, shown once, and stored as a SHA-256 hash:
+
+```bash
+docker compose exec core python -m app.keys create integration snapshots:write
+docker compose exec core python -m app.keys create <group> areas:read signal:read guidance:read
+docker compose exec core python -m app.keys list
+docker compose exec core python -m app.keys revoke <group>
+```
+
+A missing or unknown key returns `401`; a key without the scope returns `403`.
 
 State changes take `expectedVersion`; a stale version returns `409 VERSION_CONFLICT`. Other people's resources return `404`. Errors use `{"error": {"code", "message", "requestId", "retryable"}}`.
 
-Not yet included: peer API keys and the environmental-context endpoint for other groups, versioned result corrections, attachments.
+Not yet included: the public peer endpoints and health signal (A-25), exposure context on reports (A-24), versioned result corrections, attachments.

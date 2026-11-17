@@ -52,7 +52,7 @@
 | Q-03 | Written contracts with Veriqu and FlowGanic (D-23), including FlowGanic's area codes for both pilot areas, plus one backup group. | Riantama | 23 Nov |
 | Q-08 | Sources for the protection guidance and the verified local emergency contact. | Riantama | 23 Nov |
 | Q-10 | Where the integration service runs: an always-on host or a laptop with a tunnel. | Riantama | 23 Nov |
-| Q-12 | STB hardware: architecture, RAM, disk, and whether the image builds on it. | Riantama | 23 Nov (A-04) |
+| Q-12 | STB hardware. Known from the Week 7 practicum: ZTE B860H on Armbian (Debian Trixie), `aarch64`, about 1 GB RAM, Docker 26.1.4, Compose v2.28.1; it already runs aaPanel, host Nginx, MySQL, phpMyAdmin, and KatalogKu (gateway on port 8080). Still open: free disk, free memory with those running, and whether the Avela image builds. | Riantama | 23 Nov (A-04) |
 | Q-13 | ISPU PM2.5 breakpoints and averaging period, read from the regulation. | Riantama | 23 Nov |
 
 Resolved: Q-01 (D-06), Q-02 (D-14), Q-04 (simulated staff accounts `petugas1` and `petugas2`), Q-06 (D-08, D-15), Q-09 (D-18, D-19), Q-11 (D-19). Deferred with P-03: Q-05 (custom forecasting), Q-07 (attachments).
