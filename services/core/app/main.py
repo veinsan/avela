@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import APIRouter, Depends, FastAPI
 from pydantic import BaseModel, Field
 
-from . import care, errors, results
+from . import care, environment, errors, results
 from .db import get_db, init_db
 from .errors import ApiError
 from .security import _secret, current_account, issue_token, verify_password
@@ -48,4 +48,5 @@ def me(account: dict = Depends(current_account)):
 
 api.include_router(care.router)
 api.include_router(results.router)
+api.include_router(environment.router)
 app.include_router(api)

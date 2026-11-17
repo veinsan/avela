@@ -58,6 +58,37 @@ CREATE TABLE IF NOT EXISTS results (
     created_at TEXT NOT NULL,
     published_at TEXT
 );
+CREATE TABLE IF NOT EXISTS areas (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    province TEXT NOT NULL,
+    latitude REAL NOT NULL,
+    longitude REAL NOT NULL
+);
+INSERT OR IGNORE INTO areas (id, name, province, latitude, longitude) VALUES
+    ('pekanbaru', 'Pekanbaru', 'Riau', 0.5071, 101.4478),
+    ('palangka-raya', 'Palangka Raya', 'Kalimantan Tengah', -2.2096, 113.9213);
+CREATE TABLE IF NOT EXISTS area_snapshots (
+    id TEXT PRIMARY KEY,
+    area_id TEXT NOT NULL REFERENCES areas(id),
+    provider TEXT NOT NULL,
+    model_domain TEXT,
+    data_kind TEXT NOT NULL,
+    unit TEXT NOT NULL,
+    attributions TEXT NOT NULL,
+    is_synthetic INTEGER NOT NULL,
+    points TEXT NOT NULL,
+    retrieved_at TEXT NOT NULL,
+    pushed_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS area_snapshots_latest ON area_snapshots (area_id, retrieved_at);
+CREATE TABLE IF NOT EXISTS api_keys (
+    id TEXT PRIMARY KEY,
+    label TEXT NOT NULL UNIQUE,
+    key_hash TEXT NOT NULL UNIQUE,
+    scopes TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 """
 
 
@@ -92,5 +123,9 @@ def new_id() -> str:
     return str(uuid.uuid4())
 
 
+def iso(dt: datetime) -> str:
+    return dt.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
 def now() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    return iso(datetime.now(timezone.utc))
