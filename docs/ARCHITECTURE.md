@@ -1,6 +1,6 @@
 # Architecture and Implementation Plan
 
-**Updated:** 12 November 2026. Scope comes from [PRD.md](PRD.md); decisions are in [DECISIONS.md](DECISIONS.md).
+**Updated:** 17 November 2026. Scope comes from [PRD.md](PRD.md); decisions are in [DECISIONS.md](DECISIONS.md).
 
 ## Technical Stack
 
@@ -113,7 +113,7 @@ A database backup and restore drill is part of A-13.
 
 ## Implementation Plan
 
-Tracks: TST (backend, graded in II3160), PWAM (mobile, graded in II3140), Both. The same IDs appear in [TODO.md](TODO.md).
+Tracks: TST (backend, graded in II3160), PWAM (mobile, graded in II3140), Both. Riantama does every task; Mishael helps with the front-end redesign (D-19). The same IDs appear in [TODO.md](TODO.md).
 
 ### M0: Lock and align, by 15 November
 
@@ -125,10 +125,12 @@ Tracks: TST (backend, graded in II3160), PWAM (mobile, graded in II3140), Both. 
 | A-01 | Select workflow and demo boundary | Both | A-00 | Workflow, pilot areas, staff surface, and simulated staffing are recorded as confirmed decisions. |
 | A-21 | Realign documentation with decisions and built code | Both | A-01 | No document says the stack or workflow is undecided; link, token, and task-ID checks pass. |
 | A-22 | Reserve the Registry name and commit the baseline | Both | A-21 | `avela` is reserved in the class API Registry; `services/`, `infra/`, and `docs/` are committed; the assignment PDF is not tracked. |
-| A-03 | Agree peer integrations | Both | - | Two groups and one backup each have a written contract: endpoints, schema, rate limit, contact, test access. Names by 22 Nov, contracts by 29 Nov. |
+| A-03 | Agree peer integrations | Both | - | Two groups and one backup each have a written contract: endpoints, schema, rate limit, contact, test access. Names are in the DDD paper; contracts by 23 Nov. |
 | A-04 | Validate the stack on the STB | TST | A-22 | The core image builds and starts on the STB; `docker stats` shows it inside its limits; data survives `docker compose restart`. |
 
-### M1: DDD paper, core v0.2, app skeleton, by 22 November
+### M1: DDD paper, core v0.2, app skeleton, by 16 November
+
+The paper was submitted on 16 November. The other M1 steps are due with M2.
 
 | ID | Step | Track | Depends on | Completion criteria |
 | --- | --- | --- | --- | --- |
@@ -141,7 +143,7 @@ Tracks: TST (backend, graded in II3160), PWAM (mobile, graded in II3140), Both. 
 | A-25 | Peer API keys and public endpoints | TST | A-23 | Keys are created by a command and stored hashed; the public endpoints answer with a valid key, 401 without, 403 without the scope; counts from 1 to 4 are hidden. |
 | A-05 | Scaffold the mobile app | PWAM | A-06 | The Expo app runs on a device with stack and tab navigation, theme tokens from DESIGN, `ApiService.js`, a working login against the core, and one passing Jest test. |
 
-### M2: Public core, Registry, resident app on own API, by 29 November
+### M2: Public core, Registry, resident app on own API, by 23 November
 
 | ID | Step | Track | Depends on | Completion criteria |
 | --- | --- | --- | --- | --- |
@@ -159,7 +161,7 @@ Tracks: TST (backend, graded in II3160), PWAM (mobile, graded in II3140), Both. 
 | A-27 | Staff screens in the app | PWAM | A-05, A-09 | A staff account reviews a report end to end on a device: queue, claim, ask, respond, close, publish result. |
 | A-12 | Guidance, emergency screen, failure states | PWAM | A-07, A-26 | Guidance shows sources; the emergency screen opens signed out; every data screen has loading, empty, error, and stale states. |
 | A-28 | Mobile test suite and test table | PWAM | A-10, A-26, A-27 | Jest unit tests cover `ApiService.js`, validation, and state mapping; the functional and integration test table is filled with results. |
-| A-29 | Peer support and uptime | TST | A-18 | From 29 Nov to grading: health checks are logged and peer issues get a first reply within 24 hours. |
+| A-29 | Peer support and uptime | TST | A-18 | From 23 Nov to grading: health checks are logged and peer issues get a first reply within 24 hours. |
 
 ### M4: Release and submission, by 13 December
 

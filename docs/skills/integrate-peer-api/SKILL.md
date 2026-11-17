@@ -56,7 +56,7 @@ Kontak: <nama dan cara menghubungi>.
 ## Rules
 
 - Two endpoints from one group are still one group.
-- A mock is allowed only when the peer is late after the Registry deadline of 29 November. Label it as a mock in the app, the README, and the video, and report the delay to the assistant.
+- A mock is allowed only when the peer is late after the Registry deadline of 23 November. Label it as a mock in the app, the README, and the video, and report the delay to the assistant.
 - Never put a peer's key in the app or in Git.
 - Send no report, account, or result data to a peer.
 - Report a peer's bug as a GitHub issue on their repository.

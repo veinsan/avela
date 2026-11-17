@@ -1,12 +1,12 @@
 # Avela Task Tracker
 
-**Updated:** 12 November 2026. Status values: Pending, In progress, Blocked, Done. A task is Done only after its completion criteria in [ARCHITECTURE.md](ARCHITECTURE.md) are checked.
+**Updated:** 17 November 2026. Status values: Pending, In progress, Blocked, Done. A task is Done only after its completion criteria in [ARCHITECTURE.md](ARCHITECTURE.md) are checked.
 
 ## Next Three Actions
 
 1. Reserve `avela` in the class API Registry (A-22). Names are first come, first served.
-2. Contact at least three groups about their APIs (A-03). The DDD paper needs their names by 22 November.
-3. Commit the current `services/`, `infra/`, and `docs/` work (A-22).
+2. Get written contracts from Veriqu and FlowGanic, the two groups named in the DDD paper (A-03), by 23 November.
+3. Finish core v0.2 (A-23, A-24, A-25) and deploy it (A-13) before the M2 deadline on 23 November.
 
 ## M0: Lock and align, by 15 November
 
@@ -18,14 +18,16 @@
 | A-01 | Select workflow and demo boundary | Done | D-06, D-14, D-15 confirmed on 12 Nov. |
 | A-21 | Realign documentation with decisions and built code | Done | 12 Nov: checks recorded in VALIDATION_REPORT. |
 | A-22 | Reserve the Registry name and commit the baseline | Pending | Owner reserves the name and runs the Git commands. |
-| A-03 | Agree peer integrations | Pending | Shortlist from the Registry; send the contract request in `skills/integrate-peer-api`. |
+| A-03 | Agree peer integrations | In progress | Veriqu and FlowGanic are named in the paper. Send each the contract request in `skills/integrate-peer-api`; pick a backup. |
 | A-04 | Validate the stack on the STB | Pending | Needs the STB and A-22. Docker is not installed on the development machine, so the image build is untested. |
 
-## M1: DDD paper, core v0.2, app skeleton, by 22 November
+## M1: DDD paper, core v0.2, app skeleton, by 16 November
+
+The paper was submitted on 16 November. The other M1 tasks are late and are due with M2 on 23 November.
 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
-| A-16 | Submit the DDD paper | In progress | `MAKALAH_DDD.md` and the diagram updated 12 Nov for D-16 and D-17. Copy into the Google Doc, add peer names if known, export, submit. |
+| A-16 | Submit the DDD paper | Done | Submitted 16 Nov as `Makalah_DDD.docx`. |
 | A-06 | Identity and ownership | Done | `test_health_and_login`, `test_resident_cannot_see_other_residents_data`, `test_staff_limited_to_own_facility` pass. |
 | A-08 | Symptom reports API | Done | `test_report_validation`, `test_retry_is_idempotent_and_conflicting_reuse_rejected`, `test_cancel_only_before_review` pass. |
 | A-09 | Staff review and results API | Done | `test_stale_version_loses`, `test_full_review_cycle_and_result_delivery` pass. Result corrections are not versioned yet. |
@@ -34,7 +36,7 @@
 | A-25 | Peer API keys and public endpoints | Pending | Requires A-23. Confirm P-04 first. |
 | A-05 | Scaffold the mobile app | Pending | Confirm P-01 (JavaScript), then create `apps/mobile`. |
 
-## M2: Public core, Registry, resident app, by 29 November
+## M2: Public core, Registry, resident app, by 23 November
 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
@@ -48,7 +50,7 @@
 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
-| A-10 | Integrate two peer services | Pending | Blocked on A-03 for real endpoints; use contract mocks, labelled, if a peer is late after 29 Nov. |
+| A-10 | Integrate two peer services | Pending | Blocked on A-03 for real endpoints; use contract mocks, labelled, if a peer is late after 23 Nov. |
 | A-27 | Staff screens in the app | Pending | Requires A-05. |
 | A-12 | Guidance, emergency screen, failure states | Pending | Requires Q-08 for content sources. |
 | A-28 | Mobile test suite and test table | Pending | Requires A-10, A-26, A-27. |
@@ -75,3 +77,4 @@
 | 2026-11-10 | Documentation baseline, API shortlist, design refinement, branch plan | Link, token, and task-ID checks passed; details in VALIDATION_REPORT. |
 | 2026-11-11 | Core API v1 built | 8 pytest tests passed locally; a live smoke test created a report on a temporary database. |
 | 2026-11-12 | Documentation realigned (A-21) | `pytest -q` in `services/core`: 8 passed. Document checks in VALIDATION_REPORT. |
+| 2026-11-17 | DDD paper submitted (A-16); M2 moved to 23 Nov; task split updated (D-19) | Paper drafts and diagram removed; `Makalah_DDD.docx` is the record. |

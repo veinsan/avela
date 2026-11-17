@@ -1,6 +1,6 @@
 # Decisions and Open Questions
 
-**Updated:** 12 November 2026. Confirmed means the project owner said so or the assignment requires it. Proposed means the assistant recommends it and the owner has not objected or agreed yet.
+**Updated:** 17 November 2026. Confirmed means the project owner said so or the assignment requires it. Proposed means the assistant recommends it and the owner has not objected or agreed yet.
 
 ## Confirmed
 
@@ -24,7 +24,7 @@
 | D-16 | Each symptom report stores an exposure context: the area's PM2.5 forecast around symptom onset, frozen at submission. | Owner, 12 Nov | Staff see symptoms next to environmental context. |
 | D-17 | The core publishes an area health signal to other groups: anonymous report counts per area. | Owner, 12 Nov | This is Avela's main offering in the API Registry. |
 | D-18 | Class K01. Public core URL `https://avela.stei.fun`; integration service `https://avela-int.stei.fun`; tunnel name `k01-avela`. | Owner, 12 Nov; deck slides 12-13 | The Registry name `avela` still has to be reserved (A-22). |
-| D-19 | Team: Mishael Gilland (18224005) and Riantama Putra (18224061). Riantama leads both the backend and the mobile track. | DDD paper cover; owner, 12 Nov | Mishael's tasks are open (Q-11). |
+| D-19 | Team: Mishael Gilland (18224005) and Riantama Putra (18224061). Riantama does the backend, integration, and mobile work. Mishael helps redesign the front end. | DDD paper cover; owner, 17 Nov | Mishael's commits come from the redesign; both present in the video. |
 | D-20 | The STB core makes no outbound calls to public or peer APIs. The integration service pushes PM2.5 snapshots to it. | Deck slide 11; follows from D-16 and D-17 | The core serves the last pushed snapshot with its age. |
 | D-21 | App users authenticate with a JWT bearer token. Other groups and the integration service use one `X-API-Key` each, stored hashed and limited by scope. | Deck slide 17 | A peer key never opens reports, identities, or results. |
 
@@ -32,24 +32,23 @@
 
 | ID | Proposal | Why | Confirm by |
 | --- | --- | --- | --- |
-| P-01 | Write the mobile app in JavaScript with the practicum pattern: Context, `ApiService.js`, Jest. | The deck names `ApiService.js` and says to reuse the KatalogKu pattern. | 16 Nov, before A-05 |
-| P-02 | Show a PM2.5 category that refers to the ISPU concentration breakpoints, labelled as a reference and not an official ISPU reading. | Raw µg/m³ alone does not tell a resident what to do. | 29 Nov; breakpoints must be read from the KLHK regulation first (Q-13) |
+| P-01 | Write the mobile app in JavaScript with the practicum pattern: Context, `ApiService.js`, Jest. | The deck names `ApiService.js` and says to reuse the KatalogKu pattern. | Before A-05 |
+| P-02 | Show a PM2.5 category that refers to the ISPU concentration breakpoints, labelled as a reference and not an official ISPU reading. | Raw µg/m³ alone does not tell a resident what to do. | 23 Nov; breakpoints must be read from the KLHK regulation first (Q-13) |
 | P-03 | Photo attachments (A-11) and a custom forecast model (R-01) are stretch items, started only after M3 passes. | Neither is needed for a graded requirement. | 6 Dec |
-| P-04 | The area health signal hides any count from 1 to 4. | Small counts can point to one person. | 22 Nov, before A-25 |
-| P-05 | Goal targets in [PRD.md](PRD.md) section 2. | The targets are the assistant's estimates. | 22 Nov |
+| P-04 | The area health signal hides any count from 1 to 4. | Small counts can point to one person. | 23 Nov, before A-25 |
+| P-05 | Goal targets in [PRD.md](PRD.md) section 2. | The targets are the assistant's estimates. | 23 Nov |
 
 ## Open Questions
 
 | ID | Decision needed | Owner | Due |
 | --- | --- | --- | --- |
-| Q-03 | Which two groups Avela integrates, plus one backup. | Riantama | Names 22 Nov; written contracts 29 Nov |
-| Q-08 | Sources for the protection guidance and the verified local emergency contact. | Riantama | 29 Nov |
-| Q-10 | Where the integration service runs: an always-on host or a laptop with a tunnel. | Riantama | 29 Nov |
-| Q-11 | Which tasks Mishael owns. Individual grades follow each member's GitHub contribution, and both members present in the video. | Both | 15 Nov |
-| Q-12 | STB hardware: architecture, RAM, disk, and whether the image builds on it. | Riantama | 22 Nov (A-04) |
-| Q-13 | ISPU PM2.5 breakpoints and averaging period, read from the regulation. | Riantama | 29 Nov |
+| Q-03 | Written contracts with Veriqu (product catalogue) and FlowGanic (waste recap per area), the groups named in the DDD paper, plus one backup. | Riantama | 23 Nov |
+| Q-08 | Sources for the protection guidance and the verified local emergency contact. | Riantama | 23 Nov |
+| Q-10 | Where the integration service runs: an always-on host or a laptop with a tunnel. | Riantama | 23 Nov |
+| Q-12 | STB hardware: architecture, RAM, disk, and whether the image builds on it. | Riantama | 23 Nov (A-04) |
+| Q-13 | ISPU PM2.5 breakpoints and averaging period, read from the regulation. | Riantama | 23 Nov |
 
-Resolved: Q-01 (D-06), Q-02 (D-14), Q-04 (simulated staff accounts `petugas1` and `petugas2`), Q-06 (D-08, D-15), Q-09 (D-18, D-19). Deferred with P-03: Q-05 (custom forecasting), Q-07 (attachments).
+Resolved: Q-01 (D-06), Q-02 (D-14), Q-04 (simulated staff accounts `petugas1` and `petugas2`), Q-06 (D-08, D-15), Q-09 (D-18, D-19), Q-11 (D-19). Deferred with P-03: Q-05 (custom forecasting), Q-07 (attachments).
 
 ## Alternatives Considered
 

@@ -23,7 +23,7 @@ Avela connects these pieces in one loop: area smoke forecast, a symptom report t
 | G-03 | Residents never mistake a submitted report for a reviewed one. | Copy audit of every report state on every screen. | Zero screens show review, monitoring, or a response time that did not happen. |
 | G-04 | Staff review the right report with its context. | Mandatory scenarios in [TEST_PLAN.md](TEST_PLAN.md). | All pass. |
 | G-05 | The coursework is fully evidenced. | Requirements C-01 to C-17 in [COURSE_REQUIREMENTS.md](COURSE_REQUIREMENTS.md). | All have evidence by 13 December. |
-| G-06 | Other groups can use Avela's API easily. | Health checks from 29 November to grading; time to answer a peer's GitHub issue. | 95% of checks succeed; first reply within 24 hours. |
+| G-06 | Other groups can use Avela's API easily. | Health checks from 23 November to grading; time to answer a peer's GitHub issue. | 95% of checks succeed; first reply within 24 hours. |
 
 Fewer unnecessary trips and faster care are long-term hypotheses. A classroom demo with fictional data cannot measure them.
 

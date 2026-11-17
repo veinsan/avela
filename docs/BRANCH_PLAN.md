@@ -63,7 +63,7 @@ The uncommitted work on `main` today (core API, STB files, DDD draft, realigned 
 - When both members are working, the other member reviews. When only one is available, self-merge after the checks pass and say so in the pull request.
 - Update a branch with a normal merge from `origin/main`. Do not rewrite history that is already pushed.
 
-Both members need visible commits: individual grades follow GitHub contribution (C-01).
+Both members need visible commits: individual grades follow GitHub contribution (C-01). Mishael's commits come from the front-end redesign (D-19).
 
 ## Tags
 

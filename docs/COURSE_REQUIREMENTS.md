@@ -6,7 +6,7 @@
 
 | ID | Requirement | Slide | Task | Evidence to produce |
 | --- | --- | --- | --- | --- |
-| C-01 | Two members with backend and mobile responsibilities; both understand the whole system. Individual grades follow each member's role and GitHub contribution. | 3-5, 25, 27 | Q-11 | Commits from both members; both explain the system in the video |
+| C-01 | Two members with backend and mobile responsibilities; both understand the whole system. Individual grades follow each member's role and GitHub contribution. | 3-5, 25, 27 | D-19 | Commits from both members; both explain the system in the video |
 | C-02 | DDD paper: system description, bounded contexts, subdomain decomposition with diagram | 19 | A-16 | Submitted .docx or .pdf with cover |
 | C-03 | Core microservice in Docker on the STB, publicly reachable, with memory and CPU limits | 20, 23 | A-04, A-13 | `https://avela.stei.fun/health`; compose file; `docker stats` capture |
 | C-04 | Public API with OpenAPI or Postman documentation, one API key per peer group, and one test account | 14, 17 | A-25, A-18 | Swagger UI link; key issue log; test account |
@@ -31,10 +31,12 @@ One repository and one demo serve both courses (slide 4). Avela keeps the backen
 | Milestone | Date | Deliverable | Avela milestone |
 | --- | --- | --- | --- |
 | Week 12 | 9-15 November 2026 | Group, theme, domain | M0 |
-| End of Week 13 | 22 November 2026 | DDD paper; app skeleton with navigation | M1 |
-| End of Week 14 | 29 November 2026 | Microservice URL and documentation in the API Registry; screens, login, own API | M2 |
+| End of Week 13 | 16 November 2026 | DDD paper; app skeleton with navigation | M1 |
+| End of Week 14 | 23 November 2026 | Microservice URL and documentation in the API Registry; screens, login, own API | M2 |
 | Week 15 | 30 November - 6 December 2026 | Integration service; two peer APIs in the app; tests | M3 |
 | End of Week 16 | 13 December 2026, 23:59 WIB | Everything, linked in Edunex | M4 |
+
+The owner corrected the Week 13 and Week 14 dates on 17 November; the other dates are still the deck's.
 
 A group that misses the Registry deadline lets others use a mock of its contract instead. If a peer is late after Week 14, use a mock built from its contract and report it to the assistant.
 

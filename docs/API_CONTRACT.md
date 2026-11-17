@@ -177,4 +177,4 @@ Avela needs two different groups (Q-03). Public APIs such as Open-Meteo do not c
 | B, option 2 | Health or safety learning content | An Education group with materials or quizzes | Extra reading under Panduan |
 | B, option 3 | Habit or symptom journal | Another Health group | Link from Akun to a personal log |
 
-Pick the options whose owners answer first and whose APIs are live. Record each agreement with [the peer-integration skill](skills/integrate-peer-api/SKILL.md). A mock built from a peer's contract is allowed when the peer is late after 29 November; it is labelled as a mock in the app, the README, and the video.
+Pick the options whose owners answer first and whose APIs are live. Record each agreement with [the peer-integration skill](skills/integrate-peer-api/SKILL.md). A mock built from a peer's contract is allowed when the peer is late after 23 November; it is labelled as a mock in the app, the README, and the video.

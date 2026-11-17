@@ -1,6 +1,6 @@
 # Domain Model
 
-**Updated:** 12 November 2026. This is the English working model behind [MAKALAH_DDD.md](MAKALAH_DDD.md). "Built" means the table and rules exist in `services/core`.
+**Updated:** 12 November 2026. This is the English working model behind the submitted DDD paper, [Makalah_DDD.docx](Makalah_DDD.docx). "Built" means the table and rules exist in `services/core`.
 
 ## Domain and Core
 

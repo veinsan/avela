@@ -1,6 +1,6 @@
 # Avela Documentation
 
-**Updated:** 12 November 2026. The repository front page is [../README.md](../README.md). Documents are in English; the app's text and the DDD paper are in Indonesian.
+**Updated:** 17 November 2026. The repository front page is [../README.md](../README.md). Documents are in English; the app's text and the DDD paper are in Indonesian.
 
 ## Start Here
 
@@ -33,9 +33,8 @@ When two documents disagree, the one in this table wins and the other gets fixed
 | [SAFETY_PRIVACY.md](SAFETY_PRIVACY.md) | Clinical boundaries, synthetic data, access, and secrets |
 | [TEST_PLAN.md](TEST_PLAN.md) | Acceptance scenarios and their status |
 | [BRANCH_PLAN.md](BRANCH_PLAN.md) | Branch names and merge rules |
-| [MAKALAH_DDD.md](MAKALAH_DDD.md) | DDD paper draft for Tugas 1, with [the subdomain diagram](diagrams/subdomain-avela.drawio) |
+| [Makalah_DDD.docx](Makalah_DDD.docx) | DDD paper for Tugas 1 as submitted on 16 November; read-only record |
 | [REFERENCES.md](REFERENCES.md) | Sources and what each one supports |
 | [VALIDATION_REPORT.md](VALIDATION_REPORT.md) | Checks run on the documentation |
-| [HANDOFF_CHAT_2026-11-10.md](HANDOFF_CHAT_2026-11-10.md) | Summary of the first planning conversation; historical |
 | [skills/review-avela-readiness/SKILL.md](skills/review-avela-readiness/SKILL.md) | Review a feature or demo before calling it done |
 | [skills/integrate-peer-api/SKILL.md](skills/integrate-peer-api/SKILL.md) | Add one peer group's service |
