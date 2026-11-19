@@ -18,7 +18,7 @@ The root `CLAUDE.md` imports this file. Agents that do not read `CLAUDE.md` must
 | pytest, httpx | 9.2.0 and 0.28.1, core tests |
 | Nginx | 1.28 alpine, gateway and rate limits |
 | cloudflared | Tunnel to `https://avela.stei.fun` |
-| Expo, React Navigation, Jest | Mobile app; not scaffolded yet, pin versions in A-05 |
+| Expo, React Navigation, Jest | Mobile app in JavaScript (D-28); not scaffolded yet, pin versions in A-05 |
 
 Add a dependency only when the standard library or an installed package cannot do the job.
 
@@ -30,8 +30,10 @@ Add a dependency only when the standard library or an installed package cannot d
 
 ```text
 services/core/app/     main.py (app, login, /me), care.py (reports, staff review),
-                       results.py, security.py (JWT, roles), db.py (schema), errors.py, seed.py
-services/core/tests/   conftest.py, test_core.py
+                       results.py, environment.py (areas, snapshots, advisory),
+                       security.py (JWT, roles, API key scopes), keys.py (key CLI),
+                       db.py (schema), errors.py, seed.py
+services/core/tests/   conftest.py, test_core.py, test_environment.py
 infra/stb/             docker-compose.yml, nginx.conf, .env.example
 docs/                  Project documents and docs/skills/
 services/integration/  Planned: provider and peer adapters
@@ -60,7 +62,8 @@ One bounded context per module in `services/core/app`. A new context gets its ow
 - [x] Staff review: queue, claim, information request, response with disposition, close.
 - [x] Examination result: draft, publish, owner-only read.
 - [x] Gateway configuration with rate limits and container limits.
-- [ ] Areas, pushed PM2.5 snapshots, exposure context on reports.
+- [x] Areas, pushed PM2.5 snapshots, advisory, API key CLI.
+- [ ] Exposure context on reports.
 - [ ] Peer API keys and public endpoints (advisory, health signal, guidance).
 - [ ] Facility directory with services and schedule.
 - [ ] Versioned examination results.
@@ -90,7 +93,7 @@ uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirement
 .venv/Scripts/python.exe -m pytest -q
 ```
 
-Success is all tests passing; 8 pass on 12 November. To run the service locally, follow `services/core/README.md`. The Docker image has not been built yet because Docker is not installed on the development machine; A-04 covers it on the STB.
+Success is all tests passing; 12 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
 
 Mobile and integration commands do not exist yet. Add them here when A-05 and A-07 create them.
 

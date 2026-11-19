@@ -1,6 +1,6 @@
 # Decisions and Open Questions
 
-**Updated:** 17 November 2026. Confirmed means the project owner said so or the assignment requires it. Proposed means the assistant recommends it and the owner has not objected or agreed yet.
+**Updated:** 19 November 2026. Confirmed means the project owner said so or the assignment requires it. Proposed means the assistant recommends it and the owner has not objected or agreed yet.
 
 ## Confirmed
 
@@ -33,29 +33,30 @@
 | D-26 | A published examination result shows the staff member, the facility, the time, and the next steps. Only its owner reads it. A correction is stored as a new version. | DDD paper, section A | Result versioning is new work (A-31). |
 | D-27 | Avela's open host service offers other groups the smoke advisory, the area health signal, and non-sensitive guidance. | DDD paper, sections A and B | The public facility endpoint is dropped. |
 | D-21 | App users authenticate with a JWT bearer token. Other groups and the integration service use one `X-API-Key` each, stored hashed and limited by scope. | Deck slide 17 | A peer key never opens reports, identities, or results. |
+| D-28 | The mobile app is JavaScript with the practicum pattern: React Context, `src/services/ApiService.js`, Jest with `jest-expo`. (Was P-01.) | Deck slides 22 and 24 name `ApiService.js` and the KatalogKu pattern; owner delegated the choice on 19 Nov | No TypeScript build step. |
+| D-29 | The advisory shows a PM2.5 category that refers to ISPU: the 24-hour mean of the forecast points is placed in the Permen LHK P.14/2020 bands (Baik up to 15.5, Sedang up to 55.4, Tidak Sehat up to 150.4, Sangat Tidak Sehat up to 250.4, Berbahaya above). It is labelled "mengacu ISPU" and never called an official ISPU reading. With fewer than 18 hourly values in the last 24 hours the label stays null. (Was P-02; resolves Q-13.) | Lampiran I of the regulation, read 19 Nov ([REFERENCES](REFERENCES.md) S-08) | ISPU uses 24-hour station measurements; Avela has an hourly model forecast, so it is a reference only. |
+| D-30 | The area health signal hides any count from 1 to 4 and sends it as null. Zero stays zero. (Was P-04.) | DDD paper section B: small counts are hidden | Applies to daily counts, disposition totals, and the 7-day community signal. |
+| D-31 | The goal targets in [PRD.md](PRD.md) section 2 are the targets. (Was P-05.) | Owner delegated the choice on 19 Nov | G-01 to G-06 are measured as written. |
+| D-32 | The paper's "agreed identity verification" works like this in the prototype: at the facility the resident shows the report in the app, staff confirm the name, and the result is drafted against that report, so its owner comes from the report. (Was P-06.) | DDD paper section A; no real identity check exists | A-31 needs no extra identity data. |
+| D-33 | Guidance text is written from Kementerian Kesehatan publications on karhutla smoke, each item naming its source and marked "Belum ditinjau tenaga kesehatan". The emergency screen shows 119 (Kemenkes medical emergency service, 24 hours, free) and 112 (national emergency number). (Resolves Q-08.) | Sources S-09 and S-10 in [REFERENCES](REFERENCES.md), read 19 Nov | The text is coursework content, not clinically approved advice ([SAFETY_PRIVACY](SAFETY_PRIVACY.md)). |
+| D-34 | The integration service runs on the owner's laptop and is published as `https://avela-int.stei.fun` through its own Cloudflare Tunnel hostname. The deck allows a laptop (slide 11). When the laptop is off, the app shows partner sections as unavailable and the core keeps serving the last snapshot with its age. (Resolves Q-10.) | Deck slides 11 and 21; no always-on host is available | The integration service holds the peer keys and the snapshot key in its own `.env`. |
+| D-35 | Until Veriqu and FlowGanic sign a contract (Q-03), each adapter runs against a fixture built from Avela's request, and every response from it carries `isMock: true`. The app shows "Data contoh (mock)" next to the source. Replacing the fixture with the live call changes only the adapter. | Deck slide 27 allows a mock from the contract; AGENTS forbids calling a mock live | The mock label stays until the live call is recorded. |
 
 ## Proposed
 
 | ID | Proposal | Why | Confirm by |
 | --- | --- | --- | --- |
-| P-01 | Write the mobile app in JavaScript with the practicum pattern: Context, `ApiService.js`, Jest. | The deck names `ApiService.js` and says to reuse the KatalogKu pattern. | Before A-05 |
-| P-02 | Show a PM2.5 category that refers to the ISPU concentration breakpoints, labelled as a reference and not an official ISPU reading. | Raw µg/m³ alone does not tell a resident what to do. | 23 Nov; breakpoints must be read from the KLHK regulation first (Q-13) |
 | P-03 | Photo attachments (A-11) and a custom forecast model (R-01) are stretch items, started only after M3 passes. | Neither is needed for a graded requirement. | 6 Dec |
-| P-04 | The area health signal hides any count from 1 to 4. | The paper says small counts are hidden; 1 to 4 is the proposed threshold. | 23 Nov, before A-25 |
-| P-05 | Goal targets in [PRD.md](PRD.md) section 2. | The targets are the assistant's estimates. | 23 Nov |
-| P-06 | The "agreed identity verification" in the paper works like this in the prototype: at the facility the resident shows the report in the app, staff confirm the name, and the result is drafted against that report, so its owner comes from the report. | No real identity check exists; the report already ties the result to the right account. | Before A-31 |
+
+Confirmed on 19 November: P-01 (D-28), P-02 (D-29), P-04 (D-30), P-05 (D-31), P-06 (D-32).
 
 ## Open Questions
 
 | ID | Decision needed | Owner | Due |
 | --- | --- | --- | --- |
-| Q-03 | Written contracts with Veriqu and FlowGanic (D-23), including FlowGanic's area codes for both pilot areas, plus one backup group. | Riantama | 23 Nov |
-| Q-08 | Sources for the protection guidance and the verified local emergency contact. | Riantama | 23 Nov |
-| Q-10 | Where the integration service runs: an always-on host or a laptop with a tunnel. | Riantama | 23 Nov |
-| Q-12 | STB hardware. Known from the Week 7 practicum: ZTE B860H on Armbian (Debian Trixie), `aarch64`, about 1 GB RAM, Docker 26.1.4, Compose v2.28.1; it already runs aaPanel, host Nginx, MySQL, phpMyAdmin, and KatalogKu (gateway on port 8080). Still open: free disk, free memory with those running, and whether the Avela image builds. | Riantama | 23 Nov (A-04) |
-| Q-13 | ISPU PM2.5 breakpoints and averaging period, read from the regulation. | Riantama | 23 Nov |
+| Q-03 | Written contracts with Veriqu and FlowGanic (D-23), including FlowGanic's area codes for both pilot areas, plus one backup group. Until then the adapters run on labelled fixtures (D-35). | Riantama | 23 Nov |
 
-Resolved: Q-01 (D-06), Q-02 (D-14), Q-04 (simulated staff accounts `petugas1` and `petugas2`), Q-06 (D-08, D-15), Q-09 (D-18, D-19), Q-11 (D-19). Deferred with P-03: Q-05 (custom forecasting), Q-07 (attachments).
+Resolved: Q-01 (D-06), Q-02 (D-14), Q-04 (simulated staff accounts `petugas1` and `petugas2`), Q-06 (D-08, D-15), Q-08 (D-33), Q-09 (D-18, D-19), Q-10 (D-34), Q-11 (D-19), Q-12 (STB measured in A-04: ZTE B860H, Armbian, `aarch64`, 913 MiB RAM, the image builds), Q-13 (D-29). Deferred with P-03: Q-05 (custom forecasting), Q-07 (attachments).
 
 ## Alternatives Considered
 
@@ -75,3 +76,5 @@ Resolved: Q-01 (D-06), Q-02 (D-14), Q-04 (simulated staff accounts `petugas1` an
 | 2026-11-10 | API shortlist researched and design refined. |
 | 2026-11-11 | Owner authorized the core build with FastAPI and SQLite. |
 | 2026-11-12 | D-06 and D-08 confirmed. D-14 to D-21 added. Scope-freeze gate A-17 retired. |
+| 2026-11-17 | D-22 to D-27 added from the submitted DDD paper. |
+| 2026-11-19 | Owner delegated the open choices. D-28 to D-35 added; Q-08, Q-10, Q-12, Q-13 resolved. |

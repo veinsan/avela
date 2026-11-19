@@ -1,6 +1,6 @@
 # Avela Task Tracker
 
-**Updated:** 17 November 2026. Status values: Pending, In progress, Blocked, Done. A task is Done only after its completion criteria in [ARCHITECTURE.md](ARCHITECTURE.md) are checked.
+**Updated:** 19 November 2026. Status values: Pending, In progress, Blocked, Done. A task is Done only after its completion criteria in [ARCHITECTURE.md](ARCHITECTURE.md) are checked.
 
 ## Next Three Actions
 
@@ -34,8 +34,8 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | A-09 | Staff review and results API | Done | `test_stale_version_loses`, `test_full_review_cycle_and_result_delivery` pass. Result versioning is A-31. |
 | A-23 | Areas and snapshot ingestion | Done | 17 Nov: `test_environment.py` (4 tests) passes: both areas seeded, push rejected without key (401) and without scope (403), stored with `snapshots:write`, advisory fresh/stale/unavailable with age, keys stored hashed. `app.keys` CLI smoke-tested. Not run: Docker build (A-04). `communitySignal` stays null until A-25. |
 | A-24 | Exposure context on reports | Pending | Requires A-23. `areaId` becomes a required report field; update the tests. |
-| A-25 | Peer API keys and public endpoints | Pending | Requires A-23. Confirm P-04 first. |
-| A-05 | Scaffold the mobile app | Pending | Confirm P-01 (JavaScript), then create `apps/mobile`. |
+| A-25 | Peer API keys and public endpoints | Pending | Requires A-23. Suppression rule confirmed (D-30). |
+| A-05 | Scaffold the mobile app | Pending | JavaScript confirmed (D-28); create `apps/mobile`. |
 
 ## M2: Public core, Registry, resident app, by 23 November
 
@@ -43,7 +43,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | --- | --- | --- | --- |
 | A-13 | Deploy the core on the STB | Pending | Requires A-04 and A-25. |
 | A-18 | Publish to the Registry and give peers access | Pending | Requires A-13. |
-| A-02 | Finish the data audit | In progress | Open-Meteo probes passed for both areas. Remaining: BMKG codes, quota against the push schedule, ISPU breakpoints (Q-13). |
+| A-02 | Finish the data audit | In progress | Open-Meteo probes passed for both areas. ISPU bands sourced (D-29); BMKG panel dropped from the MVP. Remaining: quota against the push schedule, adapter failure paths. |
 | A-07 | Environmental context end to end | Pending | Requires A-02, A-05, A-23. |
 | A-26 | Resident report flow in the app | Pending | Requires A-05 and A-24. |
 
@@ -53,10 +53,10 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | --- | --- | --- | --- |
 | A-10 | Integrate Veriqu and FlowGanic | Pending | Blocked on A-03 for real endpoints; use contract mocks, labelled, if a peer is late after 23 Nov. |
 | A-27 | Staff screens in the app | Pending | Requires A-05. |
-| A-12 | Guidance, emergency screen, failure states | Pending | Requires Q-08 for content sources. |
+| A-12 | Guidance, emergency screen, failure states | Pending | Content sources chosen (D-33). |
 | A-28 | Mobile test suite and test table | Pending | Requires A-10, A-26, A-27. |
 | A-30 | Facility directory | Pending | Requires A-23. Add area, services, and schedule to `facilities` and a list endpoint (D-24). |
-| A-31 | Versioned examination results | Pending | Confirm P-06, then add result versions (D-26). |
+| A-31 | Versioned examination results | Pending | Identity linkage confirmed (D-32); add result versions (D-26). |
 | A-29 | Peer support and uptime | Pending | Starts when A-18 is done. |
 
 ## M4: Release and submission, by 13 December
@@ -83,3 +83,4 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | 2026-11-17 | DDD paper submitted (A-16); M2 moved to 23 Nov; task split updated (D-19) | Paper drafts and diagram removed; `Makalah_DDD.docx` is the record. |
 | 2026-11-17 | Documents aligned with the submitted paper (D-22 to D-27); A-30 and A-31 added | Checks in VALIDATION_REPORT; `pytest -q`: 8 passed. |
 | 2026-11-17 | A-23 areas, snapshot push, advisory, API key mechanism (`app.keys`) | `pytest -q` in `services/core`: 12 passed. |
+| 2026-11-19 | Open choices decided (D-28 to D-35); documents synced with the built core and the public `/api` paths | ISPU table read from the regulation's Lampiran I; `pytest -q`: 12 passed. |

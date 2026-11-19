@@ -1,6 +1,6 @@
 # Architecture and Implementation Plan
 
-**Updated:** 17 November 2026. Scope comes from [PRD.md](PRD.md); decisions are in [DECISIONS.md](DECISIONS.md).
+**Updated:** 19 November 2026. Scope comes from [PRD.md](PRD.md); decisions are in [DECISIONS.md](DECISIONS.md).
 
 ## Technical Stack
 
@@ -8,14 +8,14 @@
 | --- | --- | --- |
 | Core service | Python 3.12, FastAPI 0.162.4, uvicorn 0.54.0, PyJWT 2.15.1 | Built in `services/core` |
 | Core database | SQLite in WAL mode on a Docker volume | Built |
-| Core tests | pytest 9.2.0 with httpx 0.28.1 | 8 tests pass |
+| Core tests | pytest 9.2.0 with httpx 0.28.1 | 12 tests pass |
 | Python tooling | uv for the virtual environment and installs | In use |
-| Gateway | Nginx 1.28 alpine with rate limits | Configured in `infra/stb`, not deployed |
-| Public access | Cloudflare Tunnel `k01-avela` to `https://avela.stei.fun` | Not created |
-| Integration service | FastAPI, same versions, outside the STB at `https://avela-int.stei.fun` | Planned; host open (Q-10) |
+| Gateway | Nginx 1.28 alpine with rate limits | Running on the STB, local check on port 8081 |
+| Public access | Cloudflare Tunnel `k01-avela` to `https://avela.stei.fun` | Live: the class route sends `/api/*` to the gateway |
+| Integration service | FastAPI, same versions, on the owner's laptop at `https://avela-int.stei.fun` (D-34) | Planned |
 | PM2.5 source | Open-Meteo Air Quality, `cams_global` domain | Probed on 10 Nov |
 | Mobile app | React Native with Expo, React Navigation (stack and bottom tabs), React Context | Planned; versions pinned at scaffold |
-| Mobile language | JavaScript with `ApiService.js` | Proposed (P-01) |
+| Mobile language | JavaScript with `ApiService.js` | Confirmed (D-28) |
 | Mobile tests | Jest with `jest-expo` and React Native Testing Library | Planned |
 | Release | EAS Build, Android APK | Planned |
 
@@ -70,7 +70,7 @@ Screen behavior is in [PRODUCT_FLOWS.md](PRODUCT_FLOWS.md); endpoints are in [AP
 ## Repository Layout
 
 ```text
-services/core/         Built. app/ (main, care, results, security, db, errors, seed), tests/, Dockerfile
+services/core/         Built. app/ (main, care, results, environment, security, keys, db, errors, seed), tests/, Dockerfile
 infra/stb/             Built. docker-compose.yml, nginx.conf, .env.example
 services/integration/  Planned. Provider and peer adapters, snapshot push job
 apps/mobile/           Planned. Expo app
@@ -80,18 +80,15 @@ README.md, CLAUDE.md   Repository front page and agent entry point
 
 ## Data Design
 
-Tables that exist in `services/core/app/db.py`: `facilities`, `accounts`, `memberships`, `reports`, `report_events`, `results`.
+Tables that exist in `services/core/app/db.py`: `facilities`, `accounts`, `memberships`, `reports`, `report_events`, `results`, `areas`, `area_snapshots`, `api_keys`.
 
-Planned additions for core v0.2:
+Planned additions for core v0.2 (`areas`, `area_snapshots`, and `api_keys` were added in A-23; a key is revoked by deleting its row):
 
 | Table or column | Purpose |
 | --- | --- |
-| `areas` | ID, name, province, latitude, longitude, optional BMKG code, FlowGanic area code |
 | `facilities.area_id`, `services`, `schedule` | Area link, services, and opening schedule for the directory (A-30) |
-| `area_snapshots` | Area, hourly PM2.5 points, unit, source, model domain, retrieved time, pushed time |
 | `reports.area_id` | Area the resident reports from |
 | `reports.exposure_context` | JSON frozen at submission: window, mean, peak, point count, source, retrieved time; or null with a reason |
-| `api_keys` | Group name, key hash, scopes, active flag |
 | `results.version`, `results.previous_id` | Version history for corrected results (A-31) |
 
 Rules that hold across the design:
@@ -150,9 +147,9 @@ The paper was submitted on 16 November. The other M1 steps are due with M2.
 
 | ID | Step | Track | Depends on | Completion criteria |
 | --- | --- | --- | --- | --- |
-| A-13 | Deploy the core on the STB | TST | A-04, A-25 | `https://avela.stei.fun/health` returns 200; limits are set; a burst gets 429; a backup is restored once. |
+| A-13 | Deploy the core on the STB | TST | A-04, A-25 | `https://avela.stei.fun/api/health` returns 200; limits are set; a burst gets 429; a backup is restored once. |
 | A-18 | Publish to the Registry and give peers access | TST | A-13 | The Registry row has the base URL, documentation link, and auth type; Swagger UI is public; a README.pdf draft lists endpoints and how to get a key; a test account exists. |
-| A-02 | Finish the data audit | TST | - | BMKG codes for both areas are verified or the weather panel is dropped; Open-Meteo quota fits the push schedule; ISPU breakpoints are sourced (Q-13). |
+| A-02 | Finish the data audit | TST | - | BMKG codes for both areas are verified or the weather panel is dropped; Open-Meteo quota fits the push schedule; ISPU breakpoints are sourced (D-29). |
 | A-07 | Environmental context end to end | Both | A-02, A-05, A-23 | The integration service pushes snapshots for both areas on a schedule; Beranda shows fresh, stale, and unavailable states with source and time. |
 | A-26 | Resident report flow in the app | PWAM | A-05, A-24 | Form validation, submit with retry, report list, detail with timeline and exposure context, reply to an information request, cancel, result view, and update markers work against the deployed core. |
 
@@ -165,7 +162,7 @@ The paper was submitted on 16 November. The other M1 steps are due with M2.
 | A-12 | Guidance, emergency screen, failure states | PWAM | A-07, A-26 | Guidance shows sources; the emergency screen opens signed out; every data screen has loading, empty, error, and stale states. |
 | A-28 | Mobile test suite and test table | PWAM | A-10, A-26, A-27 | Jest unit tests cover `ApiService.js`, validation, and state mapping; the functional and integration test table is filled with results. |
 | A-30 | Facility directory | Both | A-23 | Facilities carry area, services, and schedule; `GET /api/v1/facilities` lists them by area; Fasilitas and Detail Fasilitas show them with the simulation label and "tidak diketahui" for unknown hours. |
-| A-31 | Versioned examination results | TST | A-09 | Correcting a published result creates a new version linked to the previous one; the owner reads the latest and the history; P-06 is confirmed. |
+| A-31 | Versioned examination results | TST | A-09 | Correcting a published result creates a new version linked to the previous one; the owner reads the latest and the history; identity linkage follows D-32. |
 | A-29 | Peer support and uptime | TST | A-18 | From 23 Nov to grading: health checks are logged and peer issues get a first reply within 24 hours. |
 
 ### M4: Release and submission, by 13 December

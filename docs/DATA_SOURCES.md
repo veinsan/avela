@@ -1,6 +1,6 @@
 # Data Sources
 
-**Updated:** 17 November 2026. Providers are chosen (D-13); the requests behind the choice are in [API_RESEARCH.md](API_RESEARCH.md). No adapter is built yet. Public providers do not count toward the two-group integration requirement.
+**Updated:** 19 November 2026. Providers are chosen (D-13); the requests behind the choice are in [API_RESEARCH.md](API_RESEARCH.md). No adapter is built yet. Public providers do not count toward the two-group integration requirement.
 
 ## Chosen Sources
 
@@ -10,7 +10,7 @@
 | Protective products | Veriqu's product catalogue | Product recommendations in Panduan | Contract pending (Q-03) |
 | Managed waste recap | FlowGanic's waste distribution service | Waste section on Beranda | Contract and area codes pending (Q-03) |
 | Facilities | Avela's simulated facility directory (D-24) | Fasilitas tab | ID and name seeded; services and schedule planned (A-30) |
-| Guidance | Text written from authoritative publications, with sources | Panduan, Darurat | Sources not chosen (Q-08) |
+| Guidance | Text written from Kemenkes publications, with sources (D-33) | Panduan, Darurat | Sources read 19 Nov (S-09, S-10) |
 | Local weather | BMKG village forecast | Optional weather panel | Stretch; needs verified area codes |
 
 Not used in the MVP: Open-Meteo Geocoding and device location (the resident picks one of two areas from a list, D-25), OpenAQ station observations (only needed for R-01).
@@ -35,7 +35,17 @@ Push schedule: one request per area every 60 minutes is 48 calls a day, far insi
 
 ## PM2.5 Category
 
-The app shows a category next to the value only after the ISPU concentration breakpoints and their averaging period are read from the KLHK regulation (Q-13, P-02). Until then the value appears without a category. Do not use US or European AQI names, and do not present the category as an official ISPU reading: ISPU is computed from station measurements, and Avela has a model forecast.
+The advisory places the 24-hour mean of the forecast in the PM2.5 bands of Permen LHK P.14/2020, Lampiran I (S-08, D-29):
+
+| Category | ISPU | 24-hour PM2.5 (µg/m³) |
+| --- | --- | --- |
+| Baik | 0-50 | up to 15.5 |
+| Sedang | 51-100 | up to 55.4 |
+| Tidak Sehat | 101-200 | up to 150.4 |
+| Sangat Tidak Sehat | 201-300 | up to 250.4 |
+| Berbahaya | above 300 | above 250.4 |
+
+The mean uses the forecast values valid in the 24 hours up to now; with fewer than 18 values the label is null. The app labels it "mengacu ISPU". Do not use US or European AQI names, and do not present the category as an official ISPU reading: ISPU is computed from station measurements, and Avela has a model forecast.
 
 ## BMKG Weather (stretch)
 
@@ -62,7 +72,7 @@ Facility data is Avela's own simulated list (D-24), not OpenStreetMap or a publi
 
 ## Remaining Audit (A-02)
 
-1. Read the ISPU breakpoints from the regulation and record the source in REFERENCES (Q-13).
-2. Decide on the BMKG panel: verify one `adm4` code per area, or drop the panel.
+1. ISPU breakpoints: read 19 Nov (S-08, D-29).
+2. BMKG panel: dropped from the MVP; it stays a stretch item and needs a verified `adm4` code per area.
 3. Run the adapter's failure paths: timeout, 429, and a changed schema (T-21, T-23).
 4. Confirm attribution text appears on Beranda.

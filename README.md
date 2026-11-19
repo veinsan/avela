@@ -17,14 +17,15 @@ Available now, in the core API:
 - Follow a report's state and timeline.
 - Staff claim a report, ask for more information, publish a response, and close it.
 - Staff publish an examination result that only the report's owner can read.
+- List the two pilot areas and read each area's latest pushed PM2.5 snapshot with its age.
 
-Planned for the 13 December release: area PM2.5 forecast, exposure context on each report, an anonymous area health signal for other groups, a simulated facility directory, versioned examination results, the Android app, and integration with Veriqu (protective products) and FlowGanic (waste recap per area). The domain follows the DDD paper submitted on 16 November, [docs/Makalah_DDD.docx](docs/Makalah_DDD.docx). Progress is in [docs/TODO.md](docs/TODO.md).
+Planned for the 13 December release: exposure context on each report, an anonymous area health signal for other groups, a simulated facility directory, versioned examination results, the Android app, and integration with Veriqu (protective products) and FlowGanic (waste recap per area). The domain follows the DDD paper submitted on 16 November, [docs/Makalah_DDD.docx](docs/Makalah_DDD.docx). Progress is in [docs/TODO.md](docs/TODO.md).
 
 All accounts, staff, and cases are fictional. Avela does not diagnose and is not a clinical service.
 
 ## Screenshot or Demo
 
-No screenshot or public deployment is available yet.
+The core runs on the class set-top box behind `https://avela.stei.fun/api/`; interactive documentation is at [avela.stei.fun/api/docs](https://avela.stei.fun/api/docs). No app screenshot exists yet.
 
 ## Tech Stack and Rationale
 
@@ -52,7 +53,7 @@ Prerequisites: Python 3.12 or newer, [uv](https://docs.astral.sh/uv/), and Git B
    .venv/Scripts/python.exe -m app.seed
    ```
 
-3. Start the service and open `http://127.0.0.1:8000/docs`.
+3. Start the service and open `http://127.0.0.1:8000/api/docs`.
 
    ```bash
    .venv/Scripts/python.exe -m uvicorn app.main:app --reload

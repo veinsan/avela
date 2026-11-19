@@ -1,6 +1,6 @@
 # Avela Branch Plan
 
-**Updated:** 12 November 2026. Only `main` exists. No branch protection, tag, or pull request has been created.
+**Updated:** 19 November 2026. `main` is the long-lived branch. A-23 and the tunnel fixes were merged through pull requests #1 to #3. No branch protection or tag exists.
 
 ## Strategy
 

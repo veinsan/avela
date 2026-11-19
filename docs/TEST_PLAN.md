@@ -1,12 +1,12 @@
 # Test Plan
 
-**Updated:** 12 November 2026. Core tests exist and pass (8 of 8, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
+**Updated:** 19 November 2026. Core tests exist and pass (12 of 12, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
 
 ## Layers
 
 | Layer | Tool | Where | State |
 | --- | --- | --- | --- |
-| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 8 tests pass |
+| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 12 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | Planned (A-07, A-10) |
 | Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
@@ -19,8 +19,8 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | ID | Scenario and expected result | Requirement | Status |
 | --- | --- | --- | --- |
 | T-01 | The resident picks an area from the pilot list; no location permission is requested. | US-01 | Planned, A-07 |
-| T-02 | No snapshot: advisory is unavailable and shows no value. | US-01, NFR-04 | Planned, A-23 |
-| T-03 | Advisory shows source, unit, valid time, and snapshot age. | FR-02 | Planned, A-23 |
+| T-02 | No snapshot: advisory is unavailable and shows no value. | US-01, NFR-04 | Pass (API): `test_areas_seeded_and_advisory_unavailable_without_snapshot`; screen in A-07 |
+| T-03 | Advisory shows source, unit, valid time, and snapshot age. | FR-02 | Pass (API): `test_pushed_snapshot_feeds_advisory`; screen in A-07 |
 | T-04 | The emergency screen opens signed out, without a report. | US-05 | Planned, A-12 |
 | T-05 | A valid report is saved and visible only to its owner and facility staff. | US-03 | Pass: `test_resident_cannot_see_other_residents_data`. Restart survival is checked in A-13. |
 | T-06 | A retried submit creates one report; a different body under the same key is rejected. | NFR-06 | Pass: `test_retry_is_idempotent_and_conflicting_reuse_rejected` |
@@ -44,10 +44,10 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-25 | A facility with an unknown schedule is shown as unknown, under the simulation label. | US-07 | Planned, A-30 |
 | T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Planned, A-24 |
 | T-27 | A report submitted with no snapshot saves with a null exposure context and a reason. | US-10 | Planned, A-24 |
-| T-28 | A snapshot push without the `snapshots:write` scope is rejected. | FR-15 | Planned, A-23 |
+| T-28 | A snapshot push without the `snapshots:write` scope is rejected. | FR-15 | Pass: `test_snapshot_push_requires_scoped_key` |
 | T-29 | The health signal hides counts from 1 to 4, leaves out cancelled reports, and returns no text, account, or facility. | US-11, NFR-10 | Planned, A-25 |
 | T-30 | Public endpoints: no key gives 401, a key without the scope gives 403, a valid key gives 200. | US-09 | Planned, A-25 |
-| T-31 | A snapshot older than 2 hours is marked stale in the advisory and on Beranda. | US-01 | Planned, A-23, A-07 |
+| T-31 | A snapshot older than 2 hours is marked stale in the advisory and on Beranda. | US-01 | Partial: API passes `test_old_snapshot_is_stale_and_keys_are_stored_hashed`; Beranda in A-07 |
 | T-32 | A staff account completes queue, claim, ask, respond, close, and publish result on a device. | US-06, FR-16 | Planned, A-27 |
 | T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Planned, A-27 |
 | T-34 | Correcting a published result creates a new version; the owner reads the latest and the earlier one. | US-08, FR-09 | Planned, A-31 |

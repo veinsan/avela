@@ -8,7 +8,7 @@
 | --- | --- | --- | --- | --- |
 | C-01 | Two members with backend and mobile responsibilities; both understand the whole system. Individual grades follow each member's role and GitHub contribution. | 3-5, 25, 27 | D-19 | Commits from both members; both explain the system in the video |
 | C-02 | DDD paper: system description, bounded contexts, subdomain decomposition with diagram | 19 | A-16 | Submitted .docx or .pdf with cover |
-| C-03 | Core microservice in Docker on the STB, publicly reachable, with memory and CPU limits | 20, 23 | A-04, A-13 | `https://avela.stei.fun/health`; compose file; `docker stats` capture |
+| C-03 | Core microservice in Docker on the STB, publicly reachable, with memory and CPU limits | 20, 23 | A-04, A-13 | `https://avela.stei.fun/api/health`; compose file; `docker stats` capture |
 | C-04 | Public API with OpenAPI or Postman documentation, one API key per peer group, and one test account | 14, 17 | A-25, A-18 | Swagger UI link; key issue log; test account |
 | C-05 | Use the services of at least two other groups in real features | 14, 21 | A-03, A-10 | Feature screenshots and request logs per peer |
 | C-06 | Integration runs outside the STB or in the mobile app | 11, 21 | A-07, A-10 | Integration service URL; architecture diagram |

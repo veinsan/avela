@@ -1,6 +1,6 @@
 # API and Integration Contracts
 
-**Updated:** 12 November 2026. Base URL after deployment: `https://avela.stei.fun`. Application endpoints use the prefix `/api/v1`. The built endpoints are also listed in `services/core/README.md`; FastAPI serves the OpenAPI document at `/api/openapi.json`, Swagger UI at `/api/docs`, and liveness at `/api/health`. The class tunnel forwards only `/api/*` to the gateway; other paths on the hostname go to the server panel.
+**Updated:** 19 November 2026. Base URL after deployment: `https://avela.stei.fun`. Application endpoints use the prefix `/api/v1`. The built endpoints are also listed in `services/core/README.md`; FastAPI serves the OpenAPI document at `/api/openapi.json`, Swagger UI at `/api/docs`, and liveness at `/api/health`. The class tunnel forwards only `/api/*` to the gateway; other paths on the hostname go to the server panel.
 
 ## Conventions
 
@@ -112,6 +112,7 @@ Illustrative values, not a captured response.
   "unit": "ug/m3",
   "retrievedAt": "2026-11-20T02:00:00Z",
   "freshness": "fresh",
+  "ageMinutes": 25,
   "current": {"validAt": "2026-11-20T02:00:00Z", "value": 41.2},
   "category": {"standard": "ISPU reference", "label": null},
   "series": [{"validAt": "2026-11-20T02:00:00Z", "value": 41.2}],

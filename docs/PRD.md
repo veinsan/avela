@@ -1,10 +1,10 @@
 # Avela Product Requirements Document
 
-**Status:** Approved for the coursework MVP on 12 November 2026. Goal targets are proposed (P-05 in [DECISIONS.md](DECISIONS.md)).
+**Status:** Approved for the coursework MVP on 12 November 2026. Goal targets are confirmed (D-31 in [DECISIONS.md](DECISIONS.md)).
 
 **Owner:** Riantama Putra. **Team:** Mishael Gilland, Riantama Putra.
 
-**Updated:** 17 November 2026. The submitted DDD paper is the source of truth (D-22).
+**Updated:** 19 November 2026. The submitted DDD paper is the source of truth (D-22).
 
 ## 1. Problem Statement
 
@@ -16,7 +16,7 @@ Avela connects these pieces in one loop: area smoke forecast, a symptom report t
 
 ## 2. Goals
 
-| ID | Outcome | Metric | Proposed target |
+| ID | Outcome | Metric | Target |
 | --- | --- | --- | --- |
 | G-01 | Residents read the area's smoke conditions correctly. | Five test users answer three questions on the Home screen: which area, forecast or measurement, how old. | At least 4 of 5 answer all three correctly. |
 | G-02 | Residents can submit a complete symptom report. | Time for a first-time test user from opening the form to a submitted report. | 3 minutes or less; no invalid report accepted. |
@@ -57,10 +57,10 @@ US-04 (optional photo attachment) is a stretch item; see section 7.
 
 ## 5. Functional Requirements
 
-| ID | Requirement | Stories | State on 17 Nov |
+| ID | Requirement | Stories | State on 19 Nov |
 | --- | --- | --- | --- |
 | FR-01 | Authenticate residents and staff; limit staff to their facility. | US-03, US-06, US-08 | Core API built and tested |
-| FR-02 | Serve the latest PM2.5 snapshot per area with unit, valid time, source, and age. | US-01 | Planned |
+| FR-02 | Serve the latest PM2.5 snapshot per area with unit, valid time, source, and age. | US-01 | Core API built and tested; screen planned |
 | FR-03 | Serve guidance with sources and separate emergency information. | US-02, US-05 | Planned |
 | FR-04 | Persist symptom reports and append-only updates. | US-03 | Core API built and tested |
 | FR-06 | Staff queue, claim, information request, response with disposition, close. | US-06 | Core API built and tested; screens planned |
@@ -72,7 +72,7 @@ US-04 (optional photo attachment) is a stretch item; see section 7.
 | FR-12 | Handle loading, empty, stale, unavailable, and retry states on every data screen. | All | Planned |
 | FR-13 | Freeze an exposure context onto each report at submission. | US-10 | Planned |
 | FR-14 | Publish the area health signal with small-count suppression. | US-11, US-12 | Planned |
-| FR-15 | Accept PM2.5 snapshots pushed by the integration service. | US-01, US-10 | Planned |
+| FR-15 | Accept PM2.5 snapshots pushed by the integration service. | US-01, US-10 | Core API built and tested; push job planned (A-07) |
 | FR-16 | Show staff screens only to staff accounts in the same app. | US-06 | Planned |
 | FR-17 | Show an in-app update marker when a report changes state or a result is published. | US-05, US-08 | Planned (A-26) |
 
