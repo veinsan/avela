@@ -7,7 +7,7 @@
 | Layer | Tool | Where | State |
 | --- | --- | --- | --- |
 | Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 26 tests pass |
-| Integration service | pytest with stubbed upstream responses | `services/integration/tests` | 6 tests pass (A-07) |
+| Integration service | pytest with stubbed upstream responses | `services/integration/tests` | 15 tests pass (A-07, A-10) |
 | Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
 | Deployment | Commands on the STB | Evidence in README.pdf | Planned (A-13) |
@@ -39,7 +39,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-19 | The release APK installs; login, 4+ screens, stack and tab navigation, and the validated form work. | C-07, C-11 | Planned, A-14 |
 | T-20 | Fixtures, logs, screenshots, and the video contain only synthetic people. | NFR-02 | Planned, A-15 |
 | T-21 | The Open-Meteo adapter keeps valid time and retrieval time separate and sends missing values as null. | FR-15 | Pass: `test_snapshot_keeps_valid_and_retrieval_time_apart_and_gaps_null` |
-| T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Partial: the push side passes `test_provider_failure_pushes_nothing_and_does_not_raise`; partner endpoints in A-10 |
+| T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Pass: `test_provider_failure_pushes_nothing_and_does_not_raise`, `test_veriqu_failure_serves_last_good_answer_as_stale_or_unavailable` |
 | T-24 | Light and dark themes, TalkBack labels, Android Back, and keyboard insets work on a device. | NFR-07 | Planned, A-12 |
 | T-25 | A facility with an unknown schedule is shown as unknown, under the simulation label. | US-07 | Partial: API passes `test_unknown_hours_stay_unknown`; screen in A-12 |
 | T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Pass (API): `test_report_freezes_exposure_context` |
@@ -51,7 +51,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-32 | A staff account completes queue, claim, ask, respond, close, and publish result on a device. | US-06, FR-16 | Planned, A-27 |
 | T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Planned, A-27 |
 | T-34 | Correcting a published result creates a new version; the owner reads the latest and the earlier one. | US-08, FR-09 | Pass (API): `test_correction_is_a_new_version_and_the_old_one_stays_readable`; screen in A-26 |
-| T-35 | A FlowGanic area code maps to the right pilot area; an unmapped code is dropped, not guessed. | US-13 | Planned, A-10 |
+| T-35 | A FlowGanic area code maps to the right pilot area; an unmapped code is dropped, not guessed. | US-13 | Pass (fixture codes): `test_waste_recap_maps_codes_and_drops_unmapped_ones`; agreed codes pending (Q-03) |
 | T-36 | The Laporan tab shows an update marker after a state change or a new result. | FR-17 | Planned, A-26 |
 
 T-22 (BMKG code mapping) applies only if the weather panel is built.

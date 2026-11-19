@@ -17,11 +17,43 @@ What it does
    A failed fetch pushes nothing, so the core keeps serving its last snapshot
    and marks it stale after 2 hours.
 
-Endpoints
----------
-GET /health    liveness, whether the push job is on, and the last push result
+2. Anticorruption layer for Veriqu (Katalog Produk). Translates Veriqu's
+   products into Avela's protective-product items (name, category, rating
+   summary, link) and keeps only masks and air purifiers.
 
-Every upstream call gives up after 10 seconds.
+3. Anticorruption layer for FlowGanic (Koordinasi Distribusi Sampah).
+   Translates FlowGanic's managed waste volume per RW or kelurahan code into a
+   recap per Avela pilot area and waste type. A code outside the agreed mapping
+   is dropped, never guessed.
+
+Endpoints (called by the Avela app)
+-----------------------------------
+GET /health                  liveness, push job on or off, last push result
+GET /guidance/products       Veriqu protective products
+GET /areas/{areaId}/waste    FlowGanic waste recap for pekanbaru or palangka-raya
+
+The partner endpoints always answer 200 with this envelope:
+
+    {"source": "Veriqu", "retrievedAt": "2026-11-20T02:00:00Z",
+     "freshness": "fresh", "isMock": false, "data": [...]}
+
+freshness is fresh, stale (the partner failed; this is the last good answer),
+or unavailable (no good answer yet; data is null). Every upstream call gives up
+after 10 seconds. Each partner call is logged with its result and duration;
+these log lines are the request evidence for the README and the video.
+
+Agreements and mocks
+--------------------
+Veriqu and FlowGanic are the two groups named in Avela's DDD paper. Until each
+signs a written contract (endpoints, data format, call limit, contact), its
+adapter reads a fictional fixture in fixtures/ and every answer carries
+isMock: true; the app shows "Data contoh (mock)". To switch to the live
+service set VERIQU_BASE_URL and VERIQU_API_KEY, or FLOWGANIC_BASE_URL,
+FLOWGANIC_API_KEY and FLOWGANIC_AREA_CODES, in .env. If the partner's real
+schema differs from the fixture, only translate() in app/veriqu.py or
+app/flowganic.py changes.
+
+No resident data is ever sent to a partner.
 
 Run
 ---
@@ -35,6 +67,11 @@ Requirements: Python 3.12+, uv, Git Bash.
 
 One push without the server:  .venv/Scripts/python.exe -m app.openmeteo
 Tests:                         .venv/Scripts/python.exe -m pytest -q
+
+If Windows Smart App Control blocks a DLL in the new .venv (ImportError: "An
+Application Control policy has blocked this file"), run the same commands with
+the core's environment, which pins the same versions:
+../core/.venv/Scripts/python.exe -m uvicorn app.main:app --port 8100
 
 Public URL
 ----------

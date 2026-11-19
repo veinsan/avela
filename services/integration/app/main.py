@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from . import openmeteo
+from . import flowganic, openmeteo, veriqu
 
 logging.basicConfig(level=logging.INFO)
 STATE = {"lastPush": None}
@@ -35,3 +35,14 @@ app = FastAPI(title="Avela Integration Service", version="0.2.0", lifespan=lifes
 def health():
     return {"status": "ok", "snapshotPush": "on" if os.environ.get("AVELA_SNAPSHOT_KEY") else "off",
             "lastPush": STATE["lastPush"]}
+
+
+# The app calls these two; the service calls the partners. Both always answer 200 with an envelope (NFR-04).
+@app.get("/guidance/products")
+def guidance_products():
+    return veriqu.products()
+
+
+@app.get("/areas/{area_id}/waste")
+def area_waste(area_id: str):
+    return flowganic.waste(area_id)

@@ -7,8 +7,8 @@
 | Need | Source | Used for | State |
 | --- | --- | --- | --- |
 | Area PM2.5 forecast | Open-Meteo Air Quality, `cams_global` | Smoke advisory, exposure context | Adapter and hourly push built in `services/integration` (A-07); live fetch checked 19 Nov |
-| Protective products | Veriqu's product catalogue | Product recommendations in Panduan | Contract pending (Q-03) |
-| Managed waste recap | FlowGanic's waste distribution service | Waste section on Beranda | Contract and area codes pending (Q-03) |
+| Protective products | Veriqu's product catalogue | Product recommendations in Panduan | Adapter built on a labelled fixture (D-35); contract pending (Q-03) |
+| Managed waste recap | FlowGanic's waste distribution service | Waste section on Beranda | Adapter built on a labelled fixture (D-35); contract and area codes pending (Q-03) |
 | Facilities | Avela's simulated facility directory (D-24) | Fasilitas tab | Two facilities seeded with area, services, and schedule (A-30) |
 | Guidance | Text written from Kemenkes publications, with sources (D-33) | Panduan, Darurat | Sources read 19 Nov (S-09, S-10) |
 | Local weather | BMKG village forecast | Optional weather panel | Stretch; needs verified area codes |

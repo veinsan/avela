@@ -39,7 +39,8 @@ services/core/tests/   conftest.py, test_core.py, test_environment.py
 infra/stb/             docker-compose.yml, nginx.conf, .env.example
 docs/                  Project documents and docs/skills/
 services/integration/  app/ main.py (service, push loop), upstream.py (the only network caller),
-                       openmeteo.py (PM2.5 snapshot push); tests/; README.txt
+                       openmeteo.py (PM2.5 snapshot push), partners.py (envelope, cache),
+                       veriqu.py, flowganic.py (anticorruption layers); fixtures/; tests/; README.txt
 apps/mobile/           Planned: Expo app
 ```
 
@@ -70,7 +71,7 @@ One bounded context per module in `services/core/app`. A new context gets its ow
 - [x] Peer API keys and public endpoints (advisory, health signal, guidance).
 - [x] Facility directory with services and schedule.
 - [x] Versioned examination results.
-- [ ] Integration service.
+- [x] Integration service: snapshot push and partner adapters (partners on labelled fixtures until A-03).
 - [ ] Mobile app.
 - [ ] Deployment on the STB.
 
@@ -98,7 +99,7 @@ uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirement
 
 Success is all tests passing; 26 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
 
-Integration service, from `services/integration`: the same two commands; 6 pass on 19 November. Run steps are in its `README.txt`.
+Integration service, from `services/integration`: the same two commands; 15 pass on 19 November. If Windows Smart App Control blocks a DLL in its new `.venv`, run it with `../core/.venv/Scripts/python.exe`, which pins the same versions. Run steps are in its `README.txt`.
 
 Mobile commands do not exist yet. Add them here when A-05 creates them.
 

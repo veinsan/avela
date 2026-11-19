@@ -51,7 +51,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
-| A-10 | Integrate Veriqu and FlowGanic | Pending | Blocked on A-03 for real endpoints; use contract mocks, labelled, if a peer is late after 23 Nov. |
+| A-10 | Integrate Veriqu and FlowGanic | In progress | 19 Nov: both anticorruption layers built in `services/integration` (`veriqu.py`, `flowganic.py`) with envelope, last-good cache, request log lines, and labelled fixtures (D-35); `test_partners.py` (9 tests) passes: translation, mock label, timeout, 429, and changed schema give stale or unavailable, unmapped codes dropped. `pytest -q` there: 15 passed. Remaining: live endpoints and keys from A-03, then request logs and screenshots for the README and video. |
 | A-27 | Staff screens in the app | Pending | Requires A-05. |
 | A-12 | Guidance, emergency screen, failure states | Pending | Content sources chosen (D-33). |
 | A-28 | Mobile test suite and test table | Pending | Requires A-10, A-26, A-27. |

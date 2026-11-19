@@ -188,17 +188,24 @@ Dates are calendar days in WIB. Cancelled reports are not counted. A hidden coun
 - One test account, the resident `uji-mitra`, is shared with peers so they can try the app-user endpoints. Its password (`AVELA_PEER_TEST_PASSWORD`) is separate from the demo accounts'.
 - Peers request a key and report problems as GitHub issues on `veinsan/avela`. The steps, limits, and example requests are in `services/core/README.md`, the source of `README.pdf`.
 
-## Integration Service Endpoints (planned)
+## Integration Service Endpoints
 
 Base URL `https://avela-int.stei.fun`. The app calls these; the service calls the peers.
 
 | Endpoint | Function | Notes |
 | --- | --- | --- |
-| `GET /guidance/products` | Protective products from Veriqu's catalogue, with rating summary | Shown in Panduan; the source is named |
-| `GET /areas/{areaId}/waste` | FlowGanic's managed waste volume per waste type, mapped to the pilot area | Shown on Beranda; an unmapped area returns `unavailable` |
+| `GET /guidance/products` | Protective products from Veriqu's catalogue, with rating summary | Shown in Panduan; the source is named. Built (A-10) |
+| `GET /areas/{areaId}/waste` | FlowGanic's managed waste volume per waste type, mapped to the pilot area | Shown on Beranda; an area without agreed codes returns `unavailable`. Built (A-10) |
 | `GET /health` | Liveness, whether the push job is on, and the last push result | Built (A-07) |
 
-Every response carries `source`, `retrievedAt`, and `freshness` (`fresh`, `stale`, `unavailable`). An upstream call is abandoned after 10 seconds. The scheduled job pushes one snapshot per area to the core every 60 minutes, with two past days and two forecast days (96 hourly points); it runs only when `AVELA_SNAPSHOT_KEY` is set.
+The partner endpoints always answer `200` with `{source, retrievedAt, freshness, isMock, data}`. `freshness` is `fresh`, `stale` (the partner failed and this is the last good answer, with its original `retrievedAt`), or `unavailable` (`data` is null). `isMock` is true while the adapter reads its fixture (D-35). An upstream call is abandoned after 10 seconds.
+
+```json
+{"source": "FlowGanic", "retrievedAt": "2026-11-20T02:00:00Z", "freshness": "fresh", "isMock": true,
+ "data": {"areaId": "pekanbaru", "period": "2026-11", "items": [{"wasteType": "organik", "volumeKg": 730.5}]}}
+```
+
+Veriqu `data` is a list of `{id, name, category, ratingSummary: {average, count}, link}`, filtered to the categories `masker` and `pembersih-udara`. The scheduled job pushes one snapshot per area to the core every 60 minutes, with two past days and two forecast days (96 hourly points); it runs only when `AVELA_SNAPSHOT_KEY` is set.
 
 ## Peer Integrations
 
@@ -209,4 +216,4 @@ The two groups are fixed by the DDD paper (D-23). Public APIs such as Open-Meteo
 | Veriqu | Katalog Produk | Products with rating summaries | Product to protective-product item: name, category, rating summary, link | Product recommendations in Panduan |
 | FlowGanic | Koordinasi Distribusi Sampah | Managed waste volume per RW or kelurahan and waste type | Their area code to Avela's pilot area through the agreed mapping; volumes summed per waste type | Waste section in the environment part of Beranda |
 
-No resident data is sent to either group. Their endpoint paths, limits, and keys go in the contract (Q-03). Record each agreement with [the peer-integration skill](skills/integrate-peer-api/SKILL.md). A mock built from a peer's contract is allowed when the peer is late after 23 November; it is labelled as a mock in the app, the README, and the video.
+No resident data is sent to either group. Their endpoint paths, limits, and keys go in the contract (Q-03). Until then each adapter reads a fixture shaped like Avela's request (`services/integration/fixtures`), labelled `isMock` (D-35); the request Avela sends is `GET {base}/products?category=masker,pembersih-udara` to Veriqu and `GET {base}/recap?areaCodes=...` to FlowGanic, each with `X-API-Key`. Record each agreement with [the peer-integration skill](skills/integrate-peer-api/SKILL.md). A mock built from a peer's contract is allowed when the peer is late after 23 November; it is labelled as a mock in the app, the README, and the video.

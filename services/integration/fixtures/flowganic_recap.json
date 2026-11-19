@@ -1,0 +1,11 @@
+{
+  "_note": "Fictional fixture shaped like Avela's request to FlowGanic (D-35). Not FlowGanic's data.",
+  "items": [
+    {"areaCode": "MOCK-PKU-RW01", "wasteType": "organik", "managedVolumeKg": 420.5, "period": "2026-11"},
+    {"areaCode": "MOCK-PKU-RW02", "wasteType": "organik", "managedVolumeKg": 310.0, "period": "2026-11"},
+    {"areaCode": "MOCK-PKU-RW01", "wasteType": "anorganik", "managedVolumeKg": 185.25, "period": "2026-11"},
+    {"areaCode": "MOCK-PLK-RW01", "wasteType": "organik", "managedVolumeKg": 260.0, "period": "2026-11"},
+    {"areaCode": "MOCK-PLK-RW01", "wasteType": "residu", "managedVolumeKg": 75.0, "period": "2026-11"},
+    {"areaCode": "MOCK-UNMAPPED", "wasteType": "organik", "managedVolumeKg": 999.0, "period": "2026-11"}
+  ]
+}
