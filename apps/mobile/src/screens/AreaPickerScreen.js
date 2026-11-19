@@ -7,7 +7,7 @@ import { listAreas } from '../services/ApiService';
 import { spacing } from '../theme';
 
 // The two pilot areas are fixed (D-14), so the picker still works when the core cannot be reached.
-const PILOT_AREAS = [
+export const PILOT_AREAS = [
   { id: 'palangka-raya', name: 'Palangka Raya', province: 'Kalimantan Tengah' },
   { id: 'pekanbaru', name: 'Pekanbaru', province: 'Riau' },
 ];

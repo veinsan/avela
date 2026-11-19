@@ -4,9 +4,11 @@ import { View } from 'react-native';
 import PartnerSection from '../components/PartnerSection';
 import { AppText, Button, ErrorView, LoadingView, Panel, Screen, Section, SimulationLabel } from '../components/ui';
 import { useArea } from '../context/AreaContext';
+import { useAuth } from '../context/AuthContext';
+import { useUpdates } from '../context/UpdatesContext';
 import { useLoad } from '../hooks/useLoad';
 import { getAdvisory, getWasteRecap } from '../services/ApiService';
-import { ageLabel, formatTime, pm25 } from '../utils/format';
+import { ageLabel, formatTime, pm25, stateLabel } from '../utils/format';
 import { rounded, spacing, useTheme } from '../theme';
 
 export function forecastAhead(series, now = Date.now(), count = 6) {
@@ -100,8 +102,29 @@ function CommunitySignal({ signal }) {
   );
 }
 
+function LatestReport({ navigation }) {
+  const { account } = useAuth();
+  const { reports } = useUpdates();
+  if (!account || account.role !== 'resident') return null;
+  const latest = reports[0];
+  return (
+    <Section title="Laporan terakhir">
+      {latest ? (
+        <Panel tone={latest.state === 'submitted' ? 'info' : 'neutral'}>
+          <AppText variant="bodyStrong">{stateLabel(latest.state)}</AppText>
+          <AppText numberOfLines={2}>{latest.complaint}</AppText>
+          <Button label="Buka laporan" kind="tonal" onPress={() => navigation.navigate('DetailLaporan', { id: latest.id })} />
+        </Panel>
+      ) : (
+        <AppText color="textMuted">Belum ada laporan.</AppText>
+      )}
+    </Section>
+  );
+}
+
 export default function HomeScreen({ navigation }) {
   const { area, ready } = useArea();
+  const { account } = useAuth();
   const advisory = useLoad(() => (area ? getAdvisory(area.id) : Promise.resolve(null)), [area && area.id],
     { refreshOnFocus: true });
   const waste = useLoad(() => (area ? getWasteRecap(area.id) : Promise.resolve(null)), [area && area.id]);
@@ -159,7 +182,13 @@ export default function HomeScreen({ navigation }) {
       <Section>
         <Button label="Lihat panduan perlindungan" onPress={() => navigation.navigate('Panduan')} />
         <Button label="Cari fasilitas kesehatan" kind="tonal" onPress={() => navigation.navigate('Fasilitas')} />
+        {!account || account.role === 'resident' ? (
+          <Button label="Laporkan keluhan" kind="tonal"
+            onPress={() => navigation.navigate(account ? 'FormLaporan' : 'Laporan')} />
+        ) : null}
       </Section>
+
+      <LatestReport navigation={navigation} />
 
       <Section title="Pengelolaan sampah di wilayah ini">
         <PartnerSection envelope={waste.data} loading={waste.loading} isEmpty={!wasteItems.length}>

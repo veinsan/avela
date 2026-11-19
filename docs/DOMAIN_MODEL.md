@@ -39,7 +39,7 @@ Core subdomain: **care-episode coordination** (Koordinasi Episode Layanan). It c
 | Health Guidance (Panduan Kesehatan) | Supporting | Versioned protection content with source and review status; Veriqu product recommendations | Core, `guidance.py`; products through the integration service | Guidance and emergency contacts built; products planned (A-10) |
 | Facility Directory (Direktori Fasilitas) | Supporting | Simulated facilities with services and opening schedule | Core, `facilities.py` | Built |
 | Identity and Access (Identitas dan Akses) | Generic | Authentication, resident and staff roles, staff facility membership, API keys for other groups | Core, `security.py`, `keys.py` | Built |
-| Notifications (Notifikasi) | Generic | Update markers when a report changes state or a result is published | Derived from core events; shown in the app | Planned |
+| Notifications (Notifikasi) | Generic | Update markers when a report changes state or a result is published | Derived from report and result changes in the app, `UpdatesContext.js` | Built |
 | Product Catalogue (Katalog Produk) | Peer, Veriqu | Products with rating summaries | Veriqu, through `veriqu.py` in the integration service | Adapter built on a labelled fixture (D-35); contract pending (Q-03) |
 | Waste Distribution Coordination (Koordinasi Distribusi Sampah) | Peer, FlowGanic | Managed waste volume per area and waste type | FlowGanic, through an adapter in the integration service | Contract pending (Q-03) |
 

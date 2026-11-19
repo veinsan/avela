@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { useAuth } from '../context/AuthContext';
+import { useUpdates } from '../context/UpdatesContext';
 import { typography, useTheme } from '../theme';
 import EmergencyButton from '../components/EmergencyButton';
 import { LoadingView, Screen } from '../components/ui';
@@ -15,6 +16,10 @@ import FacilityDetailScreen from '../screens/FacilityDetailScreen';
 import GuidanceScreen from '../screens/GuidanceScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import ReportDetailScreen from '../screens/ReportDetailScreen';
+import ReportFormScreen from '../screens/ReportFormScreen';
+import ReportsScreen from '../screens/ReportsScreen';
+import ResultScreen from '../screens/ResultScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,12 +27,13 @@ const Tab = createBottomTabNavigator();
 // Tab name -> [component, title]. Unfinished screens stay out until they work (BRANCH_PLAN).
 const TAB_SCREENS = {
   Beranda: [HomeScreen, 'Beranda'],
+  Laporan: [ReportsScreen, 'Laporan'],
   Fasilitas: [FacilitiesScreen, 'Fasilitas'],
   Akun: [AccountScreen, 'Akun'],
 };
 
 export function tabsForRole(role) {
-  return role === 'staff' ? ['Akun'] : ['Beranda', 'Fasilitas', 'Akun'];
+  return role === 'staff' ? ['Akun'] : ['Beranda', 'Laporan', 'Fasilitas', 'Akun'];
 }
 
 const STACK_SCREENS = {
@@ -36,12 +42,16 @@ const STACK_SCREENS = {
   Panduan: [GuidanceScreen, 'Panduan'],
   Darurat: [EmergencyScreen, 'Darurat'],
   DetailFasilitas: [FacilityDetailScreen, 'Detail Fasilitas'],
+  FormLaporan: [ReportFormScreen, 'Form Laporan'],
+  DetailLaporan: [ReportDetailScreen, 'Detail Laporan'],
+  HasilPemeriksaan: [ResultScreen, 'Hasil Pemeriksaan'],
 };
 
 const emergency = () => <EmergencyButton />;
 
 function Tabs() {
   const { account } = useAuth();
+  const { count } = useUpdates();
   const { colors } = useTheme();
   return (
     <Tab.Navigator
@@ -57,7 +67,9 @@ function Tabs() {
       }}
     >
       {tabsForRole(account && account.role).map((name) => (
-        <Tab.Screen key={name} name={name} component={TAB_SCREENS[name][0]} options={{ title: TAB_SCREENS[name][1] }} />
+        <Tab.Screen key={name} name={name} component={TAB_SCREENS[name][0]}
+          options={{ title: TAB_SCREENS[name][1], tabBarBadge: name === 'Laporan' && count ? count : undefined,
+            tabBarAccessibilityLabel: name === 'Laporan' && count ? `Laporan, ${count} pembaruan` : undefined }} />
       ))}
     </Tab.Navigator>
   );

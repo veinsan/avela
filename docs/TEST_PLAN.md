@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 26 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | 15 tests pass (A-07, A-10) |
-| Mobile unit | Jest with `jest-expo` | `apps/mobile/__tests__` | 21 tests pass (A-05, A-12) |
+| Mobile unit | Jest with `jest-expo` | `apps/mobile/__tests__` | 23 tests pass (A-05, A-12, A-26) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
 | Deployment | Commands on the STB | Evidence in README.pdf | Planned (A-13) |
 
@@ -28,7 +28,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-08 | Staff of facility A cannot see facility B's queue, reports, or results. | NFR-01 | Pass: `test_staff_limited_to_own_facility` |
 | T-09 | Two actions on the same version: only the first succeeds. | NFR-06 | Pass: `test_stale_version_loses` |
 | T-10 | Information request and resident reply keep author and order. | US-06 | Pass: `test_full_review_cycle_and_result_delivery` |
-| T-11 | A submitted report never appears as reviewed. | US-05, G-03 | Partial: API state passes; screen copy in A-26 |
+| T-11 | A submitted report never appears as reviewed. | US-05, G-03 | Pass: API state, `a submitted report never reads as reviewed`; screen copy audit in A-28 |
 | T-12 | A published result reaches only the report's owner; a draft stays hidden. | US-08 | Pass: `test_full_review_cycle_and_result_delivery` |
 | T-13 | Attachment upload fails or is skipped: the report still works. | FR-05 | Stretch |
 | T-14 | Veriqu products show in Panduan and FlowGanic's waste recap on Beranda, each with its source and a request log. | FR-10, US-02, US-13 | Partial: screens and adapters built on labelled fixtures; live calls and logs wait on A-03 |
@@ -52,7 +52,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Planned, A-27 |
 | T-34 | Correcting a published result creates a new version; the owner reads the latest and the earlier one. | US-08, FR-09 | Pass (API): `test_correction_is_a_new_version_and_the_old_one_stays_readable`; screen in A-26 |
 | T-35 | A FlowGanic area code maps to the right pilot area; an unmapped code is dropped, not guessed. | US-13 | Pass (fixture codes): `test_waste_recap_maps_codes_and_drops_unmapped_ones`; agreed codes pending (Q-03) |
-| T-36 | The Laporan tab shows an update marker after a state change or a new result. | FR-17 | Planned, A-26 |
+| T-36 | The Laporan tab shows an update marker after a state change or a new result. | FR-17 | Partial: `update markers compare against the last time Laporan was opened`; device check in A-14 |
 
 T-22 (BMKG code mapping) applies only if the weather panel is built.
 
