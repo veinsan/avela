@@ -58,10 +58,16 @@ function Condition({ advisory }) {
         Prakiraan model · PM2.5 · {advisory.areaName}
       </AppText>
       <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: spacing.md }}>
-        <AppText variant="display" accessibilityLabel={`PM2.5 ${pm25(current && current.value)}`}>
-          {current && current.value !== null ? Number(current.value).toFixed(1) : '—'}
-        </AppText>
-        <AppText variant="bodyStrong">µg/m³</AppText>
+        {current && current.value !== null ? (
+          <>
+            <AppText variant="display" accessibilityLabel={`PM2.5 ${pm25(current.value)}`}>
+              {Number(current.value).toFixed(1)}
+            </AppText>
+            <AppText variant="bodyStrong">µg/m³</AppText>
+          </>
+        ) : (
+          <AppText variant="title">Belum ada nilai untuk jam ini</AppText>
+        )}
         {category ? (
           <View style={{ borderWidth: 1, borderColor: colors.outline, borderRadius: rounded.small,
             paddingHorizontal: spacing.sm, paddingVertical: spacing.xs }}>

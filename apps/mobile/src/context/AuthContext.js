@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import * as SecureStore from 'expo-secure-store';
 
 import { getMe, login, setToken, setUnauthorizedHandler } from '../services/ApiService';
+import { logFailure } from '../utils/log';
 
 const TOKEN_KEY = 'avela.session';
 const AuthContext = createContext(null);
@@ -14,7 +15,7 @@ export function AuthProvider({ children }) {
     setToken(null);
     setAccount(null);
     setStatus('signedOut');
-    await SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => {});
+    await SecureStore.deleteItemAsync(TOKEN_KEY).catch((e) => logFailure('deleting the session token', e));
   }, []);
 
   useEffect(() => {
@@ -22,14 +23,15 @@ export function AuthProvider({ children }) {
       signOut();
     });
     (async () => {
-      const saved = await SecureStore.getItemAsync(TOKEN_KEY).catch(() => null);
+      const saved = await SecureStore.getItemAsync(TOKEN_KEY).catch((e) => logFailure('reading the session token', e));
       if (!saved) return setStatus('signedOut');
       setToken(saved);
       try {
         setAccount(await getMe());
         setStatus('signedIn');
-      } catch {
+      } catch (e) {
         // An expired session or no connection at start: show the signed-out app, which still works.
+        logFailure('restoring the session', e);
         setToken(null);
         setStatus('signedOut');
       }
