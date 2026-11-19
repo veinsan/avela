@@ -39,6 +39,17 @@ npm test
 
 Jest with `jest-expo`. Tests live in `__tests__/`.
 
+## Release APK
+
+The release build is an APK from EAS (C-11), with the Avela icon, adaptive icon, and splash in `assets/` and the HTTPS URLs set in `eas.json`.
+
+```bash
+npx eas-cli@latest login                     # the owner's Expo account
+npx eas-cli@latest build -p android --profile production
+```
+
+Download the APK from the build page and rename it `Aplikasi_Release.apk`. Before tagging a release, check on a phone that the app reaches `https://avela.stei.fun/api/health` and `https://avela-int.stei.fun/health`, then run the functional table in `docs/TESTING_REPORT.md`.
+
 ## Structure
 
 ```text

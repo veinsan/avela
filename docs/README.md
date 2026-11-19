@@ -1,6 +1,6 @@
 # Avela Documentation
 
-**Updated:** 17 November 2026. The repository front page is [../README.md](../README.md). Documents are in English; the app's text and the DDD paper are in Indonesian.
+**Updated:** 19 November 2026. The repository front page is [../README.md](../README.md). Documents are in English; the app's text and the DDD paper are in Indonesian.
 
 ## Start Here
 
@@ -33,6 +33,7 @@ When two documents disagree, the one in this table wins and the other gets fixed
 | [API_RESEARCH.md](API_RESEARCH.md) | Provider requests run on 10 November |
 | [SAFETY_PRIVACY.md](SAFETY_PRIVACY.md) | Clinical boundaries, synthetic data, access, and secrets |
 | [TEST_PLAN.md](TEST_PLAN.md) | Acceptance scenarios and their status |
+| [TESTING_REPORT.md](TESTING_REPORT.md) | Test suites, results, functional test table, and bugs found (source of the testing report PDF) |
 | [BRANCH_PLAN.md](BRANCH_PLAN.md) | Branch names and merge rules |
 | [REFERENCES.md](REFERENCES.md) | Sources and what each one supports |
 | [VALIDATION_REPORT.md](VALIDATION_REPORT.md) | Checks run on the documentation |

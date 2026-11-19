@@ -21,6 +21,7 @@ The root `CLAUDE.md` imports this file. Agents that do not read `CLAUDE.md` must
 | Expo SDK 58 (expo 58.0.26), React Native 0.88.1, React 19.3.0 | Mobile app in JavaScript (D-28), `apps/mobile` |
 | React Navigation 7 | native-stack 7.21.1, bottom-tabs 7.22.0 |
 | expo-secure-store 58.0.3 | Session token and chosen area on the device |
+| expo-splash-screen 58.0.14 | Splash configured in `app.json`; release APK through EAS (`eas.json`) |
 | Jest 30.5.2, jest-expo 58.0.15, Testing Library 14.1.0 | Mobile tests |
 
 Add a dependency only when the standard library or an installed package cannot do the job.
@@ -105,7 +106,7 @@ Success is all tests passing; 26 pass on 19 November. To run the service locally
 
 Integration service, from `services/integration`: the same two commands; 15 pass on 19 November. If Windows Smart App Control blocks a DLL in its new `.venv`, run it with `../core/.venv/Scripts/python.exe`, which pins the same versions. Run steps are in its `README.txt`.
 
-Mobile app, from `apps/mobile`: `npm install`, then `npm test` (Jest) and `npx expo start` (Expo Go). `npx expo export --platform android` bundles the app without a device and catches import errors. Pinned versions only; add a package with `npx expo install`.
+Mobile app, from `apps/mobile`: `npm install`, then `npm test` (Jest) and `npx expo start` (Expo Go). `npx expo export --platform android` bundles the app without a device and catches import errors. The opt-in API integration test runs against live services: `AVELA_IT_URL=http://127.0.0.1:8000 AVELA_IT_PASSWORD=<demo password> npm test -- api.integration`; `jest-expo` stubs `fetch` and inlines `EXPO_PUBLIC_*`, so that test brings its own HTTP client and config. Pinned versions only; add a package with `npx expo install`.
 
 Before calling a feature done, apply [the readiness-review skill](skills/review-avela-readiness/SKILL.md). To add a peer integration, follow [the peer-integration skill](skills/integrate-peer-api/SKILL.md).
 
