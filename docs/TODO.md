@@ -20,6 +20,7 @@
 | A-22 | Reserve the Registry name and commit the baseline | Pending | Owner reserves the name and runs the Git commands. |
 | A-03 | Agree peer integrations | In progress | Veriqu and FlowGanic are fixed by the paper (D-23). Send each the contract request in `skills/integrate-peer-api`, agree FlowGanic's area codes, pick a backup. |
 | A-04 | Validate the stack on the STB | In progress | 18 Nov: image built on the STB (ARM64); `/health` and `/api/v1/areas` answer on local port 8081; `docker stats`: core 45 MiB of 256, gateway 6 MiB of 64. Host: 913 MiB RAM, 276 MiB available, swap full; disk 21 GB free. Not yet checked: data survives `docker compose restart`, tunnel container memory. |
+| A-13 (progress) | Public URL | In progress | 19 Nov: class tunnel live. Routes set by the assistant: `avela.stei.fun/api/*` to `gateway:80`; the rest to aaPanel at `localhost:1122`, reached through the `panel-relay` container. From the laptop `/api/health`, `/api/docs`, `/api/v1/areas` return 200. Not yet checked: 429 burst, backup restore. |
 
 ## M1: DDD paper, core v0.2, app skeleton, by 16 November
 
