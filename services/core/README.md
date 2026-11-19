@@ -2,7 +2,7 @@
 
 Core microservice of Avela, a mobile companion for residents in wildfire-smoke areas. It owns reports, staff review, examination results, pilot areas with pushed PM2.5 snapshots, the anonymous area health signal, guidance, and the simulated facility directory. FastAPI and SQLite in Docker on the class set-top box (STB). Coursework for II3160 and II3140, ITB, class K01. All accounts, facilities, and cases are fictional; Avela does not diagnose.
 
-This file is the source of the backend `README.pdf`.
+This file is the source of the backend `README.pdf`; regenerate it with `scripts/md2pdf.py` after editing.
 
 ## Base URL and Documentation
 

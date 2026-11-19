@@ -1,10 +1,26 @@
 # Documentation Validation Report
 
-**Date:** 17 November 2026 for the latest revision; earlier sections keep their own dates and describe the repository as it was then.
+**Date:** 19 November 2026 for the latest revision; earlier sections keep their own dates and describe the repository as it was then.
 
 **Scope:** Documentation checks. The only code check is the existing core test suite.
 
-## Latest Revision: Alignment with the Submitted DDD Paper (17 November 2026)
+## Latest Revision: Build-Out Across Core, Integration, and App (19 November 2026)
+
+The owner delegated the open choices and asked for every remaining task to be built. Decisions D-28 to D-35 record the choices; the ISPU bands were read from the image of Lampiran I of Permen LHK P.14/2020, and the guidance and emergency text from Kemenkes pages (S-08 to S-10). The work is split into fourteen branches listed in the hand-off.
+
+Checks run:
+
+- `services/core`: `pytest -q`, 26 passed.
+- `services/integration`: `pytest -q`, 15 passed (run with the core's environment after Windows Smart App Control blocked a DLL in the new one).
+- `apps/mobile`: `npm test`, 25 passed; `api.integration` against a local core and integration service, 3 passed, 24 requests reached the core; `npx expo export --platform android` and `npx expo config` succeed.
+- A live Open-Meteo fetch for both areas pushed 96 points each into a local core; the advisory answered `fresh` with an ISPU label.
+- Backup and restore commands from `services/core/README.md` checked on a local SQLite file.
+- Inline read-only Python check: 26 Markdown files, 92 relative links, none broken; 32 task IDs in ARCHITECTURE match the 32 in TODO; every D, P, and Q identifier used is defined or listed as resolved.
+- `git status --ignored`: the assignment PDF stays ignored; a text scan found no token, key, or shared credential in the tree.
+
+Not checked: the app on a phone, the EAS build, the deployed STB after the upgrade, the `avela-int` tunnel, and live Veriqu and FlowGanic calls. Each is a named remaining step in TODO.
+
+## Earlier Revision: Alignment with the Submitted DDD Paper (17 November 2026)
 
 The DDD paper was submitted on 16 November as `Makalah_DDD.docx`. The owner made it the source of truth (D-22), moved the M2 deadline to 23 November, kept M3 and M4 as they were, and took on all backend, integration, and mobile work with Mishael helping on the front-end redesign (D-19). No file in `services/` or `infra/` was changed.
 

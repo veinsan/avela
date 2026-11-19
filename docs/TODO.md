@@ -4,9 +4,11 @@
 
 ## Next Three Actions
 
-1. Reserve `avela` in the class API Registry (A-22). Names are first come, first served.
-2. Get written contracts from Veriqu and FlowGanic, the two groups named in the DDD paper (A-03), by 23 November.
-3. Finish core v0.2 (A-23, A-24, A-25) and deploy it (A-13) before the M2 deadline on 23 November.
+Code for every task is in the repository as of 19 November. What is left needs the owner's accounts, the STB, a phone, or another group:
+
+1. Deploy core v0.2 on the STB (A-13): pull `main`, set `AVELA_PEER_TEST_PASSWORD` in `infra/stb/.env`, back up the database, `docker compose up -d --build`, rerun `app.seed`, run the 429 burst and the restore drill. Then reserve `avela` and fill the Registry row (A-22, A-18) before 23 November.
+2. Send Veriqu and FlowGanic the contract request in `skills/integrate-peer-api` and ask for FlowGanic's area codes (A-03); create their keys with `app.keys`. Start the integration service on the laptop with the snapshot key and the `avela-int` tunnel (A-07, D-34).
+3. Build the APK with EAS, run the functional table on a phone, export the PDFs, and record the video (A-14, A-15).
 
 ## M0: Lock and align, by 15 November
 
@@ -64,7 +66,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
 | A-14 | Release and test the APK | In progress | 19 Nov: Avela icon, adaptive icon (with monochrome layer), and light and dark splash generated from the DESIGN colors; `eas.json` builds an APK with the HTTPS URLs; release steps in `apps/mobile/README.md`; `npx expo export --platform android` and `npx expo config` pass. Remaining (owner): `eas build -p android --profile production` with the owner's Expo account, rename to `Aplikasi_Release.apk`, install, and run the functional table. |
-| A-15 | Assemble the submission | Pending | Internal freeze on 11 Dec. |
+| A-15 | Assemble the submission | In progress | 19 Nov: root README with features, layout, run steps, and demo accounts; `services/core/README.pdf` exported from its README with `scripts/md2pdf.py`; `services/integration/README.txt`; `apps/mobile/README.md` with run steps, demo accounts, and release steps; testing report source in `docs/TESTING_REPORT.md`. Remaining: testing report PDF after the device run, YouTube video with both members, Edunex links. Internal freeze on 11 Dec. |
 
 ## Stretch
 
@@ -83,4 +85,5 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | 2026-11-17 | DDD paper submitted (A-16); M2 moved to 23 Nov; task split updated (D-19) | Paper drafts and diagram removed; `Makalah_DDD.docx` is the record. |
 | 2026-11-17 | Documents aligned with the submitted paper (D-22 to D-27); A-30 and A-31 added | Checks in VALIDATION_REPORT; `pytest -q`: 8 passed. |
 | 2026-11-17 | A-23 areas, snapshot push, advisory, API key mechanism (`app.keys`) | `pytest -q` in `services/core`: 12 passed. |
+| 2026-11-19 | A-24, A-25, A-30, A-31 core; A-18 README; A-02, A-07, A-10 integration service; A-05, A-12, A-26, A-27, A-28, A-14 app; A-15 documents | Core `pytest -q`: 26 passed. Integration `pytest -q`: 15 passed. App `npm test`: 25 passed; `api.integration` against local services: 3 passed; `npx expo export --platform android` builds. Live Open-Meteo push into a local core. Document checks in VALIDATION_REPORT. |
 | 2026-11-19 | Open choices decided (D-28 to D-35); documents synced with the built core and the public `/api` paths | ISPU table read from the regulation's Lampiran I; `pytest -q`: 12 passed. |
