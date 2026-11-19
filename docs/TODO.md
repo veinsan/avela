@@ -55,7 +55,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | A-27 | Staff screens in the app | Pending | Requires A-05. |
 | A-12 | Guidance, emergency screen, failure states | Pending | Content sources chosen (D-33). |
 | A-28 | Mobile test suite and test table | Pending | Requires A-10, A-26, A-27. |
-| A-30 | Facility directory | Pending | Requires A-23. Add area, services, and schedule to `facilities` and a list endpoint (D-24). |
+| A-30 | Facility directory | In progress | 19 Nov, API done: `test_facilities.py` (4 tests) passes: list by area, simulation flag, `closed` versus unknown hours, 404 for an unknown ID, a report's facility must be in its area, seed upgrades old facility rows. `pytest -q`: 24 passed. Remaining: Fasilitas and Detail Fasilitas screens (A-12). |
 | A-31 | Versioned examination results | Pending | Identity linkage confirmed (D-32); add result versions (D-26). |
 | A-29 | Peer support and uptime | Pending | Starts when A-18 is done. |
 

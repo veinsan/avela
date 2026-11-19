@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Core service | Python 3.12, FastAPI 0.162.4, uvicorn 0.54.0, PyJWT 2.15.1 | Built in `services/core` |
 | Core database | SQLite in WAL mode on a Docker volume | Built |
-| Core tests | pytest 9.2.0 with httpx 0.28.1 | 20 tests pass |
+| Core tests | pytest 9.2.0 with httpx 0.28.1 | 24 tests pass |
 | Python tooling | uv for the virtual environment and installs | In use |
 | Gateway | Nginx 1.28 alpine with rate limits | Running on the STB, local check on port 8081 |
 | Public access | Cloudflare Tunnel `k01-avela` to `https://avela.stei.fun` | Live: the class route sends `/api/*` to the gateway |
@@ -70,7 +70,7 @@ Screen behavior is in [PRODUCT_FLOWS.md](PRODUCT_FLOWS.md); endpoints are in [AP
 ## Repository Layout
 
 ```text
-services/core/         Built. app/ (main, care, results, environment, signal, guidance, security, keys, db, errors, seed), tests/, Dockerfile
+services/core/         Built. app/ (main, care, results, environment, signal, guidance, facilities, security, keys, db, errors, seed), tests/, Dockerfile
 infra/stb/             Built. docker-compose.yml, nginx.conf, .env.example
 services/integration/  Planned. Provider and peer adapters, snapshot push job
 apps/mobile/           Planned. Expo app
@@ -82,11 +82,10 @@ README.md, CLAUDE.md   Repository front page and agent entry point
 
 Tables that exist in `services/core/app/db.py`: `facilities`, `accounts`, `memberships`, `reports`, `report_events`, `results`, `areas`, `area_snapshots`, `api_keys`.
 
-Planned additions for core v0.2 (`areas`, `area_snapshots`, and `api_keys` were added in A-23, a key is revoked by deleting its row; `reports.area_id`, `reports.exposure_context`, and `reports.exposure_context_reason` were added in A-24 through the column list in `db.py`, which upgrades an existing database at start):
+Planned additions for core v0.2 (`areas`, `area_snapshots`, and `api_keys` were added in A-23, a key is revoked by deleting its row; `reports.area_id`, `reports.exposure_context`, and `reports.exposure_context_reason` were added in A-24, and `facilities.area_id`, `services`, `schedule` in A-30, through the column list in `db.py`, which upgrades an existing database at start; `python -m app.seed` then fills the facility details):
 
 | Table or column | Purpose |
 | --- | --- |
-| `facilities.area_id`, `services`, `schedule` | Area link, services, and opening schedule for the directory (A-30) |
 | `results.version`, `results.previous_id` | Version history for corrected results (A-31) |
 
 Rules that hold across the design:

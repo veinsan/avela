@@ -44,7 +44,7 @@ def test_report_freezes_exposure_context(client, auth):  # T-26
 
 
 def test_report_without_snapshot_still_saves(client, auth):  # T-27
-    r = submit(client, auth("warga1"), body={**REPORT, "areaId": "palangka-raya",
+    r = submit(client, auth("warga1"), body={**REPORT, "areaId": "palangka-raya", "facilityId": "demo-facility-002",
                                               "onsetAt": hour(-1)})
     assert r.status_code == 201
     assert r.json()["exposureContext"] is None and r.json()["exposureContextReason"] == "no_snapshot"

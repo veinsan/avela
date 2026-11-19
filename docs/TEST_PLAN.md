@@ -1,12 +1,12 @@
 # Test Plan
 
-**Updated:** 19 November 2026. Core tests exist and pass (20 of 20, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
+**Updated:** 19 November 2026. Core tests exist and pass (24 of 24, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
 
 ## Layers
 
 | Layer | Tool | Where | State |
 | --- | --- | --- | --- |
-| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 20 tests pass |
+| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 24 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | Planned (A-07, A-10) |
 | Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
@@ -41,7 +41,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-21 | The Open-Meteo adapter keeps valid time and retrieval time separate and sends missing values as null. | FR-15 | Planned, A-07 |
 | T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Planned, A-07 |
 | T-24 | Light and dark themes, TalkBack labels, Android Back, and keyboard insets work on a device. | NFR-07 | Planned, A-12 |
-| T-25 | A facility with an unknown schedule is shown as unknown, under the simulation label. | US-07 | Planned, A-30 |
+| T-25 | A facility with an unknown schedule is shown as unknown, under the simulation label. | US-07 | Partial: API passes `test_unknown_hours_stay_unknown`; screen in A-12 |
 | T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Pass (API): `test_report_freezes_exposure_context` |
 | T-27 | A report submitted with no snapshot saves with a null exposure context and a reason. | US-10 | Pass: `test_report_without_snapshot_still_saves` |
 | T-28 | A snapshot push without the `snapshots:write` scope is rejected. | FR-15 | Pass: `test_snapshot_push_requires_scoped_key` |

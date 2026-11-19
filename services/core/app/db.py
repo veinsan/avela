@@ -110,6 +110,9 @@ COLUMNS = [
     ("reports", "area_id", "TEXT REFERENCES areas(id)"),
     ("reports", "exposure_context", "TEXT"),
     ("reports", "exposure_context_reason", "TEXT"),
+    ("facilities", "area_id", "TEXT REFERENCES areas(id)"),
+    ("facilities", "services", "TEXT"),
+    ("facilities", "schedule", "TEXT"),
 ]
 
 

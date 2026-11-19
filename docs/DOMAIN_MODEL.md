@@ -37,7 +37,7 @@ Core subdomain: **care-episode coordination** (Koordinasi Episode Layanan). It c
 | Area Health Signal (Sinyal Kesehatan Wilayah) | Supporting | Reads reports from Care Coordination and produces only counts per area and day, with small counts hidden | Core, `signal.py` | Built |
 | Environment (Lingkungan) | Supporting | Normalizes Open-Meteo forecasts, optionally with BMKG local weather, into area snapshots; shows FlowGanic's waste recap. Never receives a resident's identity or symptom history | Integration service; snapshots stored in the core, `environment.py` | Snapshot storage and advisory built; integration service planned |
 | Health Guidance (Panduan Kesehatan) | Supporting | Versioned protection content with source and review status; Veriqu product recommendations | Core, `guidance.py`; products through the integration service | Guidance and emergency contacts built; products planned (A-10) |
-| Facility Directory (Direktori Fasilitas) | Supporting | Simulated facilities with services and opening schedule | Core | Partial: facility ID and name built; area, services, schedule planned (A-30) |
+| Facility Directory (Direktori Fasilitas) | Supporting | Simulated facilities with services and opening schedule | Core, `facilities.py` | Built |
 | Identity and Access (Identitas dan Akses) | Generic | Authentication, resident and staff roles, staff facility membership, API keys for other groups | Core, `security.py`, `keys.py` | Built |
 | Notifications (Notifikasi) | Generic | Update markers when a report changes state or a result is published | Derived from core events; shown in the app | Planned |
 | Product Catalogue (Katalog Produk) | Peer, Veriqu | Products with rating summaries | Veriqu, through an adapter in the integration service | Contract pending (Q-03) |
@@ -84,7 +84,7 @@ This is section C of the paper.
 | --- | --- | --- | --- |
 | Account | ID, username, role, display name | The role is set on the server. | Built |
 | Membership | account, facility | Required to read or act on a facility's reports. Only active staff of the facility respond. | Built |
-| Facility | ID, name, area, services, schedule | A report can only target an existing facility. An unknown schedule stays unknown. | ID and name built; the rest planned (A-30) |
+| Facility | ID, name, area, services, schedule | A report can only target an existing facility in its area. An unknown schedule stays unknown. | Built |
 | SymptomReport | ID, owner, facility, area, complaint, onset, course, history, state, version | Owner never changes. Creation is idempotent per owner and key. State changes are version-checked. | Built |
 | ExposureContext (value) | window, mean, peak, point count, source, retrieved time | Frozen at submission. Null with a reason when no snapshot covers the window. | Built |
 | ReportEvent | report, author, kind, text, disposition, time | Append-only. Written in the same transaction as the state change. | Built |

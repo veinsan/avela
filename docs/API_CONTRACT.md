@@ -53,6 +53,8 @@ Codes in use: `INVALID_CREDENTIALS`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_REVIEW
 | `GET /api/v1/public/areas/{areaId}/advisory` | Peer key, scope `areas:read` | Same data as the open advisory (A-25) |
 | `GET /api/v1/public/areas/{areaId}/health-signal?days=7` | Peer key, scope `signal:read` | Daily report counts and totals per disposition; `days` 1 to 30 (A-25) |
 | `GET /api/v1/public/guidance` | Peer key, scope `guidance:read` | Avela's own guidance items with sources; no peer data (A-25) |
+| `GET /api/v1/facilities?areaId=` | Anyone, rate limited | Simulated facility directory with area, services, and opening schedule (A-30) |
+| `GET /api/v1/facilities/{id}` | Anyone, rate limited | One facility (A-30) |
 
 Snapshot push body, with illustrative values. `isSynthetic` marks a hand-made test push; `value` may be null for a provider gap; `retrievedAt` more than 5 minutes in the future is rejected.
 
@@ -81,18 +83,32 @@ Report body, with fictional values. `areaId` is required (A-24):
 }
 ```
 
-`course` is `better`, `unchanged`, or `worse`. `disposition` is `self_care`, `remote_follow_up`, or `onsite_assessment`.
+The facility must belong to the chosen area, otherwise `422 UNKNOWN_FACILITY`. `course` is `better`, `unchanged`, or `worse`. `disposition` is `self_care`, `remote_follow_up`, or `onsite_assessment`.
 
 ## Planned Core Endpoints (v0.2)
 
 | Method and path | Caller | Behavior | Task |
 | --- | --- | --- | --- |
-| `GET /api/v1/facilities?areaId=` | Anyone, rate limited | Simulated facility directory with services and opening schedule | A-30 |
-| `GET /api/v1/facilities/{id}` | Anyone, rate limited | One facility; unknown hours are null | A-30 |
 
 Changes to built endpoints in v0.2:
 
 - Correcting a published result creates a new version linked to the previous one; result reads return the latest version and its history (A-31).
+
+### Facility
+
+```json
+{
+  "id": "demo-facility-002",
+  "name": "Klinik Simulasi Avela B",
+  "areaId": "palangka-raya",
+  "areaName": "Palangka Raya",
+  "services": ["Pemeriksaan umum", "Konsultasi dokter"],
+  "schedule": [{"day": "fri", "hours": "08:00-16:00"}, {"day": "sat", "hours": null}, {"day": "sun", "hours": null}],
+  "isSimulated": true
+}
+```
+
+`schedule` lists Monday to Sunday (shortened above). `hours` is `HH:MM-HH:MM` in WIB, `closed`, or null when unknown; a null `schedule` means nothing is known.
 
 ### Advisory response
 

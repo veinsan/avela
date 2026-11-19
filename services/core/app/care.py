@@ -104,8 +104,9 @@ def create_report(body: ReportIn, idempotency_key: str = Header(min_length=8, ma
         raise ApiError(422, "VALIDATION_FAILED", "Invalid fields: onsetAt")
     if db.execute("SELECT 1 FROM areas WHERE id = ?", (body.areaId,)).fetchone() is None:
         raise ApiError(422, "UNKNOWN_AREA", "The selected area is not available.")
-    if db.execute("SELECT 1 FROM facilities WHERE id = ?", (body.facilityId,)).fetchone() is None:
-        raise ApiError(422, "UNKNOWN_FACILITY", "The selected facility is not available.")
+    if db.execute("SELECT 1 FROM facilities WHERE id = ? AND area_id = ?",
+                  (body.facilityId, body.areaId)).fetchone() is None:
+        raise ApiError(422, "UNKNOWN_FACILITY", "The selected facility is not available in this area.")
     payload = body.model_dump(mode="json")
     payload_hash = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 

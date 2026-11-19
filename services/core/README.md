@@ -20,7 +20,7 @@ Demo accounts (password from `AVELA_DEMO_PASSWORD`): `warga1`, `warga2` (residen
 ```bash
 cd infra/stb && cp .env.example .env   # fill in secrets
 docker compose up -d --build
-docker compose exec core python -m app.seed
+docker compose exec core python -m app.seed   # rerun after every upgrade; it is idempotent
 curl http://127.0.0.1:8081/health
 ```
 
@@ -51,6 +51,7 @@ Limits: core 256 MB / 0.5 CPU, gateway and tunnel 64 MB / 0.25 CPU each. Nginx r
 | `GET /public/areas`, `GET /public/areas/{areaId}/advisory` | `X-API-Key` with `areas:read` | Areas and advisory for peer groups |
 | `GET /public/areas/{areaId}/health-signal?days=7` | `X-API-Key` with `signal:read` | Anonymous report counts per day and disposition; counts 1 to 4 are null |
 | `GET /public/guidance` | `X-API-Key` with `guidance:read` | Guidance for peer groups |
+| `GET /facilities?areaId=`, `GET /facilities/{id}` | Public | Simulated facility directory with services and schedule |
 
 ## API keys
 
