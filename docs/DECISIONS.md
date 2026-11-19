@@ -1,6 +1,6 @@
 # Decisions and Open Questions
 
-**Updated:** 19 November 2026. Confirmed means the project owner said so or the assignment requires it. Proposed means the assistant recommends it and the owner has not objected or agreed yet.
+**Updated:** 20 November 2026. Confirmed means the project owner said so or the assignment requires it. Proposed means the assistant recommends it and the owner has not objected or agreed yet.
 
 ## Confirmed
 
@@ -40,6 +40,7 @@
 | D-32 | The paper's "agreed identity verification" works like this in the prototype: at the facility the resident shows the report in the app, staff confirm the name, and the result is drafted against that report, so its owner comes from the report. (Was P-06.) | DDD paper section A; no real identity check exists | A-31 needs no extra identity data. |
 | D-33 | Guidance text is written from Kementerian Kesehatan publications on karhutla smoke, each item naming its source and marked "Belum ditinjau tenaga kesehatan". The emergency screen shows 119 (Kemenkes medical emergency service, 24 hours, free) and 112 (national emergency number). (Resolves Q-08.) | Sources S-09 and S-10 in [REFERENCES](REFERENCES.md), read 19 Nov | The text is coursework content, not clinically approved advice ([SAFETY_PRIVACY](SAFETY_PRIVACY.md)). |
 | D-34 | The integration service runs on the owner's laptop and is published as `https://avela-int.stei.fun` through its own Cloudflare Tunnel hostname. The deck allows a laptop (slide 11). When the laptop is off, the app shows partner sections as unavailable and the core keeps serving the last snapshot with its age. (Resolves Q-10.) | Deck slides 11 and 21; no always-on host is available | The integration service holds the peer keys and the snapshot key in its own `.env`. |
+| D-36 | The app uses one dark palette on the 60/30/10 rule: gray `#2B2D31` for 60% (background and surfaces), silver `#D9DADC` for 30% (text, outlines, selection, active tab), and yellow `#FFC93C` for 10%, only as the fill of the one primary button on a screen. Status colors (danger, warning, information) stay muted and outside the rule. The app no longer follows the system light or dark setting. Supersedes the teal light and dark palette of 10 November. | Owner, 20 Nov | DESIGN tokens, the theme module, `app.json`, and the icon and splash change together; T-24 checks the single theme. |
 | D-35 | Until Veriqu and FlowGanic sign a contract (Q-03), each adapter runs against a fixture built from Avela's request, and every response from it carries `isMock: true`. The app shows "Data contoh (mock)" next to the source. Replacing the fixture with the live call changes only the adapter. | Deck slide 27 allows a mock from the contract; AGENTS forbids calling a mock live | The mock label stays until the live call is recorded. |
 
 ## Proposed
@@ -78,3 +79,4 @@ Resolved: Q-01 (D-06), Q-02 (D-14), Q-04 (simulated staff accounts `petugas1` an
 | 2026-11-12 | D-06 and D-08 confirmed. D-14 to D-21 added. Scope-freeze gate A-17 retired. |
 | 2026-11-17 | D-22 to D-27 added from the submitted DDD paper. |
 | 2026-11-19 | Owner delegated the open choices. D-28 to D-35 added; Q-08, Q-10, Q-12, Q-13 resolved. |
+| 2026-11-20 | D-36: the owner chose the gray, silver, and yellow 60/30/10 palette for the redesign. |

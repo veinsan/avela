@@ -28,7 +28,7 @@ Add a dependency only when the standard library or an installed package cannot d
 
 ## Design System
 
-[DESIGN.md](DESIGN.md) holds the tokens and component rules. The mobile theme module (planned at `apps/mobile/src/theme/`) must mirror the frontmatter. Change a token in DESIGN.md first, then in the theme module, in the same change. App text is Indonesian; project documents are English, except the DDD paper.
+[DESIGN.md](DESIGN.md) holds the tokens and component rules. The mobile theme module, `apps/mobile/src/theme/index.js`, must mirror the frontmatter. The palette is one dark scheme on the 60/30/10 rule (D-36): gray carries the screen, silver the text, and the yellow `accent` fills only the one primary button per screen; never use it for tabs, chips, links, text, or status. Change a token in DESIGN.md first, then in the theme module, in the same change. App text is Indonesian; project documents are English, except the DDD paper.
 
 ## Project Structure
 

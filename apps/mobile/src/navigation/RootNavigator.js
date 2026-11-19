@@ -1,5 +1,5 @@
 // One APK; the session's role decides the tabs and the two sets never mix (D-15, FR-16).
-import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -62,7 +62,7 @@ function Tabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: colors.text, // silver, never the yellow accent
         tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.divider, minHeight: 56 },
         tabBarIconStyle: { display: 'none' },
@@ -83,11 +83,11 @@ function Tabs() {
 
 export default function RootNavigator() {
   const { status, account } = useAuth();
-  const { colors, dark } = useTheme();
-  const base = dark ? DarkTheme : DefaultTheme;
+  const { colors } = useTheme();
+  const base = DarkTheme;
   const navTheme = {
     ...base,
-    colors: { ...base.colors, primary: colors.primary, background: colors.background, card: colors.surface,
+    colors: { ...base.colors, primary: colors.text, background: colors.background, card: colors.surface,
       text: colors.text, border: colors.divider },
   };
   if (status === 'loading') {

@@ -37,7 +37,7 @@ export default function GuidanceScreen({ navigation }) {
           <AppText>{item.body}</AppText>
           <AppText
             variant="caption"
-            color="primary"
+            color="text"
             accessibilityRole="link"
             onPress={() => Linking.openURL(item.source.url)}
             style={{ textDecorationLine: 'underline', paddingVertical: spacing.sm }}

@@ -41,7 +41,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-20 | Fixtures, logs, screenshots, and the video contain only synthetic people. | NFR-02 | Planned, A-15 |
 | T-21 | The Open-Meteo adapter keeps valid time and retrieval time separate and sends missing values as null. | FR-15 | Pass: `test_snapshot_keeps_valid_and_retrieval_time_apart_and_gaps_null` |
 | T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Pass: `test_provider_failure_pushes_nothing_and_does_not_raise`, `test_veriqu_failure_serves_last_good_answer_as_stale_or_unavailable` |
-| T-24 | Light and dark themes, TalkBack labels, Android Back, and keyboard insets work on a device. | NFR-07 | Planned, A-12 |
+| T-24 | The single dark theme stays readable on a device, including in bright light; a squint test shows only the yellow primary button; TalkBack labels, Android Back, and keyboard insets work. | NFR-07 | Partial: token contrast computed (DESIGN, Contrast); device check in A-14 |
 | T-25 | A facility with an unknown schedule is shown as unknown, under the simulation label. | US-07 | Partial: API passes `test_unknown_hours_stay_unknown`, `today's hours use WIB and keep unknown apart from closed` |
 | T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Pass (API): `test_report_freezes_exposure_context` |
 | T-27 | A report submitted with no snapshot saves with a null exposure context and a reason. | US-10 | Pass: `test_report_without_snapshot_still_saves` |

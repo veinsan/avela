@@ -66,7 +66,7 @@ Run each row on the installed release APK against the deployed services (A-14). 
 | 16 | FlowGanic recap | Beranda | - | Waste per type with "Sumber: FlowGanic" | Integration test passes | Device: pending |
 | 17 | Emergency | Signed out, tap Darurat in any header | - | 119 and 112 with call buttons; works offline | Automated: renders without data | Device: pending |
 | 18 | Session expiry | Wait 12 hours or revoke the token, open Laporan | `warga1` | Back to the signed-out app | Automated: 401 signs out | Device: pending |
-| 19 | Dark theme and large text | System dark mode and 200% font | - | Readable, no clipped text, status in words | - | Device: pending |
+| 19 | Large text, bright light, squint test | 200% font; screen outdoors; squint at each screen | - | Readable, no clipped text, status in words; only the yellow button stands out | Token contrast computed (all pairs pass) | Device: pending |
 
 ## Bugs Found While Testing
 

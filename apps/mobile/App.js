@@ -13,7 +13,7 @@ export default function App() {
         <AreaProvider>
           <UpdatesProvider>
             <RootNavigator />
-            <StatusBar style="auto" />
+            <StatusBar style="light" />
           </UpdatesProvider>
         </AreaProvider>
       </AuthProvider>

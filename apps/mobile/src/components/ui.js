@@ -43,9 +43,10 @@ export function Button({ label, onPress, kind = 'primary', loading = false, disa
   const { colors } = useTheme();
   const off = disabled || loading;
   const look = {
-    primary: { bg: colors.primary, pressed: colors.primaryPressed, fg: colors.onPrimary },
-    tonal: { bg: colors.primaryContainer, pressed: colors.primaryContainer, fg: colors.onPrimaryContainer },
-    text: { bg: 'transparent', pressed: colors.surfaceContainer, fg: colors.primary },
+    // Yellow belongs to the one primary action per screen (D-36); everything else stays gray and silver.
+    primary: { bg: colors.accent, pressed: colors.accentPressed, fg: colors.onAccent },
+    tonal: { bg: colors.tonal, pressed: colors.tonalPressed, fg: colors.text },
+    text: { bg: 'transparent', pressed: colors.surfaceContainer, fg: colors.text },
     danger: { bg: colors.dangerSurface, pressed: colors.dangerSurface, fg: colors.danger },
   }[kind];
   return (
@@ -112,12 +113,12 @@ export function Chip({ label, selected, onPress }) {
       style={[
         styles.chip,
         {
-          borderColor: selected ? colors.primary : colors.outline,
-          backgroundColor: selected ? colors.primaryContainer : colors.surface,
+          borderColor: selected ? colors.selected : colors.outline,
+          backgroundColor: selected ? colors.selected : colors.surface,
         },
       ]}
     >
-      <AppText variant="label" style={{ color: selected ? colors.onPrimaryContainer : colors.text }}>
+      <AppText variant="label" style={{ color: selected ? colors.onSelected : colors.text }}>
         {selected ? `✓ ${label}` : label}
       </AppText>
     </Pressable>

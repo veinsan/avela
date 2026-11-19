@@ -1,51 +1,32 @@
 ---
-version: 0.3
+version: 0.4
 name: Avela
 description: 'A calm resident companion: regional air context, a clear next step,
   and accountable care follow-up.'
 colors:
-  primary: '#166B5E'
-  primaryPressed: '#0D5147'
-  onPrimary: '#FFFFFF'
-  primaryContainer: '#D8EEE5'
-  onPrimaryContainer: '#123F35'
-  background: '#F7F8F3'
-  surface: '#FFFFFF'
-  surfaceContainer: '#EDF1E9'
-  text: '#1C302A'
-  textMuted: '#52645C'
-  outline: '#73857C'
-  divider: '#D7DFD7'
-  focus: '#275AC7'
-  information: '#2655A4'
-  informationSurface: '#EDF3FF'
-  warning: '#7C4C00'
-  warningSurface: '#FFF0D0'
-  danger: '#A92437'
-  dangerSurface: '#FFF0F1'
-  disabledSurface: '#E1E7DF'
-  disabledText: '#5D6A62'
-  darkPrimary: '#91D5BE'
-  darkOnPrimary: '#09382E'
-  darkPrimaryPressed: '#76BEA7'
-  darkPrimaryContainer: '#204B3F'
-  darkOnPrimaryContainer: '#C3F0DE'
-  darkBackground: '#111B17'
-  darkSurface: '#17251E'
-  darkSurfaceContainer: '#203128'
-  darkText: '#E5EDE4'
-  darkTextMuted: '#B5C5B9'
-  darkOutline: '#83988B'
-  darkDivider: '#34483B'
-  darkFocus: '#ADC6FF'
-  darkInformation: '#B5CAFF'
-  darkInformationSurface: '#1E304E'
-  darkWarning: '#F3C975'
-  darkWarningSurface: '#3B2D16'
-  darkDanger: '#FFB2BB'
-  darkDangerSurface: '#421F28'
-  darkDisabledSurface: '#2B3A31'
-  darkDisabledText: '#ABB8AF'
+  background: '#2B2D31'
+  surface: '#33363B'
+  surfaceContainer: '#3C3F45'
+  text: '#D9DADC'
+  textMuted: '#A9ACB1'
+  outline: '#8B8E94'
+  divider: '#46494F'
+  focus: '#D9DADC'
+  tonal: '#45484E'
+  tonalPressed: '#50535A'
+  selected: '#D9DADC'
+  onSelected: '#2B2D31'
+  accent: '#FFC93C'
+  accentPressed: '#E8B42F'
+  onAccent: '#2B2D31'
+  information: '#9DC1F2'
+  informationSurface: '#2E3A4B'
+  warning: '#F2A65E'
+  warningSurface: '#45372A'
+  danger: '#FF9A9A'
+  dangerSurface: '#4A2F33'
+  disabledSurface: '#3A3C41'
+  disabledText: '#ACAFB4'
 typography:
   display:
     fontFamily: system
@@ -97,18 +78,18 @@ spacing:
   section: 40
 components:
   buttonPrimary:
-    backgroundColor: '{colors.primary}'
-    textColor: '{colors.onPrimary}'
+    backgroundColor: '{colors.accent}'
+    textColor: '{colors.onAccent}'
     typography: '{typography.bodyStrong}'
     rounded: '{rounded.control}'
     padding: '{spacing.lg}'
     height: 48
   buttonPrimaryPressed:
-    backgroundColor: '{colors.primaryPressed}'
-    textColor: '{colors.onPrimary}'
+    backgroundColor: '{colors.accentPressed}'
+    textColor: '{colors.onAccent}'
   buttonTonal:
-    backgroundColor: '{colors.primaryContainer}'
-    textColor: '{colors.onPrimaryContainer}'
+    backgroundColor: '{colors.tonal}'
+    textColor: '{colors.text}'
     rounded: '{rounded.control}'
     height: 48
   buttonDisabled:
@@ -143,7 +124,7 @@ components:
     rounded: '{rounded.small}'
     padding: '{spacing.lg}'
   categoryChip:
-    backgroundColor: '{colors.surface}'
+    backgroundColor: '{colors.surfaceContainer}'
     textColor: '{colors.text}'
     typography: '{typography.label}'
     rounded: '{rounded.small}'
@@ -157,9 +138,9 @@ components:
 
 ## Overview
 
-**Status:** Baseline for implementation (D-09), updated 12 November 2026 for the exposure context, the community signal, and the staff screens, and 17 November 2026 for the DDD paper (partner sections, facility directory, area list). No interface exists yet, so nothing here has been checked on a device. The mobile theme module mirrors the frontmatter; change a token here first.
+**Status:** Baseline for implementation (D-09). Updated 12 November 2026 for the exposure context, the community signal, and the staff screens; 17 November 2026 for the DDD paper (partner sections, facility directory, area list); and 20 November 2026 for the 60/30/10 palette chosen by the owner (D-36). The app in `apps/mobile` implements it; it has been opened on one phone, but the accessibility checks at the end of this file have not been run. The mobile theme module (`apps/mobile/src/theme/index.js`) mirrors the frontmatter; change a token here first.
 
-The direction is a clear personal health companion with the readability of a well-organized field guide: warm light surfaces, deep botanical text, restrained teal actions, and source/time information close to environmental values. Brand character comes from proportion, spacing, and precise language. It does not need smoke imagery, a medical mascot, gradients, glass effects, or a dashboard full of interchangeable cards.
+The direction is a calm, dark personal health companion with the readability of a well-organized field guide: charcoal gray surfaces, silver text, a single yellow action per screen, and source/time information close to environmental values. Brand character comes from proportion, spacing, and precise language. It does not need smoke imagery, a medical mascot, gradients, glass effects, or a dashboard full of interchangeable cards.
 
 The resident should understand three things in order: **what the available data says about the area, what they can do next, and whether a person has reviewed their report**. Environmental certainty, medical urgency, and report progress are separate visual signals.
 
@@ -167,13 +148,29 @@ This is a documentation-only refinement informed by [Impeccable](https://github.
 
 ## Colors
 
-### Role and Theme Rules
+### The 60/30/10 Rule (D-36)
 
-Use the frontmatter values as the proposed source of truth. The unprefixed colors are the light scheme. The dark scheme maps each role to its dark-prefixed equivalent; for example primary becomes darkPrimary and surface becomes darkSurface. Resolve roles through one theme adapter instead of placing literal colors in screens. Components use logical roles, so the same component contract works in both themes.
+Two colors do 90% of the work and one color that does not quite match takes the last 10%, only on the action the user should press.
 
-The warm background carries the page; white surfaces are used only for genuinely distinct content. Teal marks primary action and current selection. Environmental information normally sits on a neutral-tonal panel. It must not become reassuring green simply because a pollution value is present.
+| Share | Color | Hex | Roles |
+| --- | --- | --- | --- |
+| 60% | Gray | `#2B2D31` | `background`, and its lighter steps `surface`, `surfaceContainer`, `tonal`, `divider` |
+| 30% | Silver | `#D9DADC` | `text`, `focus`, `selected` (chosen chips), active tab, links, and its dimmer steps `textMuted`, `outline` |
+| 10% | Yellow | `#FFC93C` | `accent`: the fill of the one primary button per screen, and nothing else |
 
-Warning and danger indicate explicitly explained conditions, not decorative emphasis. Information blue is for neutral notices such as pending review. A completed software action can use a check icon and text without implying medical safety.
+The accent goes on **Masuk**, **Kirim laporan** (and its review step), **Klaim laporan**, **Terbitkan tanggapan**, **Tutup laporan**, **Terbitkan ke warga**, and the one leading action on Beranda. It never colors tabs, chips, links, text, icons, panels, headers, or status. Secondary actions use `tonal`, low-emphasis ones are text buttons in `text`, and a chosen chip inverts to `selected` with `onSelected` text plus a check mark. Squint test: on any screen, the only thing that stands out is the yellow button.
+
+The palette is one dark scheme. The app does not switch to a light scheme with the system setting, because a light version would swap the 60% and 30% roles and lose the brand. Resolve roles through the theme module instead of placing literal colors in screens.
+
+### Status Colors Outside the 60/30/10
+
+Status needs its own hues, kept muted so they never compete with the yellow button, and always paired with text:
+
+- `danger` (soft red) for Darurat and failed actions that block the user. Yellow is never used for danger, and danger is never used for a normal action.
+- `warning` (soft orange, distinct from the yellow accent) for stale data and recoverable errors.
+- `information` (soft blue) for neutral notices such as "Terkirim, belum ditinjau" and the exposure context.
+
+Environmental information sits on a neutral `surfaceContainer` panel. It must not turn reassuring green because a pollution value is low, and it must never use the accent. A completed software action can use a check mark and text without implying medical safety.
 
 ### Semantic Mapping
 
@@ -183,7 +180,7 @@ Warning and danger indicate explicitly explained conditions, not decorative emph
 | Station observation | Neutral panel, observation icon | Pengukuran stasiun plus station and measured time |
 | Stale or unavailable data | Warning or neutral unavailable panel | Explicit age or unavailable text; no low-risk badge |
 | Report received, not reviewed | Information treatment | Terkirim / Belum ditinjau |
-| Staff response available | Primary accent on the action, attributed response body | Tanggapan petugas plus author and time |
+| Staff response available | Attributed response on a `surface` panel; the yellow goes only on the next action, if there is one | Tanggapan petugas plus author and time |
 | Urgent-access information | Danger text/container with direct navigation | Approved action wording, independent of report queue |
 | Synthetic service | Persistent small plain-language label | Simulasi tugas kuliah |
 | Exposure context on a report | Information panel, forecast icon | Prakiraan wilayah, bukan dosis pribadi |
@@ -195,6 +192,8 @@ AQI colors and category names require a separate, named standard and review. Do 
 ### Contrast and Non-Color Cues
 
 Target at least 4.5:1 for normal text and 3:1 for large text and essential control boundaries. Outline identifies controls; divider is decorative and must not be the only field boundary. Use text, icon, and placement alongside color. Disabled controls retain a readable reason. Review theme pairs numerically and on-device; a token check alone does not certify accessibility.
+
+Computed on 20 November 2026 (WCAG relative luminance): text on background 9.86:1, on surface 8.67:1, on surfaceContainer 7.55:1, on tonal 6.56:1; textMuted on background 6.06:1, on surfaceContainer 4.64:1; onAccent on accent 8.98:1, on accentPressed 7.23:1; accent against background 8.98:1; outline against background 4.20:1 and surface 3.69:1; information, warning, and danger on their surfaces 6.22, 5.67, and 5.92:1; danger on background 6.79:1; disabledText on disabledSurface 5.02:1.
 
 ## Typography
 
@@ -241,7 +240,7 @@ Keep environmental data readable without signing in. Private reports and results
 
 ### Navigation and Adaptation
 
-Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
+Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. The active tab is silver text on the gray bar; inactive tabs use `textMuted`. Tabs never use the yellow accent. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
 
 At medium width (proposed 600-839 logical units), consider a navigation rail and preserve comfortable reading measure. At expanded width (840+), a staff queue may use master/detail panes if that surface is approved. Do not stretch paragraphs across the whole display. Width thresholds are implementation proposals to test, not evidence of tablet support.
 
@@ -273,7 +272,7 @@ Include area, data kind, pollutant, unit, valid time, source, and freshness near
 
 ### Category Chip and Community Signal
 
-`categoryChip` sits beside the PM2.5 value and carries the category name in text. It has an outline in the outline role and no status fill, so the category never reads as a personal risk level. It is not rendered while the category is null.
+`categoryChip` sits beside the PM2.5 value and carries the category name in text. It has an outline in the outline role, a `surfaceContainer` fill, and no status color, so the category never reads as a personal risk level. It is not rendered while the category is null.
 
 The community signal is one caption-size row under the forecast: the 7-day report count for the area and the words "data simulasi" in the coursework build. A hidden count reads "Belum cukup data". It is never a chart, a map, or a trend arrow.
 
@@ -313,7 +312,7 @@ Use persistent labels, optional markers, inline errors, preserved values, and a 
 | Loading | Preserve action label, prevent duplicate taps, announce progress |
 | Error | Actionable inline message, retain input, offer an appropriate retry |
 
-Use a filled button for the current primary action, a tonal/outlined button for a secondary action, and text action for low-emphasis navigation. Do not put two filled competing actions side by side. Input outline uses the outline role; focus uses the focus role. These border/state rules live in prose rather than invalid custom component token properties.
+Use the yellow filled button for the current primary action, a `tonal` button for a secondary action, and a silver text action for low-emphasis navigation. A screen has at most one yellow button; never put two side by side. A destructive confirmation (such as "Ya, batalkan") uses the danger container, not yellow. Input outline uses the outline role; focus uses the focus role. These border/state rules live in prose rather than invalid custom component token properties.
 
 ### Report Timeline and Staff Response
 
@@ -348,4 +347,4 @@ Do not display reassuring medical copy as a default empty state. A successful su
 - Never use weather icons or sky color as a pollution measurement.
 - Do not claim the palette or this document has passed a rendered accessibility audit.
 
-Before UI completion, capture an actual Android build at compact width, large text (including a 200% stress check where supported), dark theme, keyboard-open form, missing environmental data, long staff response, and a failed upload. Include TalkBack checks. Add tablet evidence only if tablet support is claimed. Browser mockups do not prove native behavior.
+Before UI completion, capture an actual Android build at compact width, large text (including a 200% stress check where supported), outdoor brightness (the dark palette must stay readable in sunlight), keyboard-open form, missing environmental data, long staff response, and a failed upload. Run the squint test on every screen: only the yellow button should stand out. Include TalkBack checks. Add tablet evidence only if tablet support is claimed. Browser mockups do not prove native behavior.
