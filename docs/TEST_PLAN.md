@@ -7,7 +7,7 @@
 | Layer | Tool | Where | State |
 | --- | --- | --- | --- |
 | Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 26 tests pass |
-| Integration service | pytest with stubbed upstream responses | `services/integration/tests` | Planned (A-07, A-10) |
+| Integration service | pytest with stubbed upstream responses | `services/integration/tests` | 6 tests pass (A-07) |
 | Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
 | Deployment | Commands on the STB | Evidence in README.pdf | Planned (A-13) |
@@ -38,8 +38,8 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-18 | Large text, status without color, and form errors are usable on a device. | NFR-07 | Planned, A-12 |
 | T-19 | The release APK installs; login, 4+ screens, stack and tab navigation, and the validated form work. | C-07, C-11 | Planned, A-14 |
 | T-20 | Fixtures, logs, screenshots, and the video contain only synthetic people. | NFR-02 | Planned, A-15 |
-| T-21 | The Open-Meteo adapter keeps valid time and retrieval time separate and sends missing values as null. | FR-15 | Planned, A-07 |
-| T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Planned, A-07 |
+| T-21 | The Open-Meteo adapter keeps valid time and retrieval time separate and sends missing values as null. | FR-15 | Pass: `test_snapshot_keeps_valid_and_retrieval_time_apart_and_gaps_null` |
+| T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Partial: the push side passes `test_provider_failure_pushes_nothing_and_does_not_raise`; partner endpoints in A-10 |
 | T-24 | Light and dark themes, TalkBack labels, Android Back, and keyboard insets work on a device. | NFR-07 | Planned, A-12 |
 | T-25 | A facility with an unknown schedule is shown as unknown, under the simulation label. | US-07 | Partial: API passes `test_unknown_hours_stay_unknown`; screen in A-12 |
 | T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Pass (API): `test_report_freezes_exposure_context` |

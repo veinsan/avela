@@ -196,9 +196,9 @@ Base URL `https://avela-int.stei.fun`. The app calls these; the service calls th
 | --- | --- | --- |
 | `GET /guidance/products` | Protective products from Veriqu's catalogue, with rating summary | Shown in Panduan; the source is named |
 | `GET /areas/{areaId}/waste` | FlowGanic's managed waste volume per waste type, mapped to the pilot area | Shown on Beranda; an unmapped area returns `unavailable` |
-| `GET /health` | Liveness | - |
+| `GET /health` | Liveness, whether the push job is on, and the last push result | Built (A-07) |
 
-Every response carries `source`, `retrievedAt`, and `freshness` (`fresh`, `stale`, `unavailable`). An upstream call is abandoned after 10 seconds. The scheduled job pushes one snapshot per area to the core every 60 minutes.
+Every response carries `source`, `retrievedAt`, and `freshness` (`fresh`, `stale`, `unavailable`). An upstream call is abandoned after 10 seconds. The scheduled job pushes one snapshot per area to the core every 60 minutes, with two past days and two forecast days (96 hourly points); it runs only when `AVELA_SNAPSHOT_KEY` is set.
 
 ## Peer Integrations
 

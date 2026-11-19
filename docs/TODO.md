@@ -43,8 +43,8 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | --- | --- | --- | --- |
 | A-13 | Deploy the core on the STB | Pending | Requires A-04 and A-25. |
 | A-18 | Publish to the Registry and give peers access | In progress | 19 Nov: `services/core/README.md` is the README.pdf source (architecture, endpoints, access steps, limits, example requests, Registry row, peer agreement table); `uji-mitra` test account with its own password (`test_peer_test_account_has_its_own_password`); backup and restore commands checked on a local SQLite file. Owner steps left: fill the Registry row, set `AVELA_PEER_TEST_PASSWORD` and rerun the seed on the STB, create one key per peer group with `app.keys`. |
-| A-02 | Finish the data audit | In progress | Open-Meteo probes passed for both areas. ISPU bands sourced (D-29); BMKG panel dropped from the MVP. Remaining: quota against the push schedule, adapter failure paths. |
-| A-07 | Environmental context end to end | Pending | Requires A-02, A-05, A-23. |
+| A-02 | Finish the data audit | Done | 19 Nov: ISPU bands read from the regulation (D-29); BMKG panel dropped from the MVP; the push makes 48 Open-Meteo calls a day against a 10,000 limit; failure paths (timeout, 429, changed schema, wrong unit, empty series) pass in `services/integration/tests/test_openmeteo.py`. |
+| A-07 | Environmental context end to end | In progress | 19 Nov, service side done: `services/integration` pushes both areas every 60 minutes; `pytest -q` there: 6 passed. Live check: a real Open-Meteo fetch pushed 96 points per area into a local core, and the advisory answered `fresh` with an ISPU label. Remaining: Beranda states in the app (A-12); run the service with the STB key and the `avela-int` tunnel (owner). |
 | A-26 | Resident report flow in the app | Pending | Requires A-05 and A-24. |
 
 ## M3: Peer integration, staff screens, resilience, by 6 December

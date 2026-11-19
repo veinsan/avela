@@ -38,7 +38,8 @@ services/core/app/     main.py (app, login, /me), care.py (reports, staff review
 services/core/tests/   conftest.py, test_core.py, test_environment.py
 infra/stb/             docker-compose.yml, nginx.conf, .env.example
 docs/                  Project documents and docs/skills/
-services/integration/  Planned: provider and peer adapters
+services/integration/  app/ main.py (service, push loop), upstream.py (the only network caller),
+                       openmeteo.py (PM2.5 snapshot push); tests/; README.txt
 apps/mobile/           Planned: Expo app
 ```
 
@@ -97,7 +98,9 @@ uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirement
 
 Success is all tests passing; 26 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
 
-Mobile and integration commands do not exist yet. Add them here when A-05 and A-07 create them.
+Integration service, from `services/integration`: the same two commands; 6 pass on 19 November. Run steps are in its `README.txt`.
+
+Mobile commands do not exist yet. Add them here when A-05 creates them.
 
 Before calling a feature done, apply [the readiness-review skill](skills/review-avela-readiness/SKILL.md). To add a peer integration, follow [the peer-integration skill](skills/integrate-peer-api/SKILL.md).
 

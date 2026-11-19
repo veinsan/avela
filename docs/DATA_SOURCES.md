@@ -1,12 +1,12 @@
 # Data Sources
 
-**Updated:** 19 November 2026. Providers are chosen (D-13); the requests behind the choice are in [API_RESEARCH.md](API_RESEARCH.md). No adapter is built yet. Public providers do not count toward the two-group integration requirement.
+**Updated:** 19 November 2026. Providers are chosen (D-13); the requests behind the choice are in [API_RESEARCH.md](API_RESEARCH.md). The Open-Meteo adapter is built (A-07); the partner adapters follow in A-10. Public providers do not count toward the two-group integration requirement.
 
 ## Chosen Sources
 
 | Need | Source | Used for | State |
 | --- | --- | --- | --- |
-| Area PM2.5 forecast | Open-Meteo Air Quality, `cams_global` | Smoke advisory, exposure context | Probed for both pilot areas on 10 Nov; adapter planned (A-07) |
+| Area PM2.5 forecast | Open-Meteo Air Quality, `cams_global` | Smoke advisory, exposure context | Adapter and hourly push built in `services/integration` (A-07); live fetch checked 19 Nov |
 | Protective products | Veriqu's product catalogue | Product recommendations in Panduan | Contract pending (Q-03) |
 | Managed waste recap | FlowGanic's waste distribution service | Waste section on Beranda | Contract and area codes pending (Q-03) |
 | Facilities | Avela's simulated facility directory (D-24) | Fasilitas tab | Two facilities seeded with area, services, and schedule (A-30) |
