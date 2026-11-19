@@ -7,7 +7,7 @@
 | ID | Decision | Basis | Consequence |
 | --- | --- | --- | --- |
 | D-01 | Product name is Avela. | Owner, 10 Nov | Use it for the app, repository, and Registry name. |
-| D-02 | Project Markdown lives in `docs/`. Two root files are exceptions: `README.md` (repository front page) and `CLAUDE.md` (imports `docs/AGENTS.md`). | Owner, 10 Nov; exceptions approved 12 Nov | `project-setup/` is a local, git-ignored copy and is not part of the repository. |
+| D-02 | Project Markdown lives in `docs/`. Two root files are exceptions: `README.md` (repository front page) and `CLAUDE.md` (imports `docs/AGENTS.md`). | Owner, 10 Nov; exceptions approved 12 Nov | The local `project-setup/` copy was deleted on 20 Nov; nothing outside `docs/` holds project Markdown. |
 | D-03 | Theme is Health & Wellbeing, in the wildfire-smoke (karhutla) context. | Owner, 10 Nov | Features serve health access, not fire detection. |
 | D-04 | Residents are the primary users; facility staff support their journey. | Owner, 10 Nov | Resident screens come first in scope and design. |
 | D-05 | Residents report symptoms, staff review them, and an onsite examination follows when needed. | Owner, 10 Nov | Photo attachments are a stretch item (P-03). |

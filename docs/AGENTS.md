@@ -39,14 +39,16 @@ services/core/app/     main.py (app, login, /me), care.py (reports, staff review
                        facilities.py (facility directory),
                        security.py (JWT, roles, API key scopes), keys.py (key CLI),
                        db.py (schema), errors.py, seed.py
-services/core/tests/   conftest.py, test_core.py, test_environment.py
-infra/stb/             docker-compose.yml, nginx.conf, .env.example
-docs/                  Project documents and docs/skills/
+services/core/tests/   conftest.py, test_core.py, test_environment.py, test_exposure.py,
+                       test_peer_api.py, test_facilities.py, test_result_versions.py
+infra/stb/             docker-compose.yml, nginx.conf (rate limits, security headers), .env.example
+docs/                  Project documents; docs/skills/ (project skills); docs/submissions/ (course files)
+scripts/               md2pdf.py (exports a Markdown deliverable to PDF)
 services/integration/  app/ main.py (service, push loop), upstream.py (the only network caller),
                        openmeteo.py (PM2.5 snapshot push), partners.py (envelope, cache),
                        veriqu.py, flowganic.py (anticorruption layers); fixtures/; tests/; README.txt
-apps/mobile/           App.js; src/ (config, services/ApiService.js, context/, navigation/,
-                       screens/, components/ui.js, theme/, utils/format.js); __tests__/
+apps/mobile/           App.js; src/ (config, services/ApiService.js, context/, navigation/, screens/,
+                       components/, hooks/, theme/, utils/format.js, utils/log.js); __tests__/; assets/
 ```
 
 One bounded context per module in `services/core/app`. A new context gets its own module and router, included in `main.py`.
@@ -62,6 +64,8 @@ One bounded context per module in `services/core/app`. A new context gets its ow
 - The core never calls an outside API. Provider and peer calls belong in `services/integration`.
 - In the app, only `ApiService.js` calls the network. Screens get data through it.
 - Mark a known shortcut with a comment: `shortcut: <the limit>, <when to upgrade>`.
+- Never swallow an error. Show the user what failed and what to do next; for a failure the user cannot act on (device storage, update markers), call `logFailure(context, error)` from `apps/mobile/src/utils/log.js`.
+- App text has no em dashes and no emoji. Say a missing value in words ("tidak ada data"), never as a dash or zero.
 - When a request is ambiguous and the answer changes behavior, ask before coding.
 
 ## Features
@@ -77,8 +81,8 @@ One bounded context per module in `services/core/app`. A new context gets its ow
 - [x] Facility directory with services and schedule.
 - [x] Versioned examination results.
 - [x] Integration service: snapshot push and partner adapters (partners on labelled fixtures until A-03).
-- [ ] Mobile app: scaffold, theme, `ApiService.js`, login, and account done; feature screens in progress.
-- [ ] Deployment on the STB.
+- [x] Mobile app: 15 resident and staff screens, login, `ApiService.js`, validated report form, update markers, 60/30/10 dark theme (D-36). Checked on one phone; the staff flow on a device is pending (T-32).
+- [x] Deployment on the STB: core v0.2 at `https://avela.stei.fun/api` since 19 November.
 
 Keep the behavior of checked features unless the task says to change it.
 
@@ -95,18 +99,21 @@ Keep the behavior of checked features unless the task says to change it.
 
 ## Testing and Build
 
-Run from `services/core` in Git Bash:
+Run from each directory in Git Bash. Success is every test passing.
 
-```bash
-uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirements-dev.txt
-.venv/Scripts/python.exe -m pytest -q
-```
+| Part | Directory | Commands | Passing on 20 Nov |
+| --- | --- | --- | --- |
+| Core | `services/core` | `uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirements-dev.txt`, then `.venv/Scripts/python.exe -m pytest -q` | 26 |
+| Integration service | `services/integration` | The same two commands | 15 |
+| Mobile app | `apps/mobile` | `npm install`, then `npm test` | 25 (3 integration tests skipped) |
+| Android bundle | `apps/mobile` | `npx expo export --platform android` | Builds; catches import errors without a device |
 
-Success is all tests passing; 26 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
+Notes:
 
-Integration service, from `services/integration`: the same two commands; 15 pass on 19 November. If Windows Smart App Control blocks a DLL in its new `.venv`, run it with `../core/.venv/Scripts/python.exe`, which pins the same versions. Run steps are in its `README.txt`.
-
-Mobile app, from `apps/mobile`: `npm install`, then `npm test` (Jest) and `npx expo start` (Expo Go). `npx expo export --platform android` bundles the app without a device and catches import errors. The opt-in API integration test runs against live services: `AVELA_IT_URL=http://127.0.0.1:8000 AVELA_IT_PASSWORD=<demo password> npm test -- api.integration`; `jest-expo` stubs `fetch` and inlines `EXPO_PUBLIC_*`, so that test brings its own HTTP client and config. Pinned versions only; add a package with `npx expo install`.
+- To run the core locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04).
+- If Windows Smart App Control blocks a DLL in the integration service's new `.venv`, run it with `../core/.venv/Scripts/python.exe`, which pins the same versions.
+- The opt-in API integration test drives `ApiService.js` against live services: `AVELA_IT_URL=http://127.0.0.1:8000 AVELA_IT_PASSWORD=<demo password> npm test -- api.integration`. `jest-expo` stubs `fetch` and inlines `EXPO_PUBLIC_*`, so that test brings its own HTTP client and config.
+- Pinned versions only; add an app package with `npx expo install`.
 
 Before calling a feature done, apply [the readiness-review skill](skills/review-avela-readiness/SKILL.md). To add a peer integration, follow [the peer-integration skill](skills/integrate-peer-api/SKILL.md).
 

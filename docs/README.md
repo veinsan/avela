@@ -1,6 +1,6 @@
 # Avela Documentation
 
-**Updated:** 19 November 2026. The repository front page is [../README.md](../README.md). Documents are in English; the app's text and the DDD paper are in Indonesian.
+**Updated:** 20 November 2026. The repository front page is [../README.md](../README.md). Documents are in English; the app's text and the DDD paper are in Indonesian.
 
 ## Start Here
 

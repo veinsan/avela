@@ -4,7 +4,24 @@
 
 **Scope:** Documentation checks. The only code check is the existing core test suite.
 
-## Latest Revision: 60/30/10 Palette (20 November 2026)
+## Latest Revision: Anti-Slop Review (20 November 2026)
+
+The owner's `anti-vibecode-slop` checklist was applied to the repository in review mode, then the findings were fixed. The Markdown documents were also checked against the owner's `project-setup` guide; PRD, DESIGN, ARCHITECTURE, TODO, WORKFLOW, the skills, and both READMEs already followed it, so only stale facts were changed. At the owner's request, neither the checklist nor the local `project-setup` copy is kept in the repository or on the laptop (20 November).
+
+| Severity | Finding | Fix |
+| --- | --- | --- |
+| Blocker | The gateway sent no security headers | `infra/stb/nginx.conf` adds Content-Security-Policy (strict for the JSON API, wider only for Swagger UI at `/api/docs`), Strict-Transport-Security, X-Content-Type-Options, X-Frame-Options, and Referrer-Policy on every answer, including 429 |
+| Minor | Missing values were shown as a bare em dash | Shown in words ("tidak ada data", "waktu tidak diketahui"); Beranda says "Belum ada nilai untuk jam ini"; DESIGN's rule changed |
+| Minor | Five `.catch(() => {})` handlers swallowed storage and marker errors | `logFailure(context, error)` in `apps/mobile/src/utils/log.js` logs what was being done (development builds) and keeps the quiet fallback |
+| Minor | A symbol character in front of the simulation label | Removed; the label is plain text |
+| Minor | Root README had no environment variable list or deploy pointer | Added both |
+| Minor | AGENTS listed old test files, missed `scripts/`, and showed the STB deploy and app as unchecked | Updated; testing commands now in one table |
+
+Accepted on purpose: the dark default theme (D-36, the owner's palette), the check mark on chosen chips and the dot on updated rows (they carry meaning next to text).
+
+Checks run: the skill's Quick Detection searches (placeholders, em dashes, visual patterns, empty catches, `console.log`, `key={index}`, client-side secrets, `.env` in history) now find nothing outside the skill file itself; no banned copy phrase in documents or app text; `pyflakes` on both Python services is clean; core `pytest -q` 26 passed; `npm test` 25 passed; Android bundle builds. Not run: `nginx -t` with the new headers (no nginx on the laptop; run it on the STB before reloading).
+
+## Earlier Revision: 60/30/10 Palette (20 November 2026)
 
 The owner chose gray `#2B2D31` (60%), silver `#D9DADC` (30%), and yellow `#FFC93C` (10%) as the first step of the app redesign (D-36). DESIGN's frontmatter now holds one dark scheme with 23 color tokens; the light and dark teal tokens are gone. The theme module, the shared components (button kinds, chips, tab tint, links), `app.json` (dark interface, splash and adaptive-icon background), and the icon set follow it.
 

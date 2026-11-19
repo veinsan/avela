@@ -72,3 +72,22 @@ Prerequisites: Python 3.12 or newer, [uv](https://docs.astral.sh/uv/), Node.js 2
 4. Tests: `pytest -q` in each service (26 core, 15 integration) and `npm test` in `apps/mobile` (25). Results are in [docs/TESTING_REPORT.md](docs/TESTING_REPORT.md).
 
 Demo accounts are `warga1`, `warga2`, `petugas1`, and `petugas2`, with the password from `AVELA_DEMO_PASSWORD`. Other groups get a key and the `uji-mitra` test account as described in [Getting Access](services/core/README.md#getting-access).
+
+### Environment Variables
+
+Each service reads its own `.env`, which is never committed. Templates: [infra/stb/.env.example](infra/stb/.env.example) and [services/integration/.env.example](services/integration/.env.example).
+
+| Variable | Used by | Purpose |
+| --- | --- | --- |
+| `AVELA_JWT_SECRET` | Core | Signs session tokens; 32 or more random characters |
+| `AVELA_DEMO_PASSWORD` | Core seed | Password of the four demo accounts |
+| `AVELA_PEER_TEST_PASSWORD` | Core seed | Separate password of `uji-mitra`, the account shared with other groups |
+| `AVELA_DB_PATH` | Core | SQLite file; `/data/avela.db` in Docker, `avela.db` locally |
+| `TUNNEL_TOKEN` | STB tunnel | Cloudflare Tunnel token for `avela.stei.fun` |
+| `AVELA_CORE_URL`, `AVELA_SNAPSHOT_KEY`, `PUSH_INTERVAL_MINUTES` | Integration service | Where and how often to push PM2.5 snapshots |
+| `VERIQU_*`, `FLOWGANIC_*` | Integration service | Partner URLs, keys, and FlowGanic area codes; empty means the labelled fixture |
+| `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_INTEGRATION_URL` | App | Service URLs; they hold no secret and default to the HTTPS hosts |
+
+### Deployment
+
+The core deploys to the set-top box with Docker Compose from `infra/stb`; the steps, backup, and restore are in [Deploy on the STB](services/core/README.md#deploy-on-the-stb). The integration service runs on the owner's laptop ([README.txt](services/integration/README.txt)). The Android APK is built with EAS ([Release APK](apps/mobile/README.md#release-apk)).
