@@ -17,7 +17,9 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-app = FastAPI(title="Avela Core API", version="0.1.0", lifespan=lifespan)
+# The class tunnel only forwards /api/* to the gateway, so docs live under /api too.
+app = FastAPI(title="Avela Core API", version="0.1.0", lifespan=lifespan,
+              docs_url="/api/docs", redoc_url=None, openapi_url="/api/openapi.json")
 errors.install(app)
 api = APIRouter(prefix="/api/v1")
 
@@ -28,6 +30,7 @@ class LoginIn(BaseModel):
 
 
 @app.get("/health")
+@app.get("/api/health")
 def health():
     return {"status": "ok"}
 

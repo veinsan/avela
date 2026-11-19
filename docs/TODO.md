@@ -19,7 +19,7 @@
 | A-21 | Realign documentation with decisions and built code | Done | 12 Nov: checks recorded in VALIDATION_REPORT. |
 | A-22 | Reserve the Registry name and commit the baseline | Pending | Owner reserves the name and runs the Git commands. |
 | A-03 | Agree peer integrations | In progress | Veriqu and FlowGanic are fixed by the paper (D-23). Send each the contract request in `skills/integrate-peer-api`, agree FlowGanic's area codes, pick a backup. |
-| A-04 | Validate the stack on the STB | Pending | STB is set up from the Week 7 practicum (Q-12): ARM64, Docker and Compose installed. Avela's gateway moved to local port 8081 to avoid KatalogKu's 8080. Next: clone, build, check `docker stats` and free memory. Cloudflare Tunnel was never set up. |
+| A-04 | Validate the stack on the STB | In progress | 18 Nov: image built on the STB (ARM64); `/health` and `/api/v1/areas` answer on local port 8081; `docker stats`: core 45 MiB of 256, gateway 6 MiB of 64. Host: 913 MiB RAM, 276 MiB available, swap full; disk 21 GB free. Not yet checked: data survives `docker compose restart`, tunnel container memory. |
 
 ## M1: DDD paper, core v0.2, app skeleton, by 16 November
 
