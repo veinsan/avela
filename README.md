@@ -10,59 +10,65 @@ During a smoke episode, residents get an air-quality number without a next step.
 
 ## Key Features
 
-Available now, in the core API:
+- Pick Pekanbaru or Palangka Raya from a list (no location permission) and read the hourly PM2.5 forecast with its source, age, an ISPU reference category, and the number of reports from the area in the last 7 days.
+- Protection guidance from Kementerian Kesehatan publications, protective products from Veriqu's catalogue, and an emergency screen (119, 112) that works signed out and offline.
+- Submit a symptom report; a retried submit never creates a duplicate. Each report freezes the area's forecast PM2.5 from symptom onset to submission as its exposure context.
+- Follow a report's state and timeline, answer staff questions, and see an update marker when something changes.
+- Staff, in the same app, claim a report, ask for more information, respond with a disposition, close it, and publish an examination result; a correction becomes a new version.
+- A simulated facility directory with services and opening schedule, and FlowGanic's managed waste recap for the area.
+- A public API for other groups: smoke advisory, an anonymous area health signal that hides counts from 1 to 4, and guidance, each behind its own scoped key.
 
-- Sign in as a resident or as facility staff.
-- Submit a symptom report; a retried submit never creates a duplicate.
-- Follow a report's state and timeline.
-- Staff claim a report, ask for more information, publish a response, and close it.
-- Staff publish an examination result that only the report's owner can read.
-- List the two pilot areas and read each area's latest pushed PM2.5 snapshot with its age.
-
-Planned for the 13 December release: exposure context on each report, an anonymous area health signal for other groups, a simulated facility directory, versioned examination results, the Android app, and integration with Veriqu (protective products) and FlowGanic (waste recap per area). The domain follows the DDD paper submitted on 16 November, [docs/Makalah_DDD.docx](docs/Makalah_DDD.docx). Progress is in [docs/TODO.md](docs/TODO.md).
-
-All accounts, staff, and cases are fictional. Avela does not diagnose and is not a clinical service.
+Veriqu and FlowGanic are the partner groups in the DDD paper ([docs/Makalah_DDD.docx](docs/Makalah_DDD.docx)). Until their contracts are signed, their adapters run on fixtures and the app labels that data "Data contoh (mock)". All accounts, staff, facilities, and cases are fictional. Avela does not diagnose and is not a clinical service. Progress is in [docs/TODO.md](docs/TODO.md).
 
 ## Screenshot or Demo
 
-The core runs on the class set-top box behind `https://avela.stei.fun/api/`; interactive documentation is at [avela.stei.fun/api/docs](https://avela.stei.fun/api/docs). No app screenshot exists yet.
+The core runs on the class set-top box behind `https://avela.stei.fun/api/`; interactive documentation is at [avela.stei.fun/api/docs](https://avela.stei.fun/api/docs). App screenshots and the video come with the release APK (A-14, A-15).
+
+## Repository Layout
+
+| Path | What it is | Docs |
+| --- | --- | --- |
+| `services/core` | Core microservice: FastAPI and SQLite, deployed on the STB | [README](services/core/README.md), also exported as `README.pdf` |
+| `services/integration` | Integration service off the STB: Open-Meteo push job, Veriqu and FlowGanic adapters | [README.txt](services/integration/README.txt) |
+| `apps/mobile` | React Native (Expo SDK 58) app for residents and staff | [README](apps/mobile/README.md) |
+| `infra/stb` | Docker Compose, Nginx gateway with rate limits, Cloudflare Tunnel | [Deploy on the STB](services/core/README.md#deploy-on-the-stb) |
+| `docs` | PRD, architecture, decisions, design, tests, testing report | [docs/README.md](docs/README.md) |
+| `scripts/md2pdf.py` | Exports a Markdown deliverable to PDF | Usage in the file |
 
 ## Tech Stack and Rationale
 
 - **FastAPI and SQLite** for the core service: small enough for the set-top box (256 MB, 0.5 CPU) and validated at the API boundary.
 - **Docker, Nginx, Cloudflare Tunnel** to run the core on the STB behind a rate-limited public HTTPS URL without opening a port.
-- **React Native with Expo** for the Android app, as the course requires.
-- **A separate integration service** outside the STB for public and peer APIs, so the STB runs only the core.
+- **A separate integration service** outside the STB for Open-Meteo and the peer APIs, so the STB runs only the core and no key ships in the app.
+- **React Native with Expo**, React Navigation, and Jest for the Android app, as the course requires.
 
 ## Installation and Setup
 
-Prerequisites: Python 3.12 or newer, [uv](https://docs.astral.sh/uv/), and Git Bash on Windows.
+Prerequisites: Python 3.12 or newer, [uv](https://docs.astral.sh/uv/), Node.js 20 or newer, and Git Bash on Windows.
 
-1. Create the environment and install dependencies.
+1. Core service:
 
    ```bash
    cd services/core
    uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirements-dev.txt
-   ```
-
-2. Set the secrets and create the demo accounts.
-
-   ```bash
    export AVELA_JWT_SECRET=$(python -c "import secrets;print(secrets.token_urlsafe(48))")
    export AVELA_DEMO_PASSWORD=choose-a-demo-password
    .venv/Scripts/python.exe -m app.seed
+   .venv/Scripts/python.exe -m uvicorn app.main:app --reload --host 0.0.0.0
    ```
 
-3. Start the service and open `http://127.0.0.1:8000/api/docs`.
+   Open `http://127.0.0.1:8000/api/docs`.
+
+2. Integration service (optional locally): follow [services/integration/README.txt](services/integration/README.txt).
+
+3. App:
 
    ```bash
-   .venv/Scripts/python.exe -m uvicorn app.main:app --reload
+   cd apps/mobile
+   npm install
+   EXPO_PUBLIC_API_URL=http://<laptop-ip>:8000 npx expo start
    ```
 
-4. Run the tests.
+4. Tests: `pytest -q` in each service (26 core, 15 integration) and `npm test` in `apps/mobile` (25). Results are in [docs/TESTING_REPORT.md](docs/TESTING_REPORT.md).
 
-   ```bash
-   .venv/Scripts/python.exe -m pytest -q
-   ```
-
-Demo accounts are `warga1`, `warga2`, `petugas1`, and `petugas2`, with the password from `AVELA_DEMO_PASSWORD`. The endpoint list and STB deployment steps are in [services/core/README.md](services/core/README.md). Project documentation starts at [docs/README.md](docs/README.md).
+Demo accounts are `warga1`, `warga2`, `petugas1`, and `petugas2`, with the password from `AVELA_DEMO_PASSWORD`. Other groups get a key and the `uji-mitra` test account as described in [Getting Access](services/core/README.md#getting-access).

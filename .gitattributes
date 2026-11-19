@@ -1,0 +1,4 @@
+# Binary deliverables: never convert line endings or diff them as text.
+*.pdf binary
+*.png binary
+*.docx binary
