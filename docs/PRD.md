@@ -66,7 +66,7 @@ US-04 (optional photo attachment) is a stretch item; see section 7.
 | FR-06 | Staff queue, claim, information request, response with disposition, close. | US-06 | Core API built and tested; screens planned |
 | FR-07 | Show report state and timeline to the resident. | US-05 | Core API built; screens planned |
 | FR-08 | Serve the simulated facility directory with services and opening schedule. | US-07 | Core API built and tested; screen planned |
-| FR-09 | Publish examination results to the report's owner; store a correction as a new version. | US-08 | Publication built and tested; versioning planned (A-31); screen planned |
+| FR-09 | Publish examination results to the report's owner; store a correction as a new version. | US-08 | Core API built and tested, including versions; screen planned |
 | FR-10 | Use Veriqu's product catalogue and FlowGanic's waste recap in visible features. | US-02, US-13 | Planned; contracts pending (Q-03) |
 | FR-11 | Publish an API with documentation, per-group keys, and a test account. | US-09, US-14 | Endpoints and key CLI built; keys issued in A-18 |
 | FR-12 | Handle loading, empty, stale, unavailable, and retry states on every data screen. | All | Planned |

@@ -113,6 +113,8 @@ COLUMNS = [
     ("facilities", "area_id", "TEXT REFERENCES areas(id)"),
     ("facilities", "services", "TEXT"),
     ("facilities", "schedule", "TEXT"),
+    ("results", "version", "INTEGER NOT NULL DEFAULT 1"),
+    ("results", "previous_id", "TEXT REFERENCES results(id)"),
 ]
 
 

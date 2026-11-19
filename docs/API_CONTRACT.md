@@ -44,7 +44,9 @@ Codes in use: `INVALID_CREDENTIALS`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_REVIEW
 | `POST /api/v1/staff/reports/{id}/close` | Reviewer | `responded` to `closed` |
 | `POST /api/v1/staff/results` | Facility staff | Drafts a result for a responded report |
 | `POST /api/v1/staff/results/{id}/publish` | Facility staff | Publishes the draft |
-| `GET /api/v1/results`, `GET /api/v1/results/{id}` | Owner (published only) or facility staff | Examination results |
+| `POST /api/v1/staff/results/{id}/corrections` | Facility staff | Drafts a correction of the latest published version as version + 1; `409` when the result is a draft, already corrected, or has an open correction (A-31) |
+| `GET /api/v1/staff/results?reportId=` | Facility staff | Every version of the report's results, drafts included |
+| `GET /api/v1/results`, `GET /api/v1/results/{id}` | Owner (published only) or facility staff | The list holds the latest published version of each result; a detail carries `version`, `previousId`, `supersededBy`, and `history` (earlier versions, newest first) |
 | `GET /api/v1/areas` | Anyone, rate limited | Lists the pilot areas |
 | `GET /api/v1/areas/{areaId}/advisory` | Anyone, rate limited | Latest snapshot with freshness, `ageMinutes`, the ISPU reference category, and the 7-day `communitySignal` |
 | `PUT /api/v1/internal/areas/{areaId}/snapshot` | Integration service, scope `snapshots:write` | Stores a snapshot (A-23) |
@@ -92,7 +94,6 @@ The facility must belong to the chosen area, otherwise `422 UNKNOWN_FACILITY`. `
 
 Changes to built endpoints in v0.2:
 
-- Correcting a published result creates a new version linked to the previous one; result reads return the latest version and its history (A-31).
 
 ### Facility
 

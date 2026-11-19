@@ -56,7 +56,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | A-12 | Guidance, emergency screen, failure states | Pending | Content sources chosen (D-33). |
 | A-28 | Mobile test suite and test table | Pending | Requires A-10, A-26, A-27. |
 | A-30 | Facility directory | In progress | 19 Nov, API done: `test_facilities.py` (4 tests) passes: list by area, simulation flag, `closed` versus unknown hours, 404 for an unknown ID, a report's facility must be in its area, seed upgrades old facility rows. `pytest -q`: 24 passed. Remaining: Fasilitas and Detail Fasilitas screens (A-12). |
-| A-31 | Versioned examination results | Pending | Identity linkage confirmed (D-32); add result versions (D-26). |
+| A-31 | Versioned examination results | Done | 19 Nov: `test_result_versions.py` passes: correction drafts version 2 linked to version 1, other facility gets 404, a second open correction and a correction of a draft get 409, the owner keeps seeing version 1 until version 2 is published, then reads version 2 with its history and version 1 with `supersededBy`; staff list both versions. `pytest -q`: 25 passed. Screen in A-26. |
 | A-29 | Peer support and uptime | Pending | Starts when A-18 is done. |
 
 ## M4: Release and submission, by 13 December

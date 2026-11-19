@@ -1,12 +1,12 @@
 # Test Plan
 
-**Updated:** 19 November 2026. Core tests exist and pass (24 of 24, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
+**Updated:** 19 November 2026. Core tests exist and pass (25 of 25, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
 
 ## Layers
 
 | Layer | Tool | Where | State |
 | --- | --- | --- | --- |
-| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 24 tests pass |
+| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 25 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | Planned (A-07, A-10) |
 | Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
@@ -50,7 +50,7 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-31 | A snapshot older than 2 hours is marked stale in the advisory and on Beranda. | US-01 | Partial: API passes `test_old_snapshot_is_stale_and_keys_are_stored_hashed`; Beranda in A-07 |
 | T-32 | A staff account completes queue, claim, ask, respond, close, and publish result on a device. | US-06, FR-16 | Planned, A-27 |
 | T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Planned, A-27 |
-| T-34 | Correcting a published result creates a new version; the owner reads the latest and the earlier one. | US-08, FR-09 | Planned, A-31 |
+| T-34 | Correcting a published result creates a new version; the owner reads the latest and the earlier one. | US-08, FR-09 | Pass (API): `test_correction_is_a_new_version_and_the_old_one_stays_readable`; screen in A-26 |
 | T-35 | A FlowGanic area code maps to the right pilot area; an unmapped code is dropped, not guessed. | US-13 | Planned, A-10 |
 | T-36 | The Laporan tab shows an update marker after a state change or a new result. | FR-17 | Planned, A-26 |
 

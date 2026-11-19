@@ -43,7 +43,8 @@ Limits: core 256 MB / 0.5 CPU, gateway and tunnel 64 MB / 0.25 CPU each. Nginx r
 | `POST /staff/reports/{id}/responses` | Reviewer | Publish response, `in_review` to `responded` |
 | `POST /staff/reports/{id}/close` | Reviewer | `responded` to `closed` |
 | `POST /staff/results`, `POST /staff/results/{id}/publish` | Facility staff | Draft and publish result linked to a responded report |
-| `GET /results`, `GET /results/{id}` | Owner (published) / facility staff | Examination results |
+| `POST /staff/results/{id}/corrections`, `GET /staff/results?reportId=` | Facility staff | Draft a correction as a new version; list a report's result versions |
+| `GET /results`, `GET /results/{id}` | Owner (published) / facility staff | Latest published versions; detail with version history |
 | `GET /areas` | Public | The two pilot areas |
 | `GET /areas/{areaId}/advisory` | Public | Latest PM2.5 snapshot with freshness (`fresh` up to 2 h, then `stale`; `unavailable` if none) |
 | `PUT /internal/areas/{areaId}/snapshot` | `X-API-Key` with `snapshots:write` | Integration service pushes a snapshot |
@@ -70,4 +71,4 @@ State changes take `expectedVersion`; a stale version returns `409 VERSION_CONFL
 
 A report carries `areaId` (required) and the exposure context frozen at submission: mean and peak forecast PM2.5 for the area from onset to submission, or null with `exposureContextReason: "no_snapshot"`. Starting the service adds new columns to an existing database.
 
-Not yet included: versioned result corrections, attachments.
+Not yet included: attachments (stretch).
