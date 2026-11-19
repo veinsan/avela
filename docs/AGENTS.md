@@ -18,7 +18,10 @@ The root `CLAUDE.md` imports this file. Agents that do not read `CLAUDE.md` must
 | pytest, httpx | 9.2.0 and 0.28.1, core tests |
 | Nginx | 1.28 alpine, gateway and rate limits |
 | cloudflared | Tunnel to `https://avela.stei.fun` |
-| Expo, React Navigation, Jest | Mobile app; not scaffolded yet, pin versions in A-05 |
+| Expo SDK 58 (expo 58.0.26), React Native 0.88.1, React 19.3.0 | Mobile app in JavaScript (D-28), `apps/mobile` |
+| React Navigation 7 | native-stack 7.21.1, bottom-tabs 7.22.0 |
+| expo-secure-store 58.0.3 | Session token and chosen area on the device |
+| Jest 30.5.2, jest-expo 58.0.15, Testing Library 14.1.0 | Mobile tests |
 
 Add a dependency only when the standard library or an installed package cannot do the job.
 
@@ -30,12 +33,19 @@ Add a dependency only when the standard library or an installed package cannot d
 
 ```text
 services/core/app/     main.py (app, login, /me), care.py (reports, staff review),
-                       results.py, security.py (JWT, roles), db.py (schema), errors.py, seed.py
-services/core/tests/   conftest.py, test_core.py
+                       results.py, environment.py (areas, snapshots, advisory),
+                       signal.py (area health signal), guidance.py (guidance content),
+                       facilities.py (facility directory),
+                       security.py (JWT, roles, API key scopes), keys.py (key CLI),
+                       db.py (schema), errors.py, seed.py
+services/core/tests/   conftest.py, test_core.py, test_environment.py
 infra/stb/             docker-compose.yml, nginx.conf, .env.example
 docs/                  Project documents and docs/skills/
-services/integration/  Planned: provider and peer adapters
-apps/mobile/           Planned: Expo app
+services/integration/  app/ main.py (service, push loop), upstream.py (the only network caller),
+                       openmeteo.py (PM2.5 snapshot push), partners.py (envelope, cache),
+                       veriqu.py, flowganic.py (anticorruption layers); fixtures/; tests/; README.txt
+apps/mobile/           App.js; src/ (config, services/ApiService.js, context/, navigation/,
+                       screens/, components/ui.js, theme/, utils/format.js); __tests__/
 ```
 
 One bounded context per module in `services/core/app`. A new context gets its own module and router, included in `main.py`.
@@ -60,12 +70,13 @@ One bounded context per module in `services/core/app`. A new context gets its ow
 - [x] Staff review: queue, claim, information request, response with disposition, close.
 - [x] Examination result: draft, publish, owner-only read.
 - [x] Gateway configuration with rate limits and container limits.
-- [ ] Areas, pushed PM2.5 snapshots, exposure context on reports.
-- [ ] Peer API keys and public endpoints (advisory, health signal, guidance).
-- [ ] Facility directory with services and schedule.
-- [ ] Versioned examination results.
-- [ ] Integration service.
-- [ ] Mobile app.
+- [x] Areas, pushed PM2.5 snapshots, advisory, API key CLI.
+- [x] Exposure context on reports.
+- [x] Peer API keys and public endpoints (advisory, health signal, guidance).
+- [x] Facility directory with services and schedule.
+- [x] Versioned examination results.
+- [x] Integration service: snapshot push and partner adapters (partners on labelled fixtures until A-03).
+- [ ] Mobile app: scaffold, theme, `ApiService.js`, login, and account done; feature screens in progress.
 - [ ] Deployment on the STB.
 
 Keep the behavior of checked features unless the task says to change it.
@@ -90,9 +101,11 @@ uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirement
 .venv/Scripts/python.exe -m pytest -q
 ```
 
-Success is all tests passing; 8 pass on 12 November. To run the service locally, follow `services/core/README.md`. The Docker image has not been built yet because Docker is not installed on the development machine; A-04 covers it on the STB.
+Success is all tests passing; 26 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
 
-Mobile and integration commands do not exist yet. Add them here when A-05 and A-07 create them.
+Integration service, from `services/integration`: the same two commands; 15 pass on 19 November. If Windows Smart App Control blocks a DLL in its new `.venv`, run it with `../core/.venv/Scripts/python.exe`, which pins the same versions. Run steps are in its `README.txt`.
+
+Mobile app, from `apps/mobile`: `npm install`, then `npm test` (Jest) and `npx expo start` (Expo Go). `npx expo export --platform android` bundles the app without a device and catches import errors. Pinned versions only; add a package with `npx expo install`.
 
 Before calling a feature done, apply [the readiness-review skill](skills/review-avela-readiness/SKILL.md). To add a peer integration, follow [the peer-integration skill](skills/integrate-peer-api/SKILL.md).
 

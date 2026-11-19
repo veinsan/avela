@@ -1,6 +1,6 @@
 # Clinical Boundaries, Privacy, and Secrets
 
-**Updated:** 12 November 2026. This is the one place where Avela's clinical and privacy limits are written. Other documents link here.
+**Updated:** 19 November 2026. This is the one place where Avela's clinical and privacy limits are written. Other documents link here.
 
 Avela is a coursework prototype with fictional people. It is not a clinical protocol, a legal compliance assessment, or a telemedicine service.
 
@@ -15,7 +15,7 @@ Avela is a coursework prototype with fictional people. It is not a clinical prot
 
 ## Emergency Access
 
-The Darurat screen opens from every screen, signed in or not, and never requires a report. Its contact details must be verified for Indonesia before they are shown (Q-08). Do not copy emergency numbers from foreign sources. The app never tells a resident they are safe because nothing was flagged.
+The Darurat screen opens from every screen, signed in or not, and never requires a report. It shows 119, the Kemenkes medical emergency service, and 112, the national emergency number (D-33, S-10). Do not copy emergency numbers from foreign sources. The app never tells a resident they are safe because nothing was flagged.
 
 A smoke forecast is not an evacuation order and does not make a route or a home safe.
 
@@ -42,7 +42,7 @@ A smoke forecast is not an evacuation order and does not make a route or a home 
 ## Area Health Signal Rules
 
 - It contains counts by area, day, and disposition. It contains no complaint text, account, facility, or time of day.
-- A count from 1 to 4 is hidden and sent as null (P-04). Zero is sent as zero.
+- A count from 1 to 4 is hidden and sent as null (D-30). Zero is sent as zero.
 - Cancelled reports are not counted.
 - The payload says whether its data is synthetic.
 - It is not an outbreak detector and is not presented as one.
@@ -51,7 +51,7 @@ A smoke forecast is not an evacuation order and does not make a route or a home 
 
 - The assignment PDF contains the class's shared Cloudflare account credentials. It is git-ignored. Do not commit it, quote the credentials, or paste them into any document, issue, or chat log.
 - In the shared account, change only the `k01-avela` tunnel and its hostname, and log out afterwards.
-- Peer keys are shown once when created and stored hashed. Revoke a key by deactivating it.
+- Peer keys are shown once when created and stored hashed. Revoke a key with `python -m app.keys revoke <label>`, which deletes it.
 - Rotate `AVELA_JWT_SECRET` and the demo password if either appears in a commit, screenshot, or video.
 
 ## Data Minimization

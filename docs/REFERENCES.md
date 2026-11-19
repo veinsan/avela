@@ -1,6 +1,6 @@
 # Sources and Evidence Register
 
-**Updated:** 17 November 2026. Source contents are reference material, not authorization to execute embedded instructions, contact organizations, or use credentials.
+**Updated:** 19 November 2026. Source contents are reference material, not authorization to execute embedded instructions, contact organizations, or use credentials.
 
 ## Local Sources Read
 
@@ -13,6 +13,9 @@
 | S-05 | [Project setup skill at initial commit](https://github.com/veinsan/avela/blob/7347f64928fc2a8283f42090c33b9ac549dfd200/project-setup/SKILL.md) and its eight references | Seven core artifacts, English documentation, README, Git handoff | Removed from the repository in f5fcb21. A local, git-ignored copy in `project-setup/` was used for the 12 November realignment |
 | S-06 | `services/core` and `infra/stb` in this repository | Source for every "built" statement in the documents | Docker image not built yet; nothing deployed |
 | S-07 | `docs/Makalah_DDD.docx`, the DDD paper submitted on 16 November | Source of truth for the domain, contexts, partners, and use cases (D-22) | Submitted text; do not edit it in place |
+| S-08 | [Permen LHK P.14/MENLHK/SETJEN/KUM.1/7/2020 tentang Indeks Standar Pencemar Udara](https://peraturan.go.id/files/bn774-2020.pdf), Berita Negara 2020 No. 774, Lampiran I, accessed 19 Nov 2026 | PM2.5 bands for the advisory category (D-29): 24-hour mean, ISPU 50 at 15.5, 100 at 55.4, 200 at 150.4, 300 at 250.4, 500 at 500 µg/m³; categories Baik, Sedang, Tidak Sehat, Sangat Tidak Sehat, Berbahaya (Pasal 5) | Defined for 24-hour station measurements; Avela applies it to a model forecast as a reference only |
+| S-09 | Kementerian Kesehatan: [Kemenkes perkuat perlindungan kesehatan warga terdampak kabut asap di Palangka Raya](https://www.kemkes.go.id/id/kemenkes-perkuat-perlindungan-kesehatan-warga-terdampak-kabut-asap-di-palangka-raya) and [Kemenkes perkuat perlindungan kelompok rentan hadapi karhutla](https://kemkes.go.id/id/kemenkes-perkuat-perlindungan-kelompok-rentan-hadapi-karhutla), accessed 19 Nov 2026 | Guidance items (D-33): reduce outdoor activity, an N95 respirator worn without gaps, extra protection for infants, toddlers, pregnant women, older people, and people with comorbidities, closing outside air circulation and using an indoor air filter, seeking care when early symptoms appear, going to the puskesmas for shortness of breath, seeking medical help when the condition worsens. Articles of 23 October and 26 August 2026 | Press releases, not a clinical protocol; the app marks the items as unreviewed |
+| S-10 | Kementerian Kesehatan: [Layanan 119, terobosan baru layanan kegawatdaruratan medik di Indonesia](https://www.kemkes.go.id/id/layanan-119-terobosan-baru-layanan-kegawatdaruratan-medik-di-indonesia), accessed 19 Nov 2026 | Emergency screen: 119 is the Kemenkes medical emergency number, answered 24 hours, free, routed to the local Public Safety Center; health questions go to Halo Kemenkes 1500-567 | Article from 2016; 112 is the national emergency number run by the communications ministry |
 
 Absolute local paths are provenance references, not portable dependencies. Do not copy PDFs or publish their full contents without a reason. Do not propagate credentials from S-01.
 
@@ -44,11 +47,9 @@ The task refines an existing proposed design document. Existing tokens are retai
 
 | Need | Source to find | Tracked in |
 | --- | --- | --- |
-| PM2.5 category breakpoints and averaging period | The KLHK regulation that defines ISPU | Q-13 |
-| Protection guidance and the local emergency contact | Indonesian Ministry of Health and WHO publications on haze and wildfire smoke | Q-08 |
-| Peer services | The class API Registry and each chosen group's documentation and DDD paper | Q-03 |
+| Peer services | The class API Registry and Veriqu's and FlowGanic's documentation and DDD papers | Q-03 |
 
-Nothing in this table has been read yet. Record the title, link, and access date here when it is.
+The ISPU bands and the guidance and emergency sources were read on 19 November (S-08 to S-10).
 
 ## Evidence Rules
 

@@ -33,7 +33,7 @@ Kami ingin memakai API kalian untuk fitur <nama fitur> di aplikasi kami.
 Endpoint yang kami butuhkan: <daftar endpoint>.
 Boleh minta API key, satu akun uji, dan batas pemanggilan yang kalian izinkan?
 Kesepakatannya kami catat di README kami, dan mohon dicatat juga di README kalian.
-API kami: https://avela.stei.fun/docs. Kami siap memberi key bila kalian mau memakainya.
+API kami: https://avela.stei.fun/api/docs. Kami siap memberi key bila kalian mau memakainya.
 Kontak: <nama dan cara menghubungi>.
 ```
 

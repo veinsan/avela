@@ -1,0 +1,13 @@
+{
+  "_note": "Fictional fixture shaped like Avela's request to Veriqu (D-35). Not Veriqu's data.",
+  "items": [
+    {"id": "mock-001", "name": "Masker respirator N95 (contoh)", "category": "masker",
+     "rating": {"average": 4.6, "count": 128}, "url": null},
+    {"id": "mock-002", "name": "Masker respirator KN95 (contoh)", "category": "masker",
+     "rating": {"average": 4.3, "count": 87}, "url": null},
+    {"id": "mock-003", "name": "Penyaring udara ruangan HEPA (contoh)", "category": "pembersih-udara",
+     "rating": {"average": 4.1, "count": 42}, "url": null},
+    {"id": "mock-004", "name": "Botol minum (contoh, bukan pelindung)", "category": "perlengkapan",
+     "rating": {"average": 4.8, "count": 300}, "url": null}
+  ]
+}

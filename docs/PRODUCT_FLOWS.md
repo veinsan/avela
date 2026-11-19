@@ -33,7 +33,7 @@
 
 1. After an onsite-assessment response, Detail Laporan links to Fasilitas.
 2. Fasilitas lists Avela's simulated facility directory for the area, labelled as simulation. Detail Fasilitas shows services and opening schedule, or "tidak diketahui".
-3. At the facility the resident shows the report in the app and staff confirm the name (P-06). After the examination, staff publish a result linked to that report.
+3. At the facility the resident shows the report in the app and staff confirm the name (D-32). After the examination, staff publish a result linked to that report.
 4. Hasil Pemeriksaan shows the result, the staff member, facility, time, and next steps. Only the report's owner can open it. A correction appears as a new version.
 
 ## Flow D: Review (staff, same app)

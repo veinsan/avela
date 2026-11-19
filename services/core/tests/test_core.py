@@ -1,4 +1,5 @@
 REPORT = {
+    "areaId": "pekanbaru",
     "facilityId": "demo-facility-001",
     "complaint": "Keluhan fiktif untuk pengujian",
     "onsetAt": "2026-11-10T03:00:00Z",
@@ -64,6 +65,9 @@ def test_stale_version_loses(client, auth):  # T-09
     assert client.post(f"/api/v1/staff/reports/{rid}/claim", json={"expectedVersion": 1}, headers=p1).status_code == 200
     late = client.post(f"/api/v1/staff/reports/{rid}/claim", json={"expectedVersion": 1}, headers=p1)
     assert late.status_code == 409 and late.json()["error"]["code"] == "VERSION_CONFLICT"
+    claimed = client.get(f"/api/v1/reports/{rid}", headers=p1).json()
+    assert claimed["reviewerName"] == "Petugas Simulasi A" and claimed["reviewerId"] == client.get(
+        "/api/v1/me", headers=p1).json()["id"]
 
 
 def test_full_review_cycle_and_result_delivery(client, auth):  # T-10, T-11, T-12
