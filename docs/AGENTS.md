@@ -63,7 +63,7 @@ One bounded context per module in `services/core/app`. A new context gets its ow
 - [x] Examination result: draft, publish, owner-only read.
 - [x] Gateway configuration with rate limits and container limits.
 - [x] Areas, pushed PM2.5 snapshots, advisory, API key CLI.
-- [ ] Exposure context on reports.
+- [x] Exposure context on reports.
 - [ ] Peer API keys and public endpoints (advisory, health signal, guidance).
 - [ ] Facility directory with services and schedule.
 - [ ] Versioned examination results.
@@ -93,7 +93,7 @@ uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirement
 .venv/Scripts/python.exe -m pytest -q
 ```
 
-Success is all tests passing; 12 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
+Success is all tests passing; 16 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
 
 Mobile and integration commands do not exist yet. Add them here when A-05 and A-07 create them.
 

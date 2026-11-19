@@ -32,7 +32,7 @@ Core subdomain: **care-episode coordination** (Koordinasi Episode Layanan). It c
 
 | Context | Type | Responsibility | Where it runs | State |
 | --- | --- | --- | --- | --- |
-| Care Coordination (Koordinasi Layanan) | Core | Reports with exposure context, review queue, clarification requests, staff responses, state transitions | Core, `care.py` | Built, except exposure context |
+| Care Coordination (Koordinasi Layanan) | Core | Reports with exposure context, review queue, clarification requests, staff responses, state transitions | Core, `care.py`; exposure computed in `environment.py` | Built |
 | Examination Results (Hasil Pemeriksaan) | Supporting | Versioned onsite examination records linked to the right resident account | Core, `results.py` | Built, except versioning (A-31) |
 | Area Health Signal (Sinyal Kesehatan Wilayah) | Supporting | Reads reports from Care Coordination and produces only counts per area and day, with small counts hidden | Core | Planned |
 | Environment (Lingkungan) | Supporting | Normalizes Open-Meteo forecasts, optionally with BMKG local weather, into area snapshots; shows FlowGanic's waste recap. Never receives a resident's identity or symptom history | Integration service; snapshots stored in the core, `environment.py` | Snapshot storage and advisory built; integration service planned |
@@ -85,8 +85,8 @@ This is section C of the paper.
 | Account | ID, username, role, display name | The role is set on the server. | Built |
 | Membership | account, facility | Required to read or act on a facility's reports. Only active staff of the facility respond. | Built |
 | Facility | ID, name, area, services, schedule | A report can only target an existing facility. An unknown schedule stays unknown. | ID and name built; the rest planned (A-30) |
-| SymptomReport | ID, owner, facility, area, complaint, onset, course, history, state, version | Owner never changes. Creation is idempotent per owner and key. State changes are version-checked. | Built; area planned |
-| ExposureContext (value) | window, mean, peak, point count, source, retrieved time | Frozen at submission. Null with a reason when no snapshot covers the window. | Planned |
+| SymptomReport | ID, owner, facility, area, complaint, onset, course, history, state, version | Owner never changes. Creation is idempotent per owner and key. State changes are version-checked. | Built |
+| ExposureContext (value) | window, mean, peak, point count, source, retrieved time | Frozen at submission. Null with a reason when no snapshot covers the window. | Built |
 | ReportEvent | report, author, kind, text, disposition, time | Append-only. Written in the same transaction as the state change. | Built |
 | ExaminationResult | owner, report, facility, author, content, status, version | Owner comes from the report, never from the request. Created only after a response. A draft is hidden from the owner. A correction is a new version; earlier versions are kept. | Built, except versioning (A-31) |
 | Area | ID, name, province, coordinates | Fixed list of pilot areas. FlowGanic codes map to it in the integration service. | Built |

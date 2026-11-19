@@ -1,12 +1,12 @@
 # Test Plan
 
-**Updated:** 19 November 2026. Core tests exist and pass (12 of 12, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
+**Updated:** 19 November 2026. Core tests exist and pass (16 of 16, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
 
 ## Layers
 
 | Layer | Tool | Where | State |
 | --- | --- | --- | --- |
-| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 12 tests pass |
+| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 16 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | Planned (A-07, A-10) |
 | Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
@@ -42,8 +42,8 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-23 | Upstream failure in the integration service returns cached data marked stale, within 10 seconds. | NFR-05 | Planned, A-07 |
 | T-24 | Light and dark themes, TalkBack labels, Android Back, and keyboard insets work on a device. | NFR-07 | Planned, A-12 |
 | T-25 | A facility with an unknown schedule is shown as unknown, under the simulation label. | US-07 | Planned, A-30 |
-| T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Planned, A-24 |
-| T-27 | A report submitted with no snapshot saves with a null exposure context and a reason. | US-10 | Planned, A-24 |
+| T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Pass (API): `test_report_freezes_exposure_context` |
+| T-27 | A report submitted with no snapshot saves with a null exposure context and a reason. | US-10 | Pass: `test_report_without_snapshot_still_saves` |
 | T-28 | A snapshot push without the `snapshots:write` scope is rejected. | FR-15 | Pass: `test_snapshot_push_requires_scoped_key` |
 | T-29 | The health signal hides counts from 1 to 4, leaves out cancelled reports, and returns no text, account, or facility. | US-11, NFR-10 | Planned, A-25 |
 | T-30 | Public endpoints: no key gives 401, a key without the scope gives 403, a valid key gives 200. | US-09 | Planned, A-25 |

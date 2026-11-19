@@ -9,7 +9,8 @@ from fastapi import APIRouter, Depends, Header, Query
 from fastapi.responses import JSONResponse
 from pydantic import AwareDatetime, BaseModel, Field
 
-from .db import get_db, new_id, now
+from .db import get_db, iso, new_id, now
+from .environment import exposure_context
 from .errors import ApiError, conflict, not_found
 from .security import current_account, resident, staff
 
@@ -19,6 +20,7 @@ OPEN_FOR_RESIDENT_UPDATE = ("submitted", "in_review", "awaiting_information")
 
 
 class ReportIn(BaseModel):
+    areaId: str = Field(min_length=1, max_length=64)
     facilityId: str = Field(min_length=1, max_length=64)
     complaint: str = Field(min_length=3, max_length=2000)
     onsetAt: AwareDatetime
@@ -41,10 +43,13 @@ class ResponseIn(TextIn):
 
 def report_out(db: sqlite3.Connection, row: sqlite3.Row, with_events: bool = False) -> dict:
     out = {
-        "id": row["id"], "facilityId": row["facility_id"], "state": row["state"], "version": row["version"],
+        "id": row["id"], "areaId": row["area_id"], "facilityId": row["facility_id"], "state": row["state"],
+        "version": row["version"],
         "complaint": row["complaint"], "onsetAt": row["onset_at"], "course": row["course"],
         "additionalContext": row["additional_context"], "consentVersion": row["consent_version"],
         "reviewerAssigned": row["reviewer_id"] is not None,
+        "exposureContext": json.loads(row["exposure_context"]) if row["exposure_context"] else None,
+        "exposureContextReason": row["exposure_context_reason"],
         "createdAt": row["created_at"], "updatedAt": row["updated_at"],
     }
     if with_events:
@@ -94,8 +99,11 @@ def reload(db, report_id):
 @router.post("/reports", status_code=201)
 def create_report(body: ReportIn, idempotency_key: str = Header(min_length=8, max_length=100),
                   me: dict = Depends(resident), db: sqlite3.Connection = Depends(get_db)):
-    if body.onsetAt > datetime.now(timezone.utc) + timedelta(minutes=5):
+    submitted = datetime.now(timezone.utc)
+    if body.onsetAt > submitted + timedelta(minutes=5):
         raise ApiError(422, "VALIDATION_FAILED", "Invalid fields: onsetAt")
+    if db.execute("SELECT 1 FROM areas WHERE id = ?", (body.areaId,)).fetchone() is None:
+        raise ApiError(422, "UNKNOWN_AREA", "The selected area is not available.")
     if db.execute("SELECT 1 FROM facilities WHERE id = ?", (body.facilityId,)).fetchone() is None:
         raise ApiError(422, "UNKNOWN_FACILITY", "The selected facility is not available.")
     payload = body.model_dump(mode="json")
@@ -104,15 +112,18 @@ def create_report(body: ReportIn, idempotency_key: str = Header(min_length=8, ma
     existing = db.execute("SELECT * FROM reports WHERE owner_id = ? AND idempotency_key = ?",
                           (me["id"], idempotency_key)).fetchone()
     if existing is None:
-        report_id, ts = new_id(), now()
+        report_id, ts = new_id(), iso(submitted)
+        context, reason = exposure_context(db, body.areaId, body.onsetAt, submitted)
         try:
-            with db:
+            with db:  # report, frozen exposure context, and first event are one transaction
                 db.execute(
-                    "INSERT INTO reports (id, owner_id, facility_id, complaint, onset_at, course, additional_context,"
-                    " consent_version, state, idempotency_key, payload_hash, created_at, updated_at)"
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'submitted', ?, ?, ?, ?)",
-                    (report_id, me["id"], body.facilityId, body.complaint, payload["onsetAt"], body.course,
-                     body.additionalContext, body.consentVersion, idempotency_key, payload_hash, ts, ts))
+                    "INSERT INTO reports (id, owner_id, area_id, facility_id, complaint, onset_at, course,"
+                    " additional_context, consent_version, state, idempotency_key, payload_hash, exposure_context,"
+                    " exposure_context_reason, created_at, updated_at)"
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'submitted', ?, ?, ?, ?, ?, ?)",
+                    (report_id, me["id"], body.areaId, body.facilityId, body.complaint, payload["onsetAt"],
+                     body.course, body.additionalContext, body.consentVersion, idempotency_key, payload_hash,
+                     json.dumps(context) if context else None, reason, ts, ts))
                 add_event(db, report_id, me["id"], "submitted")
             return report_out(db, reload(db, report_id), with_events=True)
         except sqlite3.IntegrityError:  # concurrent retry with the same key won the insert

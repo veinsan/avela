@@ -104,10 +104,23 @@ def connect() -> sqlite3.Connection:
     return conn
 
 
+# Columns added after the first STB deploy. CREATE TABLE IF NOT EXISTS leaves an existing table as it is,
+# so each one is added here when missing. Old rows keep NULL.
+COLUMNS = [
+    ("reports", "area_id", "TEXT REFERENCES areas(id)"),
+    ("reports", "exposure_context", "TEXT"),
+    ("reports", "exposure_context_reason", "TEXT"),
+]
+
+
 def init_db() -> None:
     conn = connect()
     conn.execute("PRAGMA journal_mode = WAL")
     conn.executescript(SCHEMA)
+    for table, column, ddl in COLUMNS:
+        if column not in {r["name"] for r in conn.execute(f"PRAGMA table_info({table})")}:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {ddl}")
+    conn.commit()
     conn.close()
 
 

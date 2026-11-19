@@ -63,4 +63,6 @@ A missing or unknown key returns `401`; a key without the scope returns `403`.
 
 State changes take `expectedVersion`; a stale version returns `409 VERSION_CONFLICT`. Other people's resources return `404`. Errors use `{"error": {"code", "message", "requestId", "retryable"}}`.
 
-Not yet included: the public peer endpoints and health signal (A-25), exposure context on reports (A-24), versioned result corrections, attachments.
+A report carries `areaId` (required) and the exposure context frozen at submission: mean and peak forecast PM2.5 for the area from onset to submission, or null with `exposureContextReason: "no_snapshot"`. Starting the service adds new columns to an existing database.
+
+Not yet included: the public peer endpoints and health signal (A-25), versioned result corrections, attachments.

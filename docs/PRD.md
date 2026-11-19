@@ -70,7 +70,7 @@ US-04 (optional photo attachment) is a stretch item; see section 7.
 | FR-10 | Use Veriqu's product catalogue and FlowGanic's waste recap in visible features. | US-02, US-13 | Planned; contracts pending (Q-03) |
 | FR-11 | Publish an API with documentation, per-group keys, and a test account. | US-09, US-14 | Planned |
 | FR-12 | Handle loading, empty, stale, unavailable, and retry states on every data screen. | All | Planned |
-| FR-13 | Freeze an exposure context onto each report at submission. | US-10 | Planned |
+| FR-13 | Freeze an exposure context onto each report at submission. | US-10 | Core API built and tested; screen planned |
 | FR-14 | Publish the area health signal with small-count suppression. | US-11, US-12 | Planned |
 | FR-15 | Accept PM2.5 snapshots pushed by the integration service. | US-01, US-10 | Core API built and tested; push job planned (A-07) |
 | FR-16 | Show staff screens only to staff accounts in the same app. | US-06 | Planned |

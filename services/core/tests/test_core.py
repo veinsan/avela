@@ -1,4 +1,5 @@
 REPORT = {
+    "areaId": "pekanbaru",
     "facilityId": "demo-facility-001",
     "complaint": "Keluhan fiktif untuk pengujian",
     "onsetAt": "2026-11-10T03:00:00Z",

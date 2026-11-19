@@ -23,7 +23,7 @@ Every error has this shape:
 }
 ```
 
-Codes in use: `INVALID_CREDENTIALS`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_REVIEWER`, `NOT_FOUND`, `VALIDATION_FAILED`, `UNKNOWN_FACILITY`, `IDEMPOTENCY_CONFLICT`, `VERSION_CONFLICT`, `REPORT_NOT_RESPONDED`, `RATE_LIMITED`.
+Codes in use: `INVALID_CREDENTIALS`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_REVIEWER`, `NOT_FOUND`, `VALIDATION_FAILED`, `UNKNOWN_FACILITY`, `UNKNOWN_AREA`, `IDEMPOTENCY_CONFLICT`, `VERSION_CONFLICT`, `REPORT_NOT_RESPONDED`, `RATE_LIMITED`.
 
 ## Built Core Endpoints
 
@@ -62,10 +62,11 @@ Snapshot push body, with illustrative values. `isSynthetic` marks a hand-made te
 }
 ```
 
-Report body today, with fictional values:
+Report body, with fictional values. `areaId` is required (A-24):
 
 ```json
 {
+  "areaId": "pekanbaru",
   "facilityId": "demo-facility-001",
   "complaint": "Keluhan fiktif untuk pengujian",
   "onsetAt": "2026-11-10T03:00:00Z",
@@ -93,8 +94,6 @@ Changes to built endpoints in v0.2:
 
 - The advisory fills `communitySignal` (7-day report count for the area) once reports carry an area (A-25).
 
-- `POST /reports` adds the required field `areaId` (A-24).
-- Report detail adds `exposureContext` (A-24).
 - Correcting a published result creates a new version linked to the previous one; result reads return the latest version and its history (A-31).
 
 ### Advisory response
@@ -125,6 +124,8 @@ Illustrative values, not a captured response.
 `freshness` is `fresh` up to 2 hours after `retrievedAt`, `stale` after that, and `unavailable` when no snapshot exists; in that case `current`, `series`, and `category` are null. `category.label` stays null until the breakpoints are sourced (Q-13).
 
 ### Exposure context on a report
+
+Built in A-24. Every report response carries `areaId`, `exposureContext`, and `exposureContextReason`; reports created before A-24 have all three null.
 
 ```json
 {

@@ -33,7 +33,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | A-08 | Symptom reports API | Done | `test_report_validation`, `test_retry_is_idempotent_and_conflicting_reuse_rejected`, `test_cancel_only_before_review` pass. |
 | A-09 | Staff review and results API | Done | `test_stale_version_loses`, `test_full_review_cycle_and_result_delivery` pass. Result versioning is A-31. |
 | A-23 | Areas and snapshot ingestion | Done | 17 Nov: `test_environment.py` (4 tests) passes: both areas seeded, push rejected without key (401) and without scope (403), stored with `snapshots:write`, advisory fresh/stale/unavailable with age, keys stored hashed. `app.keys` CLI smoke-tested. Not run: Docker build (A-04). `communitySignal` stays null until A-25. |
-| A-24 | Exposure context on reports | Pending | Requires A-23. `areaId` becomes a required report field; update the tests. |
+| A-24 | Exposure context on reports | Done | 19 Nov: `test_exposure.py` (4 tests) passes: mean and peak over the onset window, provider gaps and points outside the window left out, context frozen against later pushes, null with `no_snapshot` and still saved, unknown or missing area rejected, an old `reports` table gains the columns. `pytest -q`: 16 passed. Not run: STB upgrade of the live database (A-13). |
 | A-25 | Peer API keys and public endpoints | Pending | Requires A-23. Suppression rule confirmed (D-30). |
 | A-05 | Scaffold the mobile app | Pending | JavaScript confirmed (D-28); create `apps/mobile`. |
 

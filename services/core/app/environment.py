@@ -15,6 +15,7 @@ router = APIRouter()
 
 # Data-age threshold, an engineering choice (DATA_SOURCES), not a health rule.
 STALE_AFTER = timedelta(hours=2)
+EXPOSURE_WINDOW = timedelta(hours=48)
 
 
 class PointIn(BaseModel):
@@ -46,9 +47,33 @@ def get_area(db: sqlite3.Connection, area_id: str) -> sqlite3.Row:
     return row
 
 
+def latest_snapshot(db: sqlite3.Connection, area_id: str) -> Optional[sqlite3.Row]:
+    return db.execute("SELECT * FROM area_snapshots WHERE area_id = ? ORDER BY retrieved_at DESC, rowid DESC",
+                      (area_id,)).fetchone()
+
+
+def exposure_context(db: sqlite3.Connection, area_id: str, onset: datetime,
+                     submitted: datetime) -> tuple[Optional[dict], Optional[str]]:
+    """Mean and peak forecast PM2.5 for the area from symptom onset to submission (US-10, D-16).
+
+    An area value, never a personal dose. Returns (None, reason) when no forecast point covers the window."""
+    # The window starts at the hour the symptoms began, capped at the last 48 hours.
+    start = max(onset, submitted - EXPOSURE_WINDOW).astimezone(timezone.utc).replace(minute=0, second=0,
+                                                                                    microsecond=0)
+    snap = latest_snapshot(db, area_id)
+    lo, hi = iso(start), iso(submitted)
+    values = [p["value"] for p in json.loads(snap["points"]) if lo <= p["validAt"] <= hi
+              and p["value"] is not None] if snap else []
+    if not values:
+        return None, "no_snapshot"
+    return {"areaId": area_id, "windowStart": lo, "windowEnd": hi,
+            "meanPm25": round(sum(values) / len(values), 1), "peakPm25": max(values), "points": len(values),
+            "unit": snap["unit"], "provider": snap["provider"], "dataKind": snap["data_kind"],
+            "retrievedAt": snap["retrieved_at"]}, None
+
+
 def advisory_out(db: sqlite3.Connection, area: sqlite3.Row) -> dict:
-    snap = db.execute("SELECT * FROM area_snapshots WHERE area_id = ? ORDER BY retrieved_at DESC, rowid DESC",
-                      (area["id"],)).fetchone()
+    snap = latest_snapshot(db, area["id"])
     out = {"areaId": area["id"], "areaName": area["name"], "pollutant": "pm2_5", "unit": "ug/m3",
            "dataKind": None, "provider": None, "modelDomain": None, "retrievedAt": None, "ageMinutes": None,
            "freshness": "unavailable", "current": None, "category": None, "series": None,
