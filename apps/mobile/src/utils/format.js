@@ -51,11 +51,11 @@ const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 const pad = (n) => String(n).padStart(2, '0');
 
-// Transport timestamps are UTC; the pilot areas are in WIB (UTC+7).
+// Transport timestamps are UTC; the pilot areas are in WIB (UTC+7). A missing value is said in words (DESIGN).
 export function formatTime(iso, { withDate = true } = {}) {
-  if (!iso) return '—';
+  if (!iso) return 'waktu tidak diketahui';
   const t = new Date(new Date(iso).getTime() + WIB_OFFSET_MS);
-  if (Number.isNaN(t.getTime())) return '—';
+  if (Number.isNaN(t.getTime())) return 'waktu tidak diketahui';
   const time = `${pad(t.getUTCHours())}.${pad(t.getUTCMinutes())} WIB`;
   return withDate ? `${t.getUTCDate()} ${MONTHS[t.getUTCMonth()]} ${t.getUTCFullYear()}, ${time}` : time;
 }
@@ -72,7 +72,7 @@ export function hoursLabel(hours) {
 }
 
 export function pm25(value) {
-  return value === null || value === undefined ? '—' : `${Number(value).toFixed(1)} µg/m³`;
+  return value === null || value === undefined ? 'tidak ada data' : `${Number(value).toFixed(1)} µg/m³`;
 }
 
 export const MAX_ONSET_HOURS = 14 * 24;

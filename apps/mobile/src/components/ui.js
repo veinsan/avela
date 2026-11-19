@@ -149,8 +149,8 @@ export function Divider() {
 // "Simulasi tugas kuliah": staff, facilities, and cases are fictional (SAFETY_PRIVACY).
 export function SimulationLabel({ text = 'Simulasi tugas kuliah' }) {
   return (
-    <AppText variant="caption" color="textMuted" accessibilityLabel={`Catatan: ${text}`}>
-      ⓘ {text}
+    <AppText variant="caption" color="textMuted">
+      {text}
     </AppText>
   );
 }

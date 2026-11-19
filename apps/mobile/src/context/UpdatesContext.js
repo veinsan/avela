@@ -6,6 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useAuth } from './AuthContext';
 import { listReports, listResults } from '../services/ApiService';
 import { hasUpdate } from '../utils/format';
+import { logFailure } from '../utils/log';
 
 const SEEN_KEY = 'avela.seenAt';
 const UpdatesContext = createContext(null);
@@ -22,7 +23,10 @@ export function UpdatesProvider({ children }) {
   useEffect(() => {
     SecureStore.getItemAsync(SEEN_KEY)
       .then((saved) => setSeenAt(saved || nowIso())) // first run: nothing is marked yet
-      .catch(() => setSeenAt(nowIso()));
+      .catch((e) => {
+        logFailure('reading when Laporan was last opened', e);
+        setSeenAt(nowIso());
+      });
   }, []);
 
   const refresh = useCallback(async () => {
@@ -31,8 +35,9 @@ export function UpdatesProvider({ children }) {
       const [r, s] = await Promise.all([listReports(), listResults()]);
       setReports(r.items);
       setResults(s.items);
-    } catch {
-      // Markers are a convenience; the screens show their own errors.
+    } catch (e) {
+      // Markers are a convenience; the screens show their own errors to the user.
+      logFailure('refreshing update markers', e);
     }
   }, [isResident]);
 
@@ -47,7 +52,7 @@ export function UpdatesProvider({ children }) {
   const markSeen = useCallback(() => {
     const at = nowIso();
     setSeenAt(at);
-    SecureStore.setItemAsync(SEEN_KEY, at).catch(() => {});
+    SecureStore.setItemAsync(SEEN_KEY, at).catch((e) => logFailure('saving when Laporan was opened', e));
   }, []);
 
   const count = [...reports, ...results].filter((item) => hasUpdate(item, seenAt)).length;

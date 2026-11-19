@@ -2,6 +2,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 
+import { logFailure } from '../utils/log';
+
 const AREA_KEY = 'avela.area';
 const AreaContext = createContext(null);
 
@@ -12,13 +14,13 @@ export function AreaProvider({ children }) {
   useEffect(() => {
     SecureStore.getItemAsync(AREA_KEY)
       .then((saved) => saved && setAreaState(JSON.parse(saved)))
-      .catch(() => {})
+      .catch((e) => logFailure('reading the saved area', e))
       .finally(() => setReady(true));
   }, []);
 
   const setArea = useCallback((next) => {
     setAreaState(next);
-    SecureStore.setItemAsync(AREA_KEY, JSON.stringify(next)).catch(() => {});
+    SecureStore.setItemAsync(AREA_KEY, JSON.stringify(next)).catch((e) => logFailure('saving the area', e));
   }, []);
 
   const value = useMemo(() => ({ area, setArea, ready }), [area, setArea, ready]);

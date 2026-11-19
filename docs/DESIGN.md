@@ -209,7 +209,7 @@ Use one platform system sans family. On Android, resolve through the native syst
 | label | Navigation and control labels |
 | caption | Source, time, units, and other supporting metadata |
 
-The proposed numbers map to React Native logical font values with system scaling enabled; web versions should convert to accessible rem sizing. Do not disable font scaling to preserve a layout. Use tabular numerals where supported for time-series values, but no monospace medical copy. Keep units adjacent to values, never as a faint corner annotation. Display missing values as an em dash with an explanation, never zero.
+The proposed numbers map to React Native logical font values with system scaling enabled; web versions should convert to accessible rem sizing. Do not disable font scaling to preserve a layout. Use tabular numerals where supported for time-series values, but no monospace medical copy. Keep units adjacent to values, never as a faint corner annotation. Say a missing value in words, such as "tidak ada data" or "waktu tidak diketahui", never as zero and never as a bare dash.
 
 Body text is left-aligned. Long guidance and responses wrap naturally; no fixed card height or truncation hides meaning. Metadata is at least caption size. Avoid uppercase paragraphs and letterspaced labels. Use Indonesian copy and locally understandable dates, explicitly showing the relevant zone; transport timestamps remain UTC.
 

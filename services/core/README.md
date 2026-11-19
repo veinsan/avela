@@ -53,6 +53,7 @@ A missing or unknown key returns `401 UNAUTHENTICATED`; a key without the scope 
 | Session token | 12 hours |
 | Request body | 64 KB |
 | List paging | `limit` 1 to 50 (default 20), `offset` |
+| Security headers | Every answer carries `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and `Referrer-Policy: no-referrer` |
 
 ## Endpoints (`/api/v1`)
 

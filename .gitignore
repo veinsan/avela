@@ -7,5 +7,3 @@ __pycache__/
 .env
 # Assignment deck embeds shared course credentials; never commit it.
 /*Tugas-Besar-TST-PWAM*.pdf
-# Local copy of the setup skill; removed from the repository in f5fcb21.
-/project-setup/
