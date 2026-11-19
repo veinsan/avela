@@ -5,8 +5,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { useAuth } from '../context/AuthContext';
 import { typography, useTheme } from '../theme';
+import EmergencyButton from '../components/EmergencyButton';
 import { LoadingView, Screen } from '../components/ui';
 import AccountScreen from '../screens/AccountScreen';
+import AreaPickerScreen from '../screens/AreaPickerScreen';
+import EmergencyScreen from '../screens/EmergencyScreen';
+import FacilitiesScreen from '../screens/FacilitiesScreen';
+import FacilityDetailScreen from '../screens/FacilityDetailScreen';
+import GuidanceScreen from '../screens/GuidanceScreen';
+import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 
 const Stack = createNativeStackNavigator();
@@ -14,16 +21,24 @@ const Tab = createBottomTabNavigator();
 
 // Tab name -> [component, title]. Unfinished screens stay out until they work (BRANCH_PLAN).
 const TAB_SCREENS = {
+  Beranda: [HomeScreen, 'Beranda'],
+  Fasilitas: [FacilitiesScreen, 'Fasilitas'],
   Akun: [AccountScreen, 'Akun'],
 };
 
 export function tabsForRole(role) {
-  return role === 'staff' ? ['Akun'] : ['Akun'];
+  return role === 'staff' ? ['Akun'] : ['Beranda', 'Fasilitas', 'Akun'];
 }
 
 const STACK_SCREENS = {
   Masuk: [LoginScreen, 'Masuk'],
+  PilihWilayah: [AreaPickerScreen, 'Pilih Wilayah'],
+  Panduan: [GuidanceScreen, 'Panduan'],
+  Darurat: [EmergencyScreen, 'Darurat'],
+  DetailFasilitas: [FacilityDetailScreen, 'Detail Fasilitas'],
 };
+
+const emergency = () => <EmergencyButton />;
 
 function Tabs() {
   const { account } = useAuth();
@@ -38,6 +53,7 @@ function Tabs() {
         tabBarLabelStyle: { ...typography.label },
         headerStyle: { backgroundColor: colors.surface },
         headerTintColor: colors.text,
+        headerRight: emergency,
       }}
     >
       {tabsForRole(account && account.role).map((name) => (
@@ -72,7 +88,8 @@ export default function RootNavigator() {
       >
         <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
         {Object.entries(STACK_SCREENS).map(([name, [component, title]]) => (
-          <Stack.Screen key={name} name={name} component={component} options={{ title }} />
+          <Stack.Screen key={name} name={name} component={component}
+            options={{ title, headerRight: name === 'Darurat' ? undefined : emergency }} />
         ))}
       </Stack.Navigator>
     </NavigationContainer>
