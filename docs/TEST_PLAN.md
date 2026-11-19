@@ -1,12 +1,12 @@
 # Test Plan
 
-**Updated:** 19 November 2026. Core tests exist and pass (25 of 25, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
+**Updated:** 19 November 2026. Core tests exist and pass (26 of 26, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
 
 ## Layers
 
 | Layer | Tool | Where | State |
 | --- | --- | --- | --- |
-| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 25 tests pass |
+| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 26 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | Planned (A-07, A-10) |
 | Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |

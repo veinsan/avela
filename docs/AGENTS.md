@@ -95,7 +95,7 @@ uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirement
 .venv/Scripts/python.exe -m pytest -q
 ```
 
-Success is all tests passing; 25 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
+Success is all tests passing; 26 pass on 19 November. To run the service locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04, 18 November).
 
 Mobile and integration commands do not exist yet. Add them here when A-05 and A-07 create them.
 

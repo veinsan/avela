@@ -24,7 +24,11 @@ ACCOUNTS = [("warga1", "resident", "Warga Fiktif Satu", None),
             ("petugas2", "staff", "Petugas Simulasi B", "demo-facility-002")]
 
 
-def seed(password: str) -> None:
+PEER_TEST_ACCOUNT = ("uji-mitra", "resident", "Akun Uji Mitra", None)  # shared with peer groups (A-18)
+
+
+def seed(password: str, peer_password: str | None = None) -> None:
+    """The peer test account gets its own password so sharing it never exposes the demo accounts."""
     init_db()
     conn = connect()
     with conn:
@@ -34,12 +38,15 @@ def seed(password: str) -> None:
                          " ON CONFLICT (id) DO UPDATE SET name = excluded.name, area_id = excluded.area_id,"
                          " services = excluded.services, schedule = excluded.schedule",
                          (fid, name, area, json.dumps(services), schedule))
-        for username, role, name, facility in ACCOUNTS:
+        accounts = [(a, password) for a in ACCOUNTS]
+        if peer_password:
+            accounts.append((PEER_TEST_ACCOUNT, peer_password))
+        for (username, role, name, facility), secret in accounts:
             if conn.execute("SELECT 1 FROM accounts WHERE username = ?", (username,)).fetchone():
                 continue
             account_id = new_id()
             conn.execute("INSERT INTO accounts (id, username, password_hash, role, display_name) "
-                         "VALUES (?, ?, ?, ?, ?)", (account_id, username, hash_password(password), role, name))
+                         "VALUES (?, ?, ?, ?, ?)", (account_id, username, hash_password(secret), role, name))
             if facility:
                 conn.execute("INSERT INTO memberships (account_id, facility_id) VALUES (?, ?)",
                              (account_id, facility))
@@ -50,5 +57,9 @@ if __name__ == "__main__":
     password = os.environ.get("AVELA_DEMO_PASSWORD")
     if not password or len(password) < 10:
         raise SystemExit("Set AVELA_DEMO_PASSWORD (10+ characters) before seeding.")
-    seed(password)
-    print("Seeded demo facilities and accounts:", ", ".join(a[0] for a in ACCOUNTS))
+    peer_password = os.environ.get("AVELA_PEER_TEST_PASSWORD")
+    if peer_password is not None and len(peer_password) < 10:
+        raise SystemExit("AVELA_PEER_TEST_PASSWORD needs 10+ characters.")
+    seed(password, peer_password)
+    names = [a[0] for a in ACCOUNTS] + ([PEER_TEST_ACCOUNT[0]] if peer_password else [])
+    print("Seeded demo facilities and accounts:", ", ".join(names))

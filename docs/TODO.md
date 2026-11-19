@@ -42,7 +42,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
 | A-13 | Deploy the core on the STB | Pending | Requires A-04 and A-25. |
-| A-18 | Publish to the Registry and give peers access | Pending | Requires A-13. |
+| A-18 | Publish to the Registry and give peers access | In progress | 19 Nov: `services/core/README.md` is the README.pdf source (architecture, endpoints, access steps, limits, example requests, Registry row, peer agreement table); `uji-mitra` test account with its own password (`test_peer_test_account_has_its_own_password`); backup and restore commands checked on a local SQLite file. Owner steps left: fill the Registry row, set `AVELA_PEER_TEST_PASSWORD` and rerun the seed on the STB, create one key per peer group with `app.keys`. |
 | A-02 | Finish the data audit | In progress | Open-Meteo probes passed for both areas. ISPU bands sourced (D-29); BMKG panel dropped from the MVP. Remaining: quota against the push schedule, adapter failure paths. |
 | A-07 | Environmental context end to end | Pending | Requires A-02, A-05, A-23. |
 | A-26 | Resident report flow in the app | Pending | Requires A-05 and A-24. |

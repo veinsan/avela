@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Core service | Python 3.12, FastAPI 0.162.4, uvicorn 0.54.0, PyJWT 2.15.1 | Built in `services/core` |
 | Core database | SQLite in WAL mode on a Docker volume | Built |
-| Core tests | pytest 9.2.0 with httpx 0.28.1 | 25 tests pass |
+| Core tests | pytest 9.2.0 with httpx 0.28.1 | 26 tests pass |
 | Python tooling | uv for the virtual environment and installs | In use |
 | Gateway | Nginx 1.28 alpine with rate limits | Running on the STB, local check on port 8081 |
 | Public access | Cloudflare Tunnel `k01-avela` to `https://avela.stei.fun` | Live: the class route sends `/api/*` to the gateway |

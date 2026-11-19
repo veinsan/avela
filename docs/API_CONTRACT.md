@@ -185,8 +185,8 @@ Dates are calendar days in WIB. Cancelled reports are not counted. A hidden coun
 - Each group gets one key, created with a command on the STB and shown once. The core stores its hash, the group name, and its scopes.
 - Default scopes for a peer: `areas:read`, `signal:read`, `guidance:read`. Only the integration service has `snapshots:write`.
 - A missing or unknown key returns `401 UNAUTHENTICATED`. A key without the scope returns `403 FORBIDDEN`.
-- One test account (a resident) is shared with peers so they can try the app-user endpoints.
-- Peers report problems as GitHub issues on `veinsan/avela`.
+- One test account, the resident `uji-mitra`, is shared with peers so they can try the app-user endpoints. Its password (`AVELA_PEER_TEST_PASSWORD`) is separate from the demo accounts'.
+- Peers request a key and report problems as GitHub issues on `veinsan/avela`. The steps, limits, and example requests are in `services/core/README.md`, the source of `README.pdf`.
 
 ## Integration Service Endpoints (planned)
 

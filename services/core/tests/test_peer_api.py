@@ -76,3 +76,12 @@ def test_guidance_names_sources_and_review_status(client):
     assert body["items"] and all(i["source"]["url"].startswith("https://") and i["reviewStatus"] == "unreviewed"
                                  for i in body["items"])
     assert [c["number"] for c in body["emergency"]["contacts"]] == ["119", "112"]
+
+
+def test_peer_test_account_has_its_own_password(client):
+    from app.seed import seed
+    seed("test-password-only", "peer-only-password")
+    login = lambda u, p: client.post("/api/v1/auth/login", json={"username": u, "password": p}).status_code
+    assert login("uji-mitra", "peer-only-password") == 200
+    assert login("uji-mitra", "test-password-only") == 401
+    assert login("warga1", "peer-only-password") == 401
