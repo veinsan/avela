@@ -23,11 +23,21 @@ services:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
-    # Lets the class route reach aaPanel on the STB host at https://host.docker.internal:1122.
     extra_hosts: ["host.docker.internal:host-gateway"]
     depends_on: [gateway]
     mem_limit: 64m
     cpus: 0.25
+
+  # The class route sends the rest of the hostname to https://localhost:1122 (aaPanel). Inside the
+  # tunnel container localhost is the container, so this relay shares its network and forwards to the host.
+  panel-relay:
+    image: alpine/socat:1.8.0.3
+    restart: unless-stopped
+    network_mode: "service:tunnel"
+    command: TCP-LISTEN:1122,fork,reuseaddr TCP:host.docker.internal:1122
+    depends_on: [tunnel]
+    mem_limit: 16m
+    cpus: 0.1
 
 volumes:
   core-data:
