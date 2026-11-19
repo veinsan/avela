@@ -34,11 +34,11 @@ Core subdomain: **care-episode coordination** (Koordinasi Episode Layanan). It c
 | --- | --- | --- | --- | --- |
 | Care Coordination (Koordinasi Layanan) | Core | Reports with exposure context, review queue, clarification requests, staff responses, state transitions | Core, `care.py`; exposure computed in `environment.py` | Built |
 | Examination Results (Hasil Pemeriksaan) | Supporting | Versioned onsite examination records linked to the right resident account | Core, `results.py` | Built, except versioning (A-31) |
-| Area Health Signal (Sinyal Kesehatan Wilayah) | Supporting | Reads reports from Care Coordination and produces only counts per area and day, with small counts hidden | Core | Planned |
+| Area Health Signal (Sinyal Kesehatan Wilayah) | Supporting | Reads reports from Care Coordination and produces only counts per area and day, with small counts hidden | Core, `signal.py` | Built |
 | Environment (Lingkungan) | Supporting | Normalizes Open-Meteo forecasts, optionally with BMKG local weather, into area snapshots; shows FlowGanic's waste recap. Never receives a resident's identity or symptom history | Integration service; snapshots stored in the core, `environment.py` | Snapshot storage and advisory built; integration service planned |
-| Health Guidance (Panduan Kesehatan) | Supporting | Versioned protection content with source and review status; Veriqu product recommendations | Core; products through the integration service | Planned |
+| Health Guidance (Panduan Kesehatan) | Supporting | Versioned protection content with source and review status; Veriqu product recommendations | Core, `guidance.py`; products through the integration service | Guidance and emergency contacts built; products planned (A-10) |
 | Facility Directory (Direktori Fasilitas) | Supporting | Simulated facilities with services and opening schedule | Core | Partial: facility ID and name built; area, services, schedule planned (A-30) |
-| Identity and Access (Identitas dan Akses) | Generic | Authentication, resident and staff roles, staff facility membership, API keys for other groups | Core, `security.py`, `keys.py` | Built; peer endpoints planned (A-25) |
+| Identity and Access (Identitas dan Akses) | Generic | Authentication, resident and staff roles, staff facility membership, API keys for other groups | Core, `security.py`, `keys.py` | Built |
 | Notifications (Notifikasi) | Generic | Update markers when a report changes state or a result is published | Derived from core events; shown in the app | Planned |
 | Product Catalogue (Katalog Produk) | Peer, Veriqu | Products with rating summaries | Veriqu, through an adapter in the integration service | Contract pending (Q-03) |
 | Waste Distribution Coordination (Koordinasi Distribusi Sampah) | Peer, FlowGanic | Managed waste volume per area and waste type | FlowGanic, through an adapter in the integration service | Contract pending (Q-03) |

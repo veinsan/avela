@@ -1,12 +1,12 @@
 # Test Plan
 
-**Updated:** 19 November 2026. Core tests exist and pass (16 of 16, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
+**Updated:** 19 November 2026. Core tests exist and pass (20 of 20, `pytest -q` in `services/core`). No mobile or integration tests exist yet.
 
 ## Layers
 
 | Layer | Tool | Where | State |
 | --- | --- | --- | --- |
-| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 16 tests pass |
+| Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 20 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | Planned (A-07, A-10) |
 | Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
@@ -45,8 +45,8 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-26 | A report submitted when a snapshot covers its window stores mean and peak PM2.5. | US-10, FR-13 | Pass (API): `test_report_freezes_exposure_context` |
 | T-27 | A report submitted with no snapshot saves with a null exposure context and a reason. | US-10 | Pass: `test_report_without_snapshot_still_saves` |
 | T-28 | A snapshot push without the `snapshots:write` scope is rejected. | FR-15 | Pass: `test_snapshot_push_requires_scoped_key` |
-| T-29 | The health signal hides counts from 1 to 4, leaves out cancelled reports, and returns no text, account, or facility. | US-11, NFR-10 | Planned, A-25 |
-| T-30 | Public endpoints: no key gives 401, a key without the scope gives 403, a valid key gives 200. | US-09 | Planned, A-25 |
+| T-29 | The health signal hides counts from 1 to 4, leaves out cancelled reports, and returns no text, account, or facility. | US-11, NFR-10 | Pass: `test_health_signal_hides_small_counts_and_cancelled_reports` |
+| T-30 | Public endpoints: no key gives 401, a key without the scope gives 403, a valid key gives 200. | US-09 | Pass: `test_public_endpoints_need_a_scoped_key` |
 | T-31 | A snapshot older than 2 hours is marked stale in the advisory and on Beranda. | US-01 | Partial: API passes `test_old_snapshot_is_stale_and_keys_are_stored_hashed`; Beranda in A-07 |
 | T-32 | A staff account completes queue, claim, ask, respond, close, and publish result on a device. | US-06, FR-16 | Planned, A-27 |
 | T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Planned, A-27 |

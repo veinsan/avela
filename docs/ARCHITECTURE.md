@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Core service | Python 3.12, FastAPI 0.162.4, uvicorn 0.54.0, PyJWT 2.15.1 | Built in `services/core` |
 | Core database | SQLite in WAL mode on a Docker volume | Built |
-| Core tests | pytest 9.2.0 with httpx 0.28.1 | 16 tests pass |
+| Core tests | pytest 9.2.0 with httpx 0.28.1 | 20 tests pass |
 | Python tooling | uv for the virtual environment and installs | In use |
 | Gateway | Nginx 1.28 alpine with rate limits | Running on the STB, local check on port 8081 |
 | Public access | Cloudflare Tunnel `k01-avela` to `https://avela.stei.fun` | Live: the class route sends `/api/*` to the gateway |
@@ -70,7 +70,7 @@ Screen behavior is in [PRODUCT_FLOWS.md](PRODUCT_FLOWS.md); endpoints are in [AP
 ## Repository Layout
 
 ```text
-services/core/         Built. app/ (main, care, results, environment, security, keys, db, errors, seed), tests/, Dockerfile
+services/core/         Built. app/ (main, care, results, environment, signal, guidance, security, keys, db, errors, seed), tests/, Dockerfile
 infra/stb/             Built. docker-compose.yml, nginx.conf, .env.example
 services/integration/  Planned. Provider and peer adapters, snapshot push job
 apps/mobile/           Planned. Expo app

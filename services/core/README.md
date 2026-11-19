@@ -47,6 +47,10 @@ Limits: core 256 MB / 0.5 CPU, gateway and tunnel 64 MB / 0.25 CPU each. Nginx r
 | `GET /areas` | Public | The two pilot areas |
 | `GET /areas/{areaId}/advisory` | Public | Latest PM2.5 snapshot with freshness (`fresh` up to 2 h, then `stale`; `unavailable` if none) |
 | `PUT /internal/areas/{areaId}/snapshot` | `X-API-Key` with `snapshots:write` | Integration service pushes a snapshot |
+| `GET /guidance` | Public | Protection guidance with sources and review status, emergency contacts |
+| `GET /public/areas`, `GET /public/areas/{areaId}/advisory` | `X-API-Key` with `areas:read` | Areas and advisory for peer groups |
+| `GET /public/areas/{areaId}/health-signal?days=7` | `X-API-Key` with `signal:read` | Anonymous report counts per day and disposition; counts 1 to 4 are null |
+| `GET /public/guidance` | `X-API-Key` with `guidance:read` | Guidance for peer groups |
 
 ## API keys
 
@@ -65,4 +69,4 @@ State changes take `expectedVersion`; a stale version returns `409 VERSION_CONFL
 
 A report carries `areaId` (required) and the exposure context frozen at submission: mean and peak forecast PM2.5 for the area from onset to submission, or null with `exposureContextReason: "no_snapshot"`. Starting the service adds new columns to an existing database.
 
-Not yet included: the public peer endpoints and health signal (A-25), versioned result corrections, attachments.
+Not yet included: versioned result corrections, attachments.

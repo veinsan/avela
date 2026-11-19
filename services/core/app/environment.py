@@ -10,11 +10,16 @@ from pydantic import AwareDatetime, BaseModel, Field
 from .db import get_db, iso, new_id, now
 from .errors import ApiError, not_found
 from .security import require_scope
+from .signal import community_signal
 
 router = APIRouter()
 
 # Data-age threshold, an engineering choice (DATA_SOURCES), not a health rule.
 STALE_AFTER = timedelta(hours=2)
+# PM2.5 bands of Permen LHK P.14/2020, Lampiran I: upper bound of each 24-hour mean, in ug/m3 (D-29).
+ISPU_BANDS = [(15.5, "Baik"), (55.4, "Sedang"), (150.4, "Tidak Sehat"), (250.4, "Sangat Tidak Sehat"),
+              (float("inf"), "Berbahaya")]
+ISPU_MIN_POINTS = 18  # of the 24 hourly values; fewer leaves the label null
 EXPOSURE_WINDOW = timedelta(hours=48)
 
 
@@ -72,27 +77,37 @@ def exposure_context(db: sqlite3.Connection, area_id: str, onset: datetime,
             "retrievedAt": snap["retrieved_at"]}, None
 
 
+def ispu_category(series: list[dict], cutoff: datetime) -> dict:
+    """The 24-hour mean forecast placed in the ISPU PM2.5 bands. A reference only: ISPU is defined on station data."""
+    lo, hi = iso(cutoff - timedelta(hours=24)), iso(cutoff)
+    values = [p["value"] for p in series if lo < p["validAt"] <= hi and p["value"] is not None]
+    out = {"standard": "ISPU reference (Permen LHK P.14/2020)", "basis": "24h_mean_forecast", "label": None,
+           "mean24h": None}
+    if len(values) >= ISPU_MIN_POINTS:
+        mean = round(sum(values) / len(values), 1)
+        out.update(mean24h=mean, label=next(name for top, name in ISPU_BANDS if mean <= top))
+    return out
+
+
 def advisory_out(db: sqlite3.Connection, area: sqlite3.Row) -> dict:
     snap = latest_snapshot(db, area["id"])
     out = {"areaId": area["id"], "areaName": area["name"], "pollutant": "pm2_5", "unit": "ug/m3",
            "dataKind": None, "provider": None, "modelDomain": None, "retrievedAt": None, "ageMinutes": None,
            "freshness": "unavailable", "current": None, "category": None, "series": None,
-           # shortcut: community signal needs reports.area_id, added with the health signal (A-25)
-           "communitySignal": None,
+           "communitySignal": community_signal(db, area["id"]),
            "attributions": [], "isSynthetic": False}
     if snap is None:
         return out
     age = datetime.now(timezone.utc) - datetime.fromisoformat(snap["retrieved_at"])
     series = json.loads(snap["points"])
-    cutoff = now()  # points are stored as normalised UTC strings, so string order is time order
-    past = [p for p in series if p["validAt"] <= cutoff and p["value"] is not None]
+    cutoff = datetime.now(timezone.utc)  # points are normalised UTC strings, so string order is time order
+    past = [p for p in series if p["validAt"] <= iso(cutoff) and p["value"] is not None]
     out.update({
         "dataKind": snap["data_kind"], "provider": snap["provider"], "modelDomain": snap["model_domain"],
         "retrievedAt": snap["retrieved_at"], "ageMinutes": max(0, int(age.total_seconds() // 60)),
         "freshness": "fresh" if age <= STALE_AFTER else "stale",
         "current": past[-1] if past else None,
-        # Label stays null until the ISPU breakpoints are sourced (Q-13).
-        "category": {"standard": "ISPU reference", "label": None},
+        "category": ispu_category(series, cutoff),
         "series": series, "attributions": json.loads(snap["attributions"]),
         "isSynthetic": bool(snap["is_synthetic"]),
     })
@@ -106,6 +121,17 @@ def list_areas(db: sqlite3.Connection = Depends(get_db)):
 
 @router.get("/areas/{area_id}/advisory")
 def get_advisory(area_id: str, db: sqlite3.Connection = Depends(get_db)):
+    return advisory_out(db, get_area(db, area_id))
+
+
+@router.get("/public/areas")
+def public_areas(_key: dict = Depends(require_scope("areas:read")), db: sqlite3.Connection = Depends(get_db)):
+    return list_areas(db)
+
+
+@router.get("/public/areas/{area_id}/advisory")
+def public_advisory(area_id: str, _key: dict = Depends(require_scope("areas:read")),
+                    db: sqlite3.Connection = Depends(get_db)):
     return advisory_out(db, get_area(db, area_id))
 
 

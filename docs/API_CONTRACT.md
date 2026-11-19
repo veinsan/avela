@@ -46,8 +46,13 @@ Codes in use: `INVALID_CREDENTIALS`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_REVIEW
 | `POST /api/v1/staff/results/{id}/publish` | Facility staff | Publishes the draft |
 | `GET /api/v1/results`, `GET /api/v1/results/{id}` | Owner (published only) or facility staff | Examination results |
 | `GET /api/v1/areas` | Anyone, rate limited | Lists the pilot areas |
-| `GET /api/v1/areas/{areaId}/advisory` | Anyone, rate limited | Latest snapshot with freshness and `ageMinutes`; `communitySignal` is null until A-25 |
+| `GET /api/v1/areas/{areaId}/advisory` | Anyone, rate limited | Latest snapshot with freshness, `ageMinutes`, the ISPU reference category, and the 7-day `communitySignal` |
 | `PUT /api/v1/internal/areas/{areaId}/snapshot` | Integration service, scope `snapshots:write` | Stores a snapshot (A-23) |
+| `GET /api/v1/guidance` | Anyone, rate limited | Guidance items with source, version, and review status, plus emergency contacts (D-33) |
+| `GET /api/v1/public/areas` | Peer key, scope `areas:read` | Same data as `/areas` (A-25) |
+| `GET /api/v1/public/areas/{areaId}/advisory` | Peer key, scope `areas:read` | Same data as the open advisory (A-25) |
+| `GET /api/v1/public/areas/{areaId}/health-signal?days=7` | Peer key, scope `signal:read` | Daily report counts and totals per disposition; `days` 1 to 30 (A-25) |
+| `GET /api/v1/public/guidance` | Peer key, scope `guidance:read` | Avela's own guidance items with sources; no peer data (A-25) |
 
 Snapshot push body, with illustrative values. `isSynthetic` marks a hand-made test push; `value` may be null for a provider gap; `retrievedAt` more than 5 minutes in the future is rejected.
 
@@ -82,17 +87,10 @@ Report body, with fictional values. `areaId` is required (A-24):
 
 | Method and path | Caller | Behavior | Task |
 | --- | --- | --- | --- |
-| `GET /api/v1/guidance` | Anyone, rate limited | Guidance items with source, version, and review status | A-12 |
 | `GET /api/v1/facilities?areaId=` | Anyone, rate limited | Simulated facility directory with services and opening schedule | A-30 |
 | `GET /api/v1/facilities/{id}` | Anyone, rate limited | One facility; unknown hours are null | A-30 |
-| `GET /api/v1/public/areas` | Peer key | Same data as `/areas` | A-25 |
-| `GET /api/v1/public/areas/{areaId}/advisory` | Peer key | Same data as the open advisory | A-25 |
-| `GET /api/v1/public/areas/{areaId}/health-signal?days=7` | Peer key, scope `signal:read` | Daily report counts and totals per disposition; `days` up to 30 | A-25 |
-| `GET /api/v1/public/guidance` | Peer key, scope `guidance:read` | Avela's own guidance items with sources; no peer data | A-25 |
 
 Changes to built endpoints in v0.2:
-
-- The advisory fills `communitySignal` (7-day report count for the area) once reports carry an area (A-25).
 
 - Correcting a published result creates a new version linked to the previous one; result reads return the latest version and its history (A-31).
 
@@ -113,7 +111,7 @@ Illustrative values, not a captured response.
   "freshness": "fresh",
   "ageMinutes": 25,
   "current": {"validAt": "2026-11-20T02:00:00Z", "value": 41.2},
-  "category": {"standard": "ISPU reference", "label": null},
+  "category": {"standard": "ISPU reference (Permen LHK P.14/2020)", "basis": "24h_mean_forecast", "label": "Sedang", "mean24h": 38.7},
   "series": [{"validAt": "2026-11-20T02:00:00Z", "value": 41.2}],
   "communitySignal": {"days": 7, "reportCount": 12, "suppressed": false},
   "attributions": ["Open-Meteo", "CAMS"],
@@ -121,7 +119,7 @@ Illustrative values, not a captured response.
 }
 ```
 
-`freshness` is `fresh` up to 2 hours after `retrievedAt`, `stale` after that, and `unavailable` when no snapshot exists; in that case `current`, `series`, and `category` are null. `category.label` stays null until the breakpoints are sourced (Q-13).
+`freshness` is `fresh` up to 2 hours after `retrievedAt`, `stale` after that, and `unavailable` when no snapshot exists; in that case `current`, `series`, and `category` are null. `category.label` places `mean24h`, the mean of the forecast values valid in the last 24 hours, in the PM2.5 bands of Permen LHK P.14/2020 (D-29); it is null with fewer than 18 values. `communitySignal` is filled even when no snapshot exists; a count from 1 to 4 is null with `suppressed: true`.
 
 ### Exposure context on a report
 

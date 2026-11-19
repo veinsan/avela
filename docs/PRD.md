@@ -61,17 +61,17 @@ US-04 (optional photo attachment) is a stretch item; see section 7.
 | --- | --- | --- | --- |
 | FR-01 | Authenticate residents and staff; limit staff to their facility. | US-03, US-06, US-08 | Core API built and tested |
 | FR-02 | Serve the latest PM2.5 snapshot per area with unit, valid time, source, and age. | US-01 | Core API built and tested; screen planned |
-| FR-03 | Serve guidance with sources and separate emergency information. | US-02, US-05 | Planned |
+| FR-03 | Serve guidance with sources and separate emergency information. | US-02, US-05 | Core API built and tested; screens planned |
 | FR-04 | Persist symptom reports and append-only updates. | US-03 | Core API built and tested |
 | FR-06 | Staff queue, claim, information request, response with disposition, close. | US-06 | Core API built and tested; screens planned |
 | FR-07 | Show report state and timeline to the resident. | US-05 | Core API built; screens planned |
 | FR-08 | Serve the simulated facility directory with services and opening schedule. | US-07 | Facility ID and name built; directory planned (A-30) |
 | FR-09 | Publish examination results to the report's owner; store a correction as a new version. | US-08 | Publication built and tested; versioning planned (A-31); screen planned |
 | FR-10 | Use Veriqu's product catalogue and FlowGanic's waste recap in visible features. | US-02, US-13 | Planned; contracts pending (Q-03) |
-| FR-11 | Publish an API with documentation, per-group keys, and a test account. | US-09, US-14 | Planned |
+| FR-11 | Publish an API with documentation, per-group keys, and a test account. | US-09, US-14 | Endpoints and key CLI built; keys issued in A-18 |
 | FR-12 | Handle loading, empty, stale, unavailable, and retry states on every data screen. | All | Planned |
 | FR-13 | Freeze an exposure context onto each report at submission. | US-10 | Core API built and tested; screen planned |
-| FR-14 | Publish the area health signal with small-count suppression. | US-11, US-12 | Planned |
+| FR-14 | Publish the area health signal with small-count suppression. | US-11, US-12 | Core API built and tested; Home row planned |
 | FR-15 | Accept PM2.5 snapshots pushed by the integration service. | US-01, US-10 | Core API built and tested; push job planned (A-07) |
 | FR-16 | Show staff screens only to staff accounts in the same app. | US-06 | Planned |
 | FR-17 | Show an in-app update marker when a report changes state or a result is published. | US-05, US-08 | Planned (A-26) |

@@ -188,7 +188,7 @@ Warning and danger indicate explicitly explained conditions, not decorative emph
 | Synthetic service | Persistent small plain-language label | Simulasi tugas kuliah |
 | Exposure context on a report | Information panel, forecast icon | Prakiraan wilayah, bukan dosis pribadi |
 | Community signal | Plain caption row under the forecast | Jumlah laporan 7 hari, or Belum cukup data |
-| PM2.5 category | Neutral chip with text; no traffic-light fill | Category name and "mengacu ISPU"; hidden until the breakpoints are sourced |
+| PM2.5 category | Neutral chip with text; no traffic-light fill | Category name and "mengacu ISPU"; hidden while the label is null |
 
 AQI colors and category names require a separate, named standard and review. Do not label US or European AQI as Indonesian ISPU. Raw PM2.5 concentration is not an AQI score. No invented health thresholds are encoded in this palette.
 
