@@ -174,6 +174,7 @@ Restore a backup into the running database (SQLite's backup API also clears the 
 docker compose cp ./avela-YYYYMMDD.db core:/data/restore.db
 docker compose exec core python -c "import sqlite3; sqlite3.connect('/data/restore.db').backup(sqlite3.connect('/data/avela.db'))"
 docker compose restart core
+sleep 15 && curl http://127.0.0.1:8081/api/health   # the core needs a few seconds to start on the STB
 ```
 
 ## API Keys
