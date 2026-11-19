@@ -140,7 +140,7 @@ Illustrative values, not a captured response.
 
 ### Exposure context on a report
 
-Built in A-24. Every report response carries `areaId`, `exposureContext`, and `exposureContextReason`; reports created before A-24 have all three null.
+Built in A-24. Every report response carries `areaId`, `exposureContext`, and `exposureContextReason`; reports created before A-24 have all three null. Every report response also names its reviewer with `reviewerId` and `reviewerName` (null until a staff member claims it), so the app shows who claimed it and which actions the signed-in staff member may take.
 
 ```json
 {

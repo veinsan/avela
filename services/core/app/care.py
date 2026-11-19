@@ -48,6 +48,9 @@ def report_out(db: sqlite3.Connection, row: sqlite3.Row, with_events: bool = Fal
         "complaint": row["complaint"], "onsetAt": row["onset_at"], "course": row["course"],
         "additionalContext": row["additional_context"], "consentVersion": row["consent_version"],
         "reviewerAssigned": row["reviewer_id"] is not None,
+        "reviewerId": row["reviewer_id"],
+        "reviewerName": (db.execute("SELECT display_name FROM accounts WHERE id = ?", (row["reviewer_id"],))
+                         .fetchone()[0] if row["reviewer_id"] else None),
         "exposureContext": json.loads(row["exposure_context"]) if row["exposure_context"] else None,
         "exposureContextReason": row["exposure_context_reason"],
         "createdAt": row["created_at"], "updatedAt": row["updated_at"],
