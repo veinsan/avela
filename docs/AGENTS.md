@@ -105,7 +105,7 @@ Success is all tests passing; 26 pass on 19 November. To run the service locally
 
 Integration service, from `services/integration`: the same two commands; 15 pass on 19 November. If Windows Smart App Control blocks a DLL in its new `.venv`, run it with `../core/.venv/Scripts/python.exe`, which pins the same versions. Run steps are in its `README.txt`.
 
-Mobile app, from `apps/mobile`: `npm install`, then `npm test` (Jest) and `npx expo start` (Expo Go). `npx expo export --platform android` bundles the app without a device and catches import errors. Pinned versions only; add a package with `npx expo install`.
+Mobile app, from `apps/mobile`: `npm install`, then `npm test` (Jest) and `npx expo start` (Expo Go). `npx expo export --platform android` bundles the app without a device and catches import errors. The opt-in API integration test runs against live services: `AVELA_IT_URL=http://127.0.0.1:8000 AVELA_IT_PASSWORD=<demo password> npm test -- api.integration`; `jest-expo` stubs `fetch` and inlines `EXPO_PUBLIC_*`, so that test brings its own HTTP client and config. Pinned versions only; add a package with `npx expo install`.
 
 Before calling a feature done, apply [the readiness-review skill](skills/review-avela-readiness/SKILL.md). To add a peer integration, follow [the peer-integration skill](skills/integrate-peer-api/SKILL.md).
 
