@@ -21,6 +21,7 @@ The root `CLAUDE.md` imports this file. Agents that do not read `CLAUDE.md` must
 | Expo SDK 58 (expo 58.0.26), React Native 0.88.1, React 19.3.0 | Mobile app in JavaScript (D-28), `apps/mobile` |
 | React Navigation 7 | native-stack 7.21.1, bottom-tabs 7.22.0 |
 | expo-secure-store 58.0.3 | Session token and chosen area on the device |
+| expo-splash-screen 58.0.14 | Splash configured in `app.json`; release APK through EAS (`eas.json`) |
 | Jest 30.5.2, jest-expo 58.0.15, Testing Library 14.1.0 | Mobile tests |
 
 Add a dependency only when the standard library or an installed package cannot do the job.

@@ -63,7 +63,7 @@ The paper was submitted on 16 November. The other M1 tasks are late and are due 
 
 | ID | Task | Status | Next step or verification |
 | --- | --- | --- | --- |
-| A-14 | Release and test the APK | Pending | Requires A-12, A-13, A-28. |
+| A-14 | Release and test the APK | In progress | 19 Nov: Avela icon, adaptive icon (with monochrome layer), and light and dark splash generated from the DESIGN colors; `eas.json` builds an APK with the HTTPS URLs; release steps in `apps/mobile/README.md`; `npx expo export --platform android` and `npx expo config` pass. Remaining (owner): `eas build -p android --profile production` with the owner's Expo account, rename to `Aplikasi_Release.apk`, install, and run the functional table. |
 | A-15 | Assemble the submission | Pending | Internal freeze on 11 Dec. |
 
 ## Stretch
