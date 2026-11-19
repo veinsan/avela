@@ -57,11 +57,13 @@ App.js                     Providers and the navigator
 src/config.js              Service URLs (HTTPS by default)
 src/services/ApiService.js The only module that calls the network
 src/context/               Session (AuthContext) and chosen pilot area (AreaContext)
-src/navigation/            Stack and tab navigation; tabs by role
+src/navigation/            Stack and tab navigation; tabs by role, icons, modal and sheet screens
 src/screens/               One file per screen
-src/components/ui.js       Shared components built on the theme
-src/theme/index.js         Tokens mirrored from docs/DESIGN.md
-src/utils/format.js        Labels, WIB times, form validation
+src/components/            ui.js (buttons, cards, list groups, chips, segmented control, banners,
+                           skeletons), ReportParts.js (timeline, exposure panel), PartnerSection.js
+src/hooks/useLoad.js       Loading, error, and refresh state for a screen
+src/theme/index.js         Tokens mirrored from docs/DESIGN.md, including motion
+src/utils/                 format.js (labels, WIB times, validation), haptics.js, log.js
 ```
 
 No API key ships in the app. Partner data comes through the integration service, which holds the keys.

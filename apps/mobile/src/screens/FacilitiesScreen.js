@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 
-import { AppText, Chip, Divider, EmptyView, ErrorView, LoadingView, Row, Screen, SimulationLabel } from '../components/ui';
+import {
+  EmptyState, ErrorView, FadeIn, ListGroup, ListRow, LoadingView, Screen, Segmented, SimulationLabel,
+} from '../components/ui';
 import { useArea } from '../context/AreaContext';
 import { useLoad } from '../hooks/useLoad';
 import { listFacilities } from '../services/ApiService';
@@ -20,39 +22,45 @@ export function todayHours(facility, now = Date.now()) {
 
 export default function FacilitiesScreen({ navigation }) {
   const { area } = useArea();
-  const [onlyMine, setOnlyMine] = useState(true);
-  const areaId = onlyMine && area ? area.id : null;
+  const [scope, setScope] = useState('area');
+  const areaId = scope === 'area' && area ? area.id : null;
   const { data, error, loading, reload, refresh, refreshing } = useLoad(() => listFacilities(areaId), [areaId]);
   const items = data ? data.items : [];
 
   return (
-    <Screen refreshing={refreshing} onRefresh={refresh}>
-      <AppText variant="headline" accessibilityRole="header">
-        Fasilitas kesehatan
-      </AppText>
-      <SimulationLabel text="Direktori simulasi tugas kuliah, bukan fasilitas sungguhan." />
-      <View style={{ flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg }} accessibilityRole="radiogroup">
-        {area ? <Chip label={`Wilayah ${area.name}`} selected={onlyMine} onPress={() => setOnlyMine(true)} /> : null}
-        <Chip label="Semua wilayah" selected={!onlyMine || !area} onPress={() => setOnlyMine(false)} />
-      </View>
-      {loading ? <LoadingView /> : null}
-      {error ? <ErrorView message={error.message} onRetry={reload} /> : null}
-      {data && !items.length ? (
-        <EmptyView title="Belum ada fasilitas di wilayah ini." body="Pilih Semua wilayah untuk melihat daftar lain." />
+    <Screen title="Fasilitas" subtitle="Direktori simulasi tugas kuliah" refreshing={refreshing} onRefresh={refresh}>
+      {area ? (
+        <Segmented
+          value={scope}
+          onChange={setScope}
+          options={[{ value: 'area', label: area.name }, { value: 'all', label: 'Semua wilayah' }]}
+        />
       ) : null}
-      <View style={{ marginTop: spacing.md }}>
-        {items.map((f) => (
-          <View key={f.id}>
-            <Row
-              title={f.name}
-              subtitle={`${f.areaName} · ${f.services.join(', ') || 'Layanan tidak diketahui'}`}
-              meta={`Hari ini: ${todayHours(f)}`}
-              onPress={() => navigation.navigate('DetailFasilitas', { id: f.id, name: f.name })}
-            />
-            <Divider />
-          </View>
-        ))}
+      <View style={{ marginTop: spacing.lg }}>
+        {loading ? <LoadingView card={false} /> : null}
+        {error ? <ErrorView message={error.message} onRetry={reload} /> : null}
+        {data && !items.length ? (
+          <EmptyState icon="business-outline" title="Belum ada fasilitas di wilayah ini"
+            body="Pilih Semua wilayah untuk melihat daftar lain." />
+        ) : null}
+        {items.length ? (
+          <FadeIn key={String(areaId)}>
+            <ListGroup inset={72}>
+              {items.map((f) => (
+                <ListRow
+                  key={f.id}
+                  icon="business-outline"
+                  title={f.name}
+                  subtitle={`${f.areaName}, ${f.services.length} layanan`}
+                  meta={`Hari ini ${todayHours(f)}`}
+                  onPress={() => navigation.navigate('DetailFasilitas', { id: f.id, name: f.name })}
+                />
+              ))}
+            </ListGroup>
+          </FadeIn>
+        ) : null}
       </View>
+      <SimulationLabel text="Fasilitas fiktif. Ketersediaan petugas tidak dijamin." />
     </Screen>
   );
 }

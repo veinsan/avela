@@ -1,10 +1,13 @@
 import { render, screen } from '@testing-library/react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import PartnerSection from '../src/components/PartnerSection';
 import { AppText } from '../src/components/ui';
 import EmergencyScreen from '../src/screens/EmergencyScreen';
 import { todayHours, todayIndex } from '../src/screens/FacilitiesScreen';
 import { forecastAhead } from '../src/screens/HomeScreen';
+
+const METRICS = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
 
 test('a partner outage collapses to one line and hides the content', async () => {
   await render(
@@ -24,13 +27,15 @@ test('partner data names its source and says when it is a mock or stale', async 
     </PartnerSection>,
   );
   expect(screen.getByText('Organik')).toBeTruthy();
-  expect(screen.getByText(/Sumber: FlowGanic · Data contoh \(mock\).*Data tersimpan/)).toBeTruthy();
+  expect(screen.getByText('Sumber: FlowGanic')).toBeTruthy();
+  expect(screen.getByText('Data contoh (mock)')).toBeTruthy();
+  expect(screen.getByText(/Data tersimpan, mitra sedang tidak tersedia/)).toBeTruthy();
 });
 
 test('the emergency screen needs no data and lists 119 and 112', async () => {
-  await render(<EmergencyScreen />);
-  expect(screen.getByText('Telepon 119')).toBeTruthy();
-  expect(screen.getByText('Telepon 112')).toBeTruthy();
+  await render(<SafeAreaProvider initialMetrics={METRICS}><EmergencyScreen /></SafeAreaProvider>);
+  expect(screen.getByLabelText(/Telepon 119/)).toBeTruthy();
+  expect(screen.getByLabelText(/Telepon 112/)).toBeTruthy();
   expect(screen.getByText(/bukan pertolongan darurat/)).toBeTruthy();
 });
 

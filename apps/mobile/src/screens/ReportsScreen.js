@@ -2,24 +2,25 @@ import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { AppText, Button, Divider, EmptyView, Panel, Row, Screen, Section } from '../components/ui';
+import {
+  AppText, Banner, Button, Card, EmptyState, FadeIn, Icon, ListGroup, ListRow, Screen, Section, StatusPill,
+} from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { useUpdates } from '../context/UpdatesContext';
-import { formatTime, hasUpdate, stateLabel } from '../utils/format';
-import { spacing } from '../theme';
+import { formatTime, hasUpdate } from '../utils/format';
+import { spacing, useTheme } from '../theme';
 
 export function ReceiptNotice() {
   return (
-    <Panel tone="info">
-      <AppText>
-        Laporan dikirim ke petugas fasilitas simulasi. Mengirim laporan bukan pertolongan darurat, tidak dipantau
-        terus-menerus, dan tidak ada janji waktu tanggapan.
-      </AppText>
-    </Panel>
+    <Banner tone="info" icon="information-circle-outline">
+      Laporan dibaca petugas fasilitas simulasi. Ini bukan pertolongan darurat, tidak dipantau terus-menerus, dan tidak
+      ada janji waktu tanggapan.
+    </Banner>
   );
 }
 
 export default function ReportsScreen({ navigation }) {
+  const { colors } = useTheme();
   const { account } = useAuth();
   const updates = useUpdates();
   const [markersSince, setMarkersSince] = useState(null);
@@ -36,15 +37,23 @@ export default function ReportsScreen({ navigation }) {
 
   if (!account) {
     return (
-      <Screen>
-        <AppText variant="headline" accessibilityRole="header">
-          Laporan keluhan
-        </AppText>
-        <AppText color="textMuted" style={{ marginVertical: spacing.md }}>
-          Masuk untuk mengirim keluhan dari rumah dan mengikuti tinjauan petugas.
-        </AppText>
-        <ReceiptNotice />
-        <Button label="Masuk" onPress={() => navigation.navigate('Masuk')} style={{ marginTop: spacing.lg }} />
+      <Screen title="Laporan" subtitle="Keluhan dan tinjauan petugas">
+        <FadeIn>
+          <Card style={{ padding: spacing.xl, gap: spacing.lg }}>
+            <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: colors.surfaceContainer,
+              alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="lock-closed-outline" size={24} />
+            </View>
+            <AppText variant="title">Masuk untuk melapor</AppText>
+            <AppText color="textMuted">
+              Kirim keluhan dari rumah, lalu ikuti tinjauan petugas di sini.
+            </AppText>
+            <Button label="Masuk" icon="log-in-outline" onPress={() => navigation.navigate('Masuk')} />
+          </Card>
+        </FadeIn>
+        <View style={{ marginTop: spacing.lg }}>
+          <ReceiptNotice />
+        </View>
       </Screen>
     );
   }
@@ -56,28 +65,37 @@ export default function ReportsScreen({ navigation }) {
   };
 
   return (
-    <Screen refreshing={refreshing} onRefresh={onRefresh}>
-      <ReceiptNotice />
-      <Button label="Buat laporan" onPress={() => navigation.navigate('FormLaporan')} style={{ marginTop: spacing.lg }} />
+    <Screen title="Laporan" subtitle="Keluhan dan tinjauan petugas" refreshing={refreshing} onRefresh={onRefresh}>
+      <Button label="Buat laporan" icon="add" onPress={() => navigation.navigate('FormLaporan')} />
+      <View style={{ marginTop: spacing.lg }}>
+        <ReceiptNotice />
+      </View>
 
       <Section title="Laporan saya">
         {updates.reports.length ? (
-          updates.reports.map((r) => (
-            <View key={r.id}>
-              <Row
-                title={r.complaint.split('\n')[0]}
-                subtitle={stateLabel(r.state)}
-                meta={`Dikirim ${formatTime(r.createdAt)}`}
-                marker={hasUpdate(r, markersSince)}
-                accessibilityLabel={`${r.complaint}. ${stateLabel(r.state)}${hasUpdate(r, markersSince) ? '. Ada pembaruan' : ''}`}
-                onPress={() => navigation.navigate('DetailLaporan', { id: r.id })}
-              />
-              <Divider />
-            </View>
-          ))
+          <FadeIn>
+            <ListGroup>
+              {updates.reports.map((r) => (
+                <ListRow
+                  key={r.id}
+                  title={r.complaint.split('\n')[0]}
+                  marker={hasUpdate(r, markersSince)}
+                  meta={
+                    <View style={{ gap: spacing.sm, marginTop: spacing.xs }}>
+                      <StatusPill state={r.state} />
+                      <AppText variant="caption" color="textMuted">Dikirim {formatTime(r.createdAt)}</AppText>
+                    </View>
+                  }
+                  accessibilityLabel={`${r.complaint}${hasUpdate(r, markersSince) ? ', ada pembaruan' : ''}`}
+                  onPress={() => navigation.navigate('DetailLaporan', { id: r.id })}
+                />
+              ))}
+            </ListGroup>
+          </FadeIn>
         ) : (
-          <EmptyView
-            title="Belum ada laporan."
+          <EmptyState
+            icon="document-text-outline"
+            title="Belum ada laporan"
             body="Laporan berisi keluhan, kapan mulai, dan perkembangannya. Petugas fasilitas simulasi akan meninjaunya."
           />
         )}
@@ -85,18 +103,21 @@ export default function ReportsScreen({ navigation }) {
 
       {updates.results.length ? (
         <Section title="Hasil pemeriksaan">
-          {updates.results.map((r) => (
-            <View key={r.id}>
-              <Row
-                title={`${r.facilityName} · versi ${r.version}`}
-                subtitle={`Oleh ${r.authorName}`}
-                meta={`Terbit ${formatTime(r.publishedAt)}`}
-                marker={hasUpdate(r, markersSince)}
-                onPress={() => navigation.navigate('HasilPemeriksaan', { id: r.id })}
-              />
-              <Divider />
-            </View>
-          ))}
+          <FadeIn>
+            <ListGroup inset={72}>
+              {updates.results.map((r) => (
+                <ListRow
+                  key={r.id}
+                  icon="clipboard-outline"
+                  title={r.facilityName}
+                  subtitle={`Versi ${r.version}, oleh ${r.authorName}`}
+                  meta={`Terbit ${formatTime(r.publishedAt)}`}
+                  marker={hasUpdate(r, markersSince)}
+                  onPress={() => navigation.navigate('HasilPemeriksaan', { id: r.id })}
+                />
+              ))}
+            </ListGroup>
+          </FadeIn>
         </Section>
       ) : null}
     </Screen>

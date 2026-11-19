@@ -3,12 +3,15 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { ExposurePanel, ReportFacts, StaffResponse, StateHeading, Timeline } from '../components/ReportParts';
-import { AppText, Button, Chip, ErrorView, LoadingView, Panel, Screen, Section, SimulationLabel, TextField }
-  from '../components/ui';
+import {
+  AppText, Banner, Button, Card, Chip, ChipRow, ErrorView, FadeIn, FieldError, LoadingView, Screen, Section,
+  SimulationLabel, TextField,
+} from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { useLoad } from '../hooks/useLoad';
 import { claimReport, closeReport, getReport, requestInformation, respondToReport } from '../services/ApiService';
-import { DISPOSITIONS, formatTime } from '../utils/format';
+import { DISPOSITIONS } from '../utils/format';
+import { haptic } from '../utils/haptics';
 import { spacing } from '../theme';
 
 // What the signed-in staff member can do with a report in this state.
@@ -28,6 +31,12 @@ export function staffActions(report, accountId) {
   }
 }
 
+const DISPOSITION_ICONS = {
+  self_care: 'home-outline',
+  remote_follow_up: 'chatbubbles-outline',
+  onsite_assessment: 'business-outline',
+};
+
 export default function ReviewScreen({ route, navigation }) {
   const { id } = route.params;
   const { account } = useAuth();
@@ -43,16 +52,20 @@ export default function ReviewScreen({ route, navigation }) {
     setFailure(null);
     try {
       await call();
+      haptic.success();
       setText('');
       setDisposition(null);
       await report.refresh();
     } catch (e) {
+      haptic.error();
       setFailure(e.message);
       if (e.code === 'VERSION_CONFLICT') report.refresh(); // reload so the valid action shows (Flow D step 6)
     } finally {
       setBusy(null);
     }
   }
+
+  const r = report.data;
 
   function respond() {
     const found = {};
@@ -68,7 +81,6 @@ export default function ReviewScreen({ route, navigation }) {
     act('ask', () => requestInformation(id, r.version, text.trim()));
   }
 
-  const r = report.data;
   const actions = r && account ? staffActions(r, account.id) : [];
   const owner = r && r.events && r.events[0] ? r.events[0].authorName : null;
 
@@ -78,63 +90,77 @@ export default function ReviewScreen({ route, navigation }) {
       {report.error && !r ? <ErrorView message={report.error.message} onRetry={report.reload} /> : null}
       {r ? (
         <>
-          <StateHeading report={r} />
-          <AppText color="textMuted">
-            {owner ? `Dari ${owner} · ` : ''}masuk {formatTime(r.createdAt)}
-          </AppText>
-          <AppText color="textMuted">{r.reviewerName ? `Diklaim oleh ${r.reviewerName}` : 'Belum diklaim'}</AppText>
-          <SimulationLabel />
-          {failure ? <ErrorView message={failure} /> : null}
+          <FadeIn>
+            <StateHeading report={r} />
+            <AppText color="textMuted" style={{ marginTop: spacing.sm }}>
+              {owner ? `Dari ${owner}. ` : ''}{r.reviewerName ? `Diklaim oleh ${r.reviewerName}.` : 'Belum diklaim.'}
+            </AppText>
+          </FadeIn>
+          {failure ? (
+            <View style={{ marginTop: spacing.lg }}>
+              <Banner tone="warning" title="Belum berhasil" animate>{failure}</Banner>
+            </View>
+          ) : null}
 
-          <Section title="Keluhan">
-            <ReportFacts report={r} />
-          </Section>
           <Section>
             <ExposurePanel report={r} />
           </Section>
-          <Section>
-            <StaffResponse report={r} />
+          <Section title="Isi laporan">
+            <ReportFacts report={r} />
           </Section>
+          {r.state === 'responded' || r.state === 'closed' ? (
+            <Section>
+              <StaffResponse report={r} />
+            </Section>
+          ) : null}
 
           <Section title="Tindakan">
             {actions.includes('claim') ? (
-              <Button label="Klaim laporan" loading={busy === 'claim'} onPress={() => act('claim', () => claimReport(id, r.version))} />
+              <Button label="Klaim laporan" icon="hand-left-outline" loading={busy === 'claim'}
+                onPress={() => act('claim', () => claimReport(id, r.version))} />
             ) : null}
             {actions.includes('respond') ? (
-              <View style={{ gap: spacing.md }}>
+              <Card style={{ gap: spacing.lg }}>
                 <TextField label="Tanggapan atau pertanyaan untuk warga" multiline value={text} onChangeText={setText}
                   error={errors.text} maxLength={2000} />
-                <AppText variant="label">Jenis tanggapan</AppText>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }} accessibilityRole="radiogroup">
-                  {Object.entries(DISPOSITIONS).map(([value, label]) => (
-                    <Chip key={value} label={label} selected={disposition === value} onPress={() => setDisposition(value)} />
-                  ))}
+                <View style={{ gap: spacing.sm }}>
+                  <AppText variant="label">Jenis tanggapan</AppText>
+                  <ChipRow>
+                    {Object.entries(DISPOSITIONS).map(([value, label]) => (
+                      <Chip key={value} label={label} icon={DISPOSITION_ICONS[value]} selected={disposition === value}
+                        onPress={() => setDisposition(value)} />
+                    ))}
+                  </ChipRow>
+                  <FieldError message={errors.disposition} />
                 </View>
-                {errors.disposition ? <AppText variant="caption" color="danger">{errors.disposition}</AppText> : null}
-                <Button label="Terbitkan tanggapan" loading={busy === 'respond'} onPress={respond} />
-                <Button label="Minta informasi tambahan" kind="tonal" loading={busy === 'ask'} onPress={ask} />
-              </View>
+                <Button label="Terbitkan tanggapan" icon="send" loading={busy === 'respond'} onPress={respond} />
+                <Button label="Minta informasi tambahan" kind="tonal" icon="help-circle-outline" loading={busy === 'ask'}
+                  onPress={ask} />
+              </Card>
             ) : null}
             {actions.includes('close') ? (
-              <Button label="Tutup laporan" loading={busy === 'close'} onPress={() => act('close', () => closeReport(id, r.version))} />
+              <Button label="Tutup laporan" icon="checkmark-done" loading={busy === 'close'}
+                onPress={() => act('close', () => closeReport(id, r.version))} />
             ) : null}
             {actions.includes('result') ? (
-              <Button label="Terbitkan hasil pemeriksaan" kind={actions.includes('close') ? 'tonal' : 'primary'}
+              <Button label="Terbitkan hasil pemeriksaan" icon="clipboard-outline"
+                kind={actions.includes('close') ? 'tonal' : 'primary'}
                 onPress={() => navigation.navigate('TerbitkanHasil', { reportId: id })} />
             ) : null}
             {r.state === 'in_review' && !actions.length ? (
-              <Panel tone="info"><AppText>Sedang ditinjau oleh {r.reviewerName}.</AppText></Panel>
+              <Banner tone="neutral" icon="eye-outline">{`Sedang ditinjau oleh ${r.reviewerName}.`}</Banner>
             ) : null}
             {r.state === 'awaiting_information' ? (
-              <Panel tone="info"><AppText>Menunggu jawaban warga.</AppText></Panel>
+              <Banner tone="neutral" icon="hourglass-outline">Menunggu jawaban warga.</Banner>
             ) : null}
             {r.state === 'cancelled' ? (
-              <Panel tone="neutral"><AppText>Laporan dibatalkan oleh warga.</AppText></Panel>
+              <Banner tone="neutral" icon="close-circle-outline">Laporan dibatalkan oleh warga.</Banner>
             ) : null}
           </Section>
 
           <Section title="Riwayat">
             <Timeline report={r} />
+            <SimulationLabel />
           </Section>
         </>
       ) : null}

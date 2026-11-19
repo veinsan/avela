@@ -2,11 +2,14 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 
-import { AppText, Button, Divider, ErrorView, LoadingView, Panel, Screen, Section, SimulationLabel, TextField }
-  from '../components/ui';
+import {
+  AppText, Banner, Button, Card, ErrorView, FadeIn, ListGroup, ListRow, LoadingView, Screen, Section, SimulationLabel,
+  TextField,
+} from '../components/ui';
 import { useLoad } from '../hooks/useLoad';
 import { draftCorrection, draftResult, getReport, listReportResults, publishResult } from '../services/ApiService';
 import { formatTime } from '../utils/format';
+import { haptic } from '../utils/haptics';
 import { spacing } from '../theme';
 
 export function resultPlan(versions) {
@@ -36,6 +39,7 @@ export default function PublishResultScreen({ route, navigation }) {
       await versions.refresh();
       return true;
     } catch (e) {
+      haptic.error();
       setFailure(e.message);
       versions.refresh();
       return false;
@@ -52,61 +56,71 @@ export default function PublishResultScreen({ route, navigation }) {
   }
 
   async function publish() {
-    if (await run(() => publishResult(plan.draft.id))) navigation.goBack();
+    if (await run(() => publishResult(plan.draft.id))) {
+      haptic.success();
+      navigation.goBack();
+    }
   }
 
+  const footer = !versions.data ? null : plan.mode === 'publish' ? (
+    <Button label="Terbitkan ke warga" icon="send" onPress={publish} loading={busy} />
+  ) : (
+    <Button label="Simpan draf dan pratinjau" icon="eye-outline" onPress={saveDraft} loading={busy} />
+  );
+
   return (
-    <Screen>
+    <Screen footer={footer}>
       {report.loading || versions.loading ? <LoadingView /> : null}
       {versions.error ? <ErrorView message={versions.error.message} onRetry={versions.reload} /> : null}
       {report.data ? (
-        <>
-          <AppText variant="headline" accessibilityRole="header">
-            Terbitkan hasil
+        <FadeIn>
+          <AppText variant="headline" accessibilityRole="header">Hasil pemeriksaan</AppText>
+          <AppText color="textMuted" style={{ marginTop: spacing.xs }}>
+            {owner ? `Untuk ${owner}. ` : ''}Laporan: {report.data.complaint.split('\n')[0]}
           </AppText>
-          <AppText color="textMuted">
-            Laporan {owner ? `dari ${owner}` : ''}: {report.data.complaint.split('\n')[0]}
-          </AppText>
-          <SimulationLabel text="Hasil fiktif; hanya warga pemilik laporan yang dapat membacanya." />
-          {failure ? <ErrorView message={failure} /> : null}
+          <SimulationLabel text="Hasil fiktif. Hanya warga pemilik laporan yang dapat membacanya." />
+          {failure ? (
+            <View style={{ marginTop: spacing.lg }}>
+              <Banner tone="warning" title="Belum berhasil" animate>{failure}</Banner>
+            </View>
+          ) : null}
 
           {plan.mode === 'publish' ? (
             <Section title={`Pratinjau versi ${plan.draft.version}`}>
-              <Panel tone="surface">
+              <Card>
                 <AppText>{plan.draft.content}</AppText>
-              </Panel>
-              <AppText variant="caption" color="textMuted">
-                Draf oleh {plan.draft.authorName} · {plan.draft.facilityName} · {formatTime(plan.draft.createdAt)}
-              </AppText>
-              <Button label="Terbitkan ke warga" onPress={publish} loading={busy} />
+                <AppText variant="caption" color="textMuted">
+                  Draf oleh {plan.draft.authorName}, {plan.draft.facilityName}. {formatTime(plan.draft.createdAt)}.
+                </AppText>
+              </Card>
+              <Banner tone="info" icon="eye-outline">Warga baru dapat membaca hasil ini setelah diterbitkan.</Banner>
             </Section>
           ) : (
             <Section title={plan.mode === 'correct' ? `Koreksi versi ${plan.latest.version}` : 'Hasil baru'}>
               {plan.mode === 'correct' ? (
-                <AppText color="textMuted">
-                  Koreksi disimpan sebagai versi baru. Versi lama tetap dapat dibaca warga.
-                </AppText>
+                <AppText color="textMuted">Koreksi disimpan sebagai versi baru. Versi lama tetap dapat dibaca warga.</AppText>
               ) : null}
               <TextField label="Hasil pemeriksaan dan arahan berikutnya" multiline value={content}
                 onChangeText={setContent} error={error} maxLength={4000} />
-              <Button label="Simpan draf dan lihat pratinjau" onPress={saveDraft} loading={busy} />
             </Section>
           )}
 
           {versions.data && versions.data.items.length ? (
             <Section title="Versi">
-              {versions.data.items.map((v) => (
-                <View key={v.id} style={{ paddingVertical: spacing.sm, gap: 2 }}>
-                  <AppText variant="bodyStrong">
-                    Versi {v.version} · {v.status === 'draft' ? 'draf' : `terbit ${formatTime(v.publishedAt)}`}
-                  </AppText>
-                  <AppText numberOfLines={3}>{v.content}</AppText>
-                  <Divider />
-                </View>
-              ))}
+              <ListGroup inset={72}>
+                {versions.data.items.map((v) => (
+                  <ListRow
+                    key={v.id}
+                    icon={v.status === 'draft' ? 'create-outline' : 'document-text-outline'}
+                    title={`Versi ${v.version}${v.status === 'draft' ? ', draf' : ''}`}
+                    subtitle={v.content}
+                    meta={v.publishedAt ? `Terbit ${formatTime(v.publishedAt)}` : undefined}
+                  />
+                ))}
+              </ListGroup>
             </Section>
           ) : null}
-        </>
+        </FadeIn>
       ) : null}
     </Screen>
   );

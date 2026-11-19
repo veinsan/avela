@@ -2,16 +2,19 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { ExposurePanel, ReportFacts, StaffResponse, StateHeading, Timeline, latestEvent } from '../components/ReportParts';
-import { AppText, Button, Divider, ErrorView, LoadingView, Panel, Row, Screen, Section, SimulationLabel, TextField }
-  from '../components/ui';
+import {
+  AppText, Banner, Button, Card, ErrorView, FadeIn, ListGroup, ListRow, LoadingView, Screen, Section, SimulationLabel,
+  TextField,
+} from '../components/ui';
 import { useUpdates } from '../context/UpdatesContext';
 import { useLoad } from '../hooks/useLoad';
 import { addReportUpdate, cancelReport, getReport, listResults } from '../services/ApiService';
 import { formatTime } from '../utils/format';
+import { haptic } from '../utils/haptics';
 import { spacing } from '../theme';
 
 export default function ReportDetailScreen({ route, navigation }) {
-  const { id } = route.params;
+  const { id, justSent } = route.params;
   const updates = useUpdates();
   const report = useLoad(() => getReport(id), [id], { refreshOnFocus: true });
   const results = useLoad(() => listResults(), [id], { refreshOnFocus: true });
@@ -26,10 +29,12 @@ export default function ReportDetailScreen({ route, navigation }) {
     setActionError(null);
     try {
       await call();
+      haptic.success();
       await report.refresh();
       updates.refresh().then(updates.markSeen);
       return true;
     } catch (e) {
+      haptic.error();
       setActionError(e.message);
       if (e.code === 'VERSION_CONFLICT') report.refresh(); // someone changed it first; show the new state
       return false;
@@ -55,44 +60,54 @@ export default function ReportDetailScreen({ route, navigation }) {
       {report.error && !r ? <ErrorView message={report.error.message} onRetry={report.reload} /> : null}
       {r ? (
         <>
-          <StateHeading report={r} />
-          <AppText variant="caption" color="textMuted">Dikirim {formatTime(r.createdAt)}</AppText>
-          <SimulationLabel />
-          {r.state === 'submitted' ? (
-            <Panel tone="info" style={{ marginTop: spacing.lg }}>
-              <AppText>Laporan terkirim. Belum ditinjau petugas.</AppText>
-            </Panel>
+          <FadeIn>
+            <StateHeading report={r} />
+          </FadeIn>
+          <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+            {justSent && r.state === 'submitted' ? (
+              <Banner tone="info" icon="checkmark-circle-outline" title="Laporan terkirim" animate>
+                Belum ditinjau petugas. Status akan berubah di sini.
+              </Banner>
+            ) : r.state === 'submitted' ? (
+              <Banner tone="info" icon="paper-plane-outline">Laporan terkirim. Belum ditinjau petugas.</Banner>
+            ) : null}
+            {actionError ? <Banner tone="warning" title="Belum berhasil" animate>{actionError}</Banner> : null}
+          </View>
+
+          {question ? (
+            <Section title="Petugas bertanya">
+              <FadeIn>
+                <Card style={{ gap: spacing.lg }}>
+                  <AppText variant="bodyStrong">{question.text}</AppText>
+                  <TextField label="Jawaban Anda" multiline value={reply} onChangeText={setReply} error={replyError}
+                    maxLength={2000} />
+                  <Button label="Kirim jawaban" icon="send" onPress={sendReply} loading={busy} />
+                </Card>
+              </FadeIn>
+            </Section>
           ) : null}
-          {actionError ? <ErrorView message={actionError} /> : null}
 
           {response ? (
             <Section>
-              <StaffResponse report={r} />
+              <FadeIn>
+                <StaffResponse report={r} />
+              </FadeIn>
               {response.disposition === 'onsite_assessment' ? (
-                <Button label="Cari fasilitas" kind="tonal"
+                <Button label="Cari fasilitas" kind="tonal" icon="business-outline"
                   onPress={() => navigation.navigate('Tabs', { screen: 'Fasilitas' })} />
               ) : null}
             </Section>
           ) : null}
 
-          {question ? (
-            <Section title="Petugas meminta informasi">
-              <AppText>{question.text}</AppText>
-              <TextField label="Jawaban Anda" multiline value={reply} onChangeText={setReply} error={replyError}
-                maxLength={2000} />
-              <Button label="Kirim jawaban" onPress={sendReply} loading={busy} />
-            </Section>
-          ) : null}
-
           {mine.length ? (
             <Section title="Hasil pemeriksaan">
-              {mine.map((x) => (
-                <View key={x.id}>
-                  <Row title={`${x.facilityName} · versi ${x.version}`} meta={`Terbit ${formatTime(x.publishedAt)}`}
+              <ListGroup inset={72}>
+                {mine.map((x) => (
+                  <ListRow key={x.id} icon="clipboard-outline" title={x.facilityName} subtitle={`Versi ${x.version}`}
+                    meta={`Terbit ${formatTime(x.publishedAt)}`}
                     onPress={() => navigation.navigate('HasilPemeriksaan', { id: x.id })} />
-                  <Divider />
-                </View>
-              ))}
+                ))}
+              </ListGroup>
             </Section>
           ) : null}
 
@@ -104,19 +119,23 @@ export default function ReportDetailScreen({ route, navigation }) {
           </Section>
           <Section title="Isi laporan">
             <ReportFacts report={r} />
+            <SimulationLabel />
           </Section>
 
           {r.state === 'submitted' ? (
             <Section>
               {confirmCancel ? (
-                <>
-                  <AppText>Batalkan laporan ini? Laporan yang dibatalkan tidak ditinjau.</AppText>
-                  <Button label="Ya, batalkan" kind="danger" loading={busy}
-                    onPress={() => act(() => cancelReport(id, r.version)).then(() => setConfirmCancel(false))} />
-                  <Button label="Tidak" kind="text" onPress={() => setConfirmCancel(false)} />
-                </>
+                <FadeIn>
+                  <Card style={{ gap: spacing.md }}>
+                    <AppText variant="bodyStrong">Batalkan laporan ini?</AppText>
+                    <AppText color="textMuted">Laporan yang dibatalkan tidak akan ditinjau.</AppText>
+                    <Button label="Ya, batalkan" kind="danger" icon="close-circle-outline" loading={busy}
+                      onPress={() => act(() => cancelReport(id, r.version)).then(() => setConfirmCancel(false))} />
+                    <Button label="Tidak jadi" kind="ghost" onPress={() => setConfirmCancel(false)} />
+                  </Card>
+                </FadeIn>
               ) : (
-                <Button label="Batalkan laporan" kind="tonal" onPress={() => setConfirmCancel(true)} />
+                <Button label="Batalkan laporan" kind="ghost" icon="close-circle-outline" onPress={() => setConfirmCancel(true)} />
               )}
             </Section>
           ) : null}

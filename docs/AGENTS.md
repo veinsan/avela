@@ -22,6 +22,9 @@ The root `CLAUDE.md` imports this file. Agents that do not read `CLAUDE.md` must
 | React Navigation 7 | native-stack 7.21.1, bottom-tabs 7.22.0 |
 | expo-secure-store 58.0.3 | Session token and chosen area on the device |
 | expo-splash-screen 58.0.14 | Splash configured in `app.json`; release APK through EAS (`eas.json`) |
+| react-native-reanimated 4.7.1, react-native-worklets 0.13.0 | All motion: press scale, entrances, segmented indicator, skeleton pulse (DESIGN, motion) |
+| expo-haptics 58.0.8 | Selection, success, and error haptics through `src/utils/haptics.js` only |
+| @expo/vector-icons 15.1.1 (expo-font 58.0.12, expo-asset 58.0.21) | Ionicons, outline style |
 | Jest 30.5.2, jest-expo 58.0.15, Testing Library 14.1.0 | Mobile tests |
 
 Add a dependency only when the standard library or an installed package cannot do the job.
@@ -112,6 +115,7 @@ Notes:
 
 - To run the core locally, follow `services/core/README.md`. Docker is not installed on the development machine; the image is built on the STB (A-04).
 - If Windows Smart App Control blocks a DLL in the integration service's new `.venv`, run it with `../core/.venv/Scripts/python.exe`, which pins the same versions.
+- Jest uses Reanimated's resolver and `setUpTests()` (`apps/mobile/jest.setup.js`); a component that reads safe-area insets needs a `SafeAreaProvider` with `initialMetrics` in its test.
 - The opt-in API integration test drives `ApiService.js` against live services: `AVELA_IT_URL=http://127.0.0.1:8000 AVELA_IT_PASSWORD=<demo password> npm test -- api.integration`. `jest-expo` stubs `fetch` and inlines `EXPO_PUBLIC_*`, so that test brings its own HTTP client and config.
 - Pinned versions only; add an app package with `npx expo install`.
 

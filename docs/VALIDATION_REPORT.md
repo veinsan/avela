@@ -4,7 +4,13 @@
 
 **Scope:** Documentation checks. The only code check is the existing core test suite.
 
-## Latest Revision: Anti-Slop Review (20 November 2026)
+## Latest Revision: App Redesign (20 November 2026)
+
+The owner asked for a better layout, UI, and animation on the D-36 palette. DESIGN changed first: a larger type scale (display 56), `pill` radius and `screen` spacing, 25 component contracts (buttons, card, list group and row, chip, segmented control, status pill, banners, skeleton, tab bar), a motion table with the purpose of each animation, Ionicons, and a copy rule against semicolons, bullet characters, em dashes, and emoji. The theme module and every screen followed. Motion uses Reanimated 4 (press scale 0.97 in 120 ms, entrances once at 250 ms with a 40 ms stagger, a sliding segmented indicator, a skeleton pulse) and respects reduced motion; tabs never animate and screens use the native stack. Skills used: `animate-expo` (motion rules and recipes) and `mobile-native` (read, but it targets web apps). Installing two official Expo skills was blocked by the session's permission rules.
+
+Checks run: every `{colors|typography|rounded|spacing}` reference in DESIGN resolves (85); `npm test` 25 passed; `npx expo export --platform android` builds; a scan of all app strings and `guidance.py` finds no semicolon, bullet, middle dot, em dash, or emoji. Not checked: the screens on a phone; a web preview was built but the connected browser could not reach the laptop's local server.
+
+## Earlier Revision: Anti-Slop Review (20 November 2026)
 
 The owner's `anti-vibecode-slop` checklist was applied to the repository in review mode, then the findings were fixed. The Markdown documents were also checked against the owner's `project-setup` guide; PRD, DESIGN, ARCHITECTURE, TODO, WORKFLOW, the skills, and both READMEs already followed it, so only stale facts were changed. At the owner's request, neither the checklist nor the local `project-setup` copy is kept in the repository or on the laptop (20 November).
 
