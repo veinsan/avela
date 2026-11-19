@@ -23,6 +23,8 @@ services:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    # Lets the class route reach aaPanel on the STB host at https://host.docker.internal:1122.
+    extra_hosts: ["host.docker.internal:host-gateway"]
     depends_on: [gateway]
     mem_limit: 64m
     cpus: 0.25

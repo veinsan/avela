@@ -11,7 +11,7 @@ export AVELA_JWT_SECRET=$(python -c "import secrets;print(secrets.token_urlsafe(
 .venv/Scripts/python.exe -m uvicorn app.main:app --reload
 ```
 
-Interactive docs: `http://127.0.0.1:8000/docs`. Tests: `.venv/Scripts/python.exe -m pytest -q`.
+Interactive docs: `http://127.0.0.1:8000/api/docs` (public: `https://avela.stei.fun/api/docs`; the tunnel only forwards `/api/*`). Tests: `.venv/Scripts/python.exe -m pytest -q`.
 
 Demo accounts (password from `AVELA_DEMO_PASSWORD`): `warga1`, `warga2` (residents), `petugas1` (demo-facility-001), `petugas2` (demo-facility-002).
 
@@ -30,7 +30,7 @@ Limits: core 256 MB / 0.5 CPU, gateway and tunnel 64 MB / 0.25 CPU each. Nginx r
 
 | Method and path | Actor | Purpose |
 | --- | --- | --- |
-| `GET /health` (no prefix) | Public | Liveness |
+| `GET /health`, `GET /api/health` (no `/v1`) | Public | Liveness |
 | `POST /auth/login` | Any | Returns bearer token |
 | `GET /me` | Signed in | Own profile, role, facilities |
 | `POST /reports` | Resident | Submit report; requires `Idempotency-Key` header |
