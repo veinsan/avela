@@ -34,8 +34,8 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-13 | Attachment upload fails or is skipped: the report still works. | FR-05 | Stretch |
 | T-14 | Veriqu products show in Panduan and FlowGanic's waste recap on Beranda, each with its source and a request log. | FR-10, US-02, US-13 | Partial: screens and adapters built on labelled fixtures; live calls and logs wait on A-03 |
 | T-15 | Peer timeout, 429, or malformed body: the app shows an unavailable state and keeps working. | NFR-04 | Pass: `test_veriqu_failure_serves_last_good_answer_as_stale_or_unavailable`, `a partner outage becomes an unavailable envelope instead of an error`, `a partner outage collapses to one line and hides the content` |
-| T-16 | STB restart keeps the database; limits are set; no outbound provider call from the core. | NFR-03 | Planned, A-13 |
-| T-17 | HTTPS works; a burst gets 429; no secret is in the APK or the repository. | NFR-08 | Planned, A-13, A-14 |
+| T-16 | STB restart keeps the database; limits are set; no outbound provider call from the core. | NFR-03 | Pass on the STB 19 Nov: data intact after restart and restore, `docker stats` inside every limit, snapshots arrive by push only |
+| T-17 | HTTPS works; a burst gets 429; no secret is in the APK or the repository. | NFR-08 | Partial: HTTPS and 429 pass on `avela.stei.fun` (19 Nov); repository scan clean; APK check in A-14 |
 | T-18 | Large text, status without color, and form errors are usable on a device. | NFR-07 | Planned, A-12 |
 | T-19 | The release APK installs; login, 4+ screens, stack and tab navigation, and the validated form work. | C-07, C-11 | Planned, A-14 |
 | T-20 | Fixtures, logs, screenshots, and the video contain only synthetic people. | NFR-02 | Planned, A-15 |
