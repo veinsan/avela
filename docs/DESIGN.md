@@ -30,19 +30,19 @@ colors:
 typography:
   display:
     fontFamily: system
-    fontSize: 40
-    fontWeight: 600
-    lineHeight: 48
+    fontSize: 56
+    fontWeight: 700
+    lineHeight: 60
   headline:
     fontFamily: system
     fontSize: 28
-    fontWeight: 600
-    lineHeight: 36
+    fontWeight: 700
+    lineHeight: 34
   title:
     fontFamily: system
-    fontSize: 22
+    fontSize: 20
     fontWeight: 600
-    lineHeight: 28
+    lineHeight: 26
   body:
     fontFamily: system
     fontSize: 16
@@ -65,14 +65,16 @@ typography:
     lineHeight: 20
 rounded:
   small: 8
-  control: 12
+  control: 14
   panel: 20
-  sheet: 24
+  sheet: 28
+  pill: 999
 spacing:
   xs: 4
   sm: 8
   md: 12
   lg: 16
+  screen: 20
   xl: 24
   xxl: 32
   section: 40
@@ -83,57 +85,119 @@ components:
     typography: '{typography.bodyStrong}'
     rounded: '{rounded.control}'
     padding: '{spacing.lg}'
-    height: 48
+    height: 52
   buttonPrimaryPressed:
     backgroundColor: '{colors.accentPressed}'
     textColor: '{colors.onAccent}'
   buttonTonal:
     backgroundColor: '{colors.tonal}'
     textColor: '{colors.text}'
+    typography: '{typography.bodyStrong}'
     rounded: '{rounded.control}'
+    height: 52
+  buttonTonalPressed:
+    backgroundColor: '{colors.tonalPressed}'
+    textColor: '{colors.text}'
+  buttonGhost:
+    textColor: '{colors.text}'
+    typography: '{typography.label}'
     height: 48
+  buttonDanger:
+    backgroundColor: '{colors.dangerSurface}'
+    textColor: '{colors.danger}'
+    typography: '{typography.bodyStrong}'
+    rounded: '{rounded.control}'
+    height: 52
   buttonDisabled:
     backgroundColor: '{colors.disabledSurface}'
     textColor: '{colors.disabledText}'
-    height: 48
-  conditionPanel:
+    height: 52
+  card:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.text}'
+    rounded: '{rounded.panel}'
+    padding: '{spacing.screen}'
+  conditionCard:
     backgroundColor: '{colors.surfaceContainer}'
     textColor: '{colors.text}'
     rounded: '{rounded.panel}'
     padding: '{spacing.xl}'
+  listGroup:
+    backgroundColor: '{colors.surface}'
+    rounded: '{rounded.panel}'
+  listRow:
+    textColor: '{colors.text}'
+    typography: '{typography.bodyStrong}'
+    padding: '{spacing.lg}'
+    height: 64
   field:
     backgroundColor: '{colors.surface}'
     textColor: '{colors.text}'
     typography: '{typography.body}'
     rounded: '{rounded.control}'
     padding: '{spacing.lg}'
-  warningPanel:
-    backgroundColor: '{colors.warningSurface}'
-    textColor: '{colors.warning}'
+    height: 52
+  fieldFocused:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.text}'
+  chip:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.text}'
+    typography: '{typography.label}'
+    rounded: '{rounded.pill}'
+    padding: '{spacing.md}'
+    height: 44
+  chipSelected:
+    backgroundColor: '{colors.selected}'
+    textColor: '{colors.onSelected}'
+  segmentedTrack:
+    backgroundColor: '{colors.surface}'
+    rounded: '{rounded.control}'
+    height: 48
+  segmentedIndicator:
+    backgroundColor: '{colors.tonal}'
+    textColor: '{colors.text}'
     rounded: '{rounded.small}'
+  statusPill:
+    backgroundColor: '{colors.surfaceContainer}'
+    textColor: '{colors.text}'
+    typography: '{typography.label}'
+    rounded: '{rounded.pill}'
+    padding: '{spacing.sm}'
+  bannerInfo:
+    backgroundColor: '{colors.informationSurface}'
+    textColor: '{colors.text}'
+    rounded: '{rounded.control}'
     padding: '{spacing.lg}'
-  urgentPanel:
+  bannerWarning:
+    backgroundColor: '{colors.warningSurface}'
+    textColor: '{colors.text}'
+    rounded: '{rounded.control}'
+    padding: '{spacing.lg}'
+  bannerDanger:
     backgroundColor: '{colors.dangerSurface}'
-    textColor: '{colors.danger}'
-    rounded: '{rounded.small}'
+    textColor: '{colors.text}'
+    rounded: '{rounded.control}'
     padding: '{spacing.lg}'
   exposurePanel:
     backgroundColor: '{colors.informationSurface}'
     textColor: '{colors.text}'
     typography: '{typography.body}'
-    rounded: '{rounded.small}'
+    rounded: '{rounded.control}'
     padding: '{spacing.lg}'
   categoryChip:
-    backgroundColor: '{colors.surfaceContainer}'
-    textColor: '{colors.text}'
-    typography: '{typography.label}'
-    rounded: '{rounded.small}'
-    padding: '{spacing.sm}'
-  queueRow:
     backgroundColor: '{colors.surface}'
     textColor: '{colors.text}'
-    typography: '{typography.body}'
-    padding: '{spacing.lg}'
+    typography: '{typography.label}'
+    rounded: '{rounded.pill}'
+    padding: '{spacing.sm}'
+  tabBar:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.text}'
+    typography: '{typography.label}'
+  skeleton:
+    backgroundColor: '{colors.surfaceContainer}'
+    rounded: '{rounded.small}'
 ---
 
 ## Overview
@@ -217,7 +281,9 @@ Body text is left-aligned. Long guidance and responses wrap naturally; no fixed 
 
 ### Shared Spatial Rules
 
-Use a single phone content column with 16-unit horizontal padding and 24-unit section separation. Reserve the larger section token for major changes in task, not every row. Align titles, values, and actions to a consistent left edge. Prefer grouped lists and whitespace over nested cards.
+Use a single phone content column with `spacing.screen` (20) horizontal padding and `spacing.xl` (24) between sections. Reserve `spacing.section` for major changes in task, not every row. Align titles, values, and actions to a consistent left edge. Group related rows inside one `listGroup` with inset dividers instead of a card per row, and never nest a card inside a card.
+
+Tab screens open with a large title block: the screen name in `headline`, an optional `caption` line under it, and the Darurat pill on the right. Stack screens use the native header in `surface` with no shadow, a silver title, and the system Back.
 
 Honor safe areas, display cutouts, system navigation, and keyboard insets. All interactive targets are at least 48 by 48 logical units, with at least 8 units separation. Token height is a minimum baseline: controls expand under larger text settings. Keep essential information in the scrolling content rather than behind a floating action.
 
@@ -240,31 +306,58 @@ Keep environmental data readable without signing in. Private reports and results
 
 ### Navigation and Adaptation
 
-Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. The active tab is silver text on the gray bar; inactive tabs use `textMuted`. Tabs never use the yellow accent. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
+Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. Each tab has an outline icon above its label; the active tab switches to the filled icon and silver text on the gray bar, and inactive tabs use `textMuted`. The Laporan tab shows a count badge for update markers. Tabs never use the yellow accent. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
 
 At medium width (proposed 600-839 logical units), consider a navigation rail and preserve comfortable reading measure. At expanded width (840+), a staff queue may use master/detail panes if that surface is approved. Do not stretch paragraphs across the whole display. Width thresholds are implementation proposals to test, not evidence of tablet support.
 
 ### Environmental Timeline
 
-Show a small, horizontally readable forecast trend with time labels, PM2.5 units, and an accessible list/table alternative. Break the line at missing samples. No smooth curve or confidence band unless supported by data. A selected time displays its exact value and valid time. Forecasts remain separate from station observations; changing the source must be visible.
+Show the next six hours as a row of vertical bars, each with its time and value in text, the current hour first in `text` and later hours in `outline`. The row carries an accessibility label that reads the hours as a list. Break the line at missing samples. No smooth curve or confidence band unless supported by data. A selected time displays its exact value and valid time. Forecasts remain separate from station observations; changing the source must be visible.
 
 ## Elevation & Depth
 
 Use tonal surfaces and clear grouping first. Ordinary rows do not need shadows. A modal sheet may use native elevation to communicate a temporary layer; its backdrop must not obscure the current task's meaning. Avoid floating, stacked, translucent panels.
 
-Motion is functional: approximately 150-220 ms for state transitions, preserving content position. Honor Android Remove animations and reduced-motion preferences with instant changes or a simple fade. No smoke particles, animated risk counters, page-load choreography, or endless pulsing urgency.
+Motion runs on the UI thread with Reanimated and is functional, never decorative. Each case below names its purpose:
+
+| Moment | Motion | Purpose |
+| --- | --- | --- |
+| Any press | Scale to 0.97 in 120 ms, `ease-out` (cubic-bezier 0.23, 1, 0.32, 1) | Feedback |
+| Segmented control | Indicator slides to the chosen option in 250 ms, ease-in-out; one selection haptic | Spatial consistency |
+| A list or card the user waited for (reports, queue, facilities, the condition card) | Fades up 8 units in 250 ms, rows staggered by 40 ms, only on first load | Preventing a jarring change |
+| Banner that appears after an action (sent, conflict, error) | Fades up in 250 ms | State indication |
+| Skeleton while loading | Opacity 0.55 to 1 and back over 1.6 s | State indication |
+| Report sent, response published, result published | Success haptic in the same frame as the screen change | Feedback |
+| Tab switch | None | Used too often to animate |
+| Screen push, modal, sheet | The native stack default | Platform behavior |
+
+With reduced motion on, entrances and the skeleton pulse are skipped, the indicator jumps, and screens fade instead of sliding. Haptics are never the only feedback. No smoke particles, animated risk counters, page-load choreography, or endless pulsing urgency.
 
 Loading uses stable skeleton regions for initially absent content. A refresh preserves the last source-attributed content and shows a small updating indicator. Use a spinner only for a localized action in progress, not as a blank full-screen experience.
 
 ## Shapes
 
-Small radius belongs to notices and compact grouping. Control radius is shared by inputs and buttons. Panel radius is reserved for the main condition summary or genuinely distinct content; sheet radius applies to temporary surfaces. Avela's visual signature is the spacious condition summary paired with a concise, plainly attributed next step, not a repeated rounded-card grid.
+Small radius belongs to skeleton bars and the segmented indicator. Control radius (14) is shared by inputs, buttons, and banners. Panel radius (20) is for cards, list groups, and the condition card. Sheet radius applies to temporary surfaces. Pill radius is for chips, status pills, and the Darurat pill. Avela's visual signature is the spacious condition summary paired with a concise, plainly attributed next step, not a repeated rounded-card grid.
 
-Use a consistent outline icon family chosen for Expo compatibility during implementation. Familiar symbols support labels rather than replacing them. No emoji as clinical status icons, no fake hospital logos, and no photography suggesting a partner or staff member who does not exist.
+Use Ionicons from `@expo/vector-icons`, outline style, 20 to 24 units, in `text` or `textMuted`; the filled variant marks the active tab only. Familiar symbols support labels rather than replacing them. No emoji as clinical status icons, no fake hospital logos, and no photography suggesting a partner or staff member who does not exist.
 
 ## Components
 
-These are planned component contracts. No component code exists yet.
+Every contract below is implemented in `apps/mobile/src/components/`. Use these components instead of styling a screen by hand.
+
+### Building Blocks
+
+| Component | Use |
+| --- | --- |
+| `Button` | `primary` (yellow, one per screen), `tonal` (secondary), `ghost` (low emphasis), `danger` (destructive or emergency). Optional leading icon. 52 units high. |
+| `Card` | One distinct object: the condition summary, a staff response, a result. |
+| `ListGroup` and `ListRow` | Rows of the same kind (reports, facilities, settings) inside one surface with inset dividers. A row has an optional leading icon, a title, a subtitle, trailing meta, and a chevron when it opens something. |
+| `Chip` | One choice among a few (course of symptoms, facility, disposition). The chosen chip inverts to `selected` with a check icon. |
+| `Segmented` | Two to four filters over one list (area filter, queue state). |
+| `StatusPill` | A report state in words with its icon. `awaiting_information` uses the warning tone because the resident must act; the others stay neutral. |
+| `Banner` | Info, warning, or danger notice with an icon, a title, a sentence, and an optional action. |
+| `Skeleton` | Gray bars in the shape of the content that is loading. |
+| `EmptyState` | An icon, one sentence on what appears here, and the action that fills it. |
 
 ### Environmental Summary
 
@@ -282,7 +375,7 @@ The community signal is one caption-size row under the forecast: the 7-day repor
 
 ### Staff Queue and Review
 
-`queueRow` shows the complaint's first line, the state in text, and how long the report has waited. Rows are separated by dividers, not cards. The review screen shows exactly one primary action for the current state: claim, then ask or respond, then close. A version conflict shows an inline message and reloads the report. Every staff screen carries the "Simulasi tugas kuliah" label.
+Each queue row shows the complaint's first line, a `StatusPill`, how long the report has waited, and who claimed it. Rows sit in one `ListGroup`, not in separate cards. The review screen shows exactly one primary action for the current state: claim, then ask or respond, then close. A version conflict shows an inline message and reloads the report. Every staff screen carries the "Simulasi tugas kuliah" label.
 
 ### Guidance and Next Step
 
@@ -316,7 +409,7 @@ Use the yellow filled button for the current primary action, a `tonal` button fo
 
 ### Report Timeline and Staff Response
 
-Distinguish submitted, in review, awaiting information, responded, and closed. Each event shows author type and time. The published response is visually stronger than audit details. Do not use a green completed check to mean the resident is healthy. Resident comments and professional responses must not share an ambiguous author treatment. Simulation labels remain visible.
+Distinguish submitted, in review, awaiting information, responded, and closed. The timeline is a vertical line with one node per event; staff events and resident events use different icons. Each event shows author type and time. The published response is visually stronger than audit details. Do not use a green completed check to mean the resident is healthy. Resident comments and professional responses must not share an ambiguous author treatment. Simulation labels remain visible.
 
 ### Facility List
 
@@ -345,6 +438,7 @@ Do not display reassuring medical copy as a default empty state. A successful su
 - Keep facility lists, large text, keyboard/Back behavior, and offline/error states first-class.
 - Avoid generic metric tiles, gradients, glass, decorative maps, 3D lungs, or an invented Avela health score.
 - Never use weather icons or sky color as a pollution measurement.
+- Write app text as full sentences or short labels. No semicolons, no bullet characters (•), no em dashes, and no emoji; split a list into rows or chips instead.
 - Do not claim the palette or this document has passed a rendered accessibility audit.
 
 Before UI completion, capture an actual Android build at compact width, large text (including a 200% stress check where supported), outdoor brightness (the dark palette must stay readable in sunlight), keyboard-open form, missing environmental data, long staff response, and a failed upload. Run the squint test on every screen: only the yellow button should stand out. Include TalkBack checks. Add tablet evidence only if tablet support is claimed. Browser mockups do not prove native behavior.
