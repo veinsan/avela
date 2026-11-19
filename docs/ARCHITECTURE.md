@@ -14,9 +14,9 @@
 | Public access | Cloudflare Tunnel `k01-avela` to `https://avela.stei.fun` | Live: the class route sends `/api/*` to the gateway |
 | Integration service | FastAPI, same versions, on the owner's laptop at `https://avela-int.stei.fun` (D-34) | Built in `services/integration`: snapshot push job, Veriqu and FlowGanic adapters on labelled fixtures |
 | PM2.5 source | Open-Meteo Air Quality, `cams_global` domain | Probed on 10 Nov |
-| Mobile app | React Native with Expo, React Navigation (stack and bottom tabs), React Context | Planned; versions pinned at scaffold |
+| Mobile app | React Native with Expo SDK 58, React Navigation 7 (stack and bottom tabs), React Context | Scaffolded in `apps/mobile`; versions pinned in `package.json` |
 | Mobile language | JavaScript with `ApiService.js` | Confirmed (D-28) |
-| Mobile tests | Jest with `jest-expo` and React Native Testing Library | Planned |
+| Mobile tests | Jest with `jest-expo` and React Native Testing Library | In use |
 | Release | EAS Build, Android APK | Planned |
 
 ## System Structure
@@ -73,7 +73,7 @@ Screen behavior is in [PRODUCT_FLOWS.md](PRODUCT_FLOWS.md); endpoints are in [AP
 services/core/         Built. app/ (main, care, results, environment, signal, guidance, facilities, security, keys, db, errors, seed), tests/, Dockerfile
 infra/stb/             Built. docker-compose.yml, nginx.conf, .env.example
 services/integration/  Built. app/ (main, upstream, openmeteo, partners, veriqu, flowganic), fixtures/, tests/, README.txt
-apps/mobile/           Planned. Expo app
+apps/mobile/           Built. Expo app (A-05 onward)
 docs/                  Project documentation
 README.md, CLAUDE.md   Repository front page and agent entry point
 ```

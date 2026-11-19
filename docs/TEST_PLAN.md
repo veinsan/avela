@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 26 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | 15 tests pass (A-07, A-10) |
-| Mobile unit | Jest with `jest-expo` | `apps/mobile` | Planned (A-05, A-28) |
+| Mobile unit | Jest with `jest-expo` | `apps/mobile/__tests__` | 16 tests pass (A-05) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
 | Deployment | Commands on the STB | Evidence in README.pdf | Planned (A-13) |
 
