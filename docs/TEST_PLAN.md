@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | Core API | pytest with FastAPI TestClient on a temporary database | `services/core/tests` | 26 tests pass |
 | Integration service | pytest with stubbed upstream responses | `services/integration/tests` | 15 tests pass (A-07, A-10) |
-| Mobile unit | Jest with `jest-expo` | `apps/mobile/__tests__` | 23 tests pass (A-05, A-12, A-26) |
+| Mobile unit | Jest with `jest-expo` | `apps/mobile/__tests__` | 25 tests pass (A-05, A-12, A-26, A-27) |
 | Functional and integration table | Manual steps on the installed APK against deployed services | Testing report PDF | Planned (A-28) |
 | Deployment | Commands on the STB | Evidence in README.pdf | Planned (A-13) |
 
@@ -48,8 +48,8 @@ Status: Pass (automated test passes), Partial, Planned, Stretch.
 | T-29 | The health signal hides counts from 1 to 4, leaves out cancelled reports, and returns no text, account, or facility. | US-11, NFR-10 | Pass: `test_health_signal_hides_small_counts_and_cancelled_reports` |
 | T-30 | Public endpoints: no key gives 401, a key without the scope gives 403, a valid key gives 200. | US-09 | Pass: `test_public_endpoints_need_a_scoped_key` |
 | T-31 | A snapshot older than 2 hours is marked stale in the advisory and on Beranda. | US-01 | Partial: API passes `test_old_snapshot_is_stale_and_keys_are_stored_hashed`; Beranda shows "Data tersimpan" (manual check in A-14) |
-| T-32 | A staff account completes queue, claim, ask, respond, close, and publish result on a device. | US-06, FR-16 | Planned, A-27 |
-| T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Planned, A-27 |
+| T-32 | A staff account completes queue, claim, ask, respond, close, and publish result on a device. | US-06, FR-16 | Partial: screens built; action rules pass `staff see only the actions valid for the state and their role in it`; device run in A-14 |
+| T-33 | A resident account never sees the staff tabs; a staff account cannot open Form Laporan. | FR-16 | Pass: `residents and staff get separate tab sets`; the API also refuses a staff report (`test_report_validation`) |
 | T-34 | Correcting a published result creates a new version; the owner reads the latest and the earlier one. | US-08, FR-09 | Pass (API): `test_correction_is_a_new_version_and_the_old_one_stays_readable`; screen in A-26 |
 | T-35 | A FlowGanic area code maps to the right pilot area; an unmapped code is dropped, not guessed. | US-13 | Pass (fixture codes): `test_waste_recap_maps_codes_and_drops_unmapped_ones`; agreed codes pending (Q-03) |
 | T-36 | The Laporan tab shows an update marker after a state change or a new result. | FR-17 | Partial: `update markers compare against the last time Laporan was opened`; device check in A-14 |

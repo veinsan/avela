@@ -16,10 +16,13 @@ import FacilityDetailScreen from '../screens/FacilityDetailScreen';
 import GuidanceScreen from '../screens/GuidanceScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import PublishResultScreen from '../screens/PublishResultScreen';
+import QueueScreen from '../screens/QueueScreen';
 import ReportDetailScreen from '../screens/ReportDetailScreen';
 import ReportFormScreen from '../screens/ReportFormScreen';
 import ReportsScreen from '../screens/ReportsScreen';
 import ResultScreen from '../screens/ResultScreen';
+import ReviewScreen from '../screens/ReviewScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,11 +32,12 @@ const TAB_SCREENS = {
   Beranda: [HomeScreen, 'Beranda'],
   Laporan: [ReportsScreen, 'Laporan'],
   Fasilitas: [FacilitiesScreen, 'Fasilitas'],
+  Antrean: [QueueScreen, 'Antrean'],
   Akun: [AccountScreen, 'Akun'],
 };
 
 export function tabsForRole(role) {
-  return role === 'staff' ? ['Akun'] : ['Beranda', 'Laporan', 'Fasilitas', 'Akun'];
+  return role === 'staff' ? ['Antrean', 'Akun'] : ['Beranda', 'Laporan', 'Fasilitas', 'Akun'];
 }
 
 const STACK_SCREENS = {
@@ -45,6 +49,8 @@ const STACK_SCREENS = {
   FormLaporan: [ReportFormScreen, 'Form Laporan'],
   DetailLaporan: [ReportDetailScreen, 'Detail Laporan'],
   HasilPemeriksaan: [ResultScreen, 'Hasil Pemeriksaan'],
+  TinjauLaporan: [ReviewScreen, 'Tinjau Laporan'],
+  TerbitkanHasil: [PublishResultScreen, 'Terbitkan Hasil'],
 };
 
 const emergency = () => <EmergencyButton />;

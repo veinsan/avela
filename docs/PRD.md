@@ -63,7 +63,7 @@ US-04 (optional photo attachment) is a stretch item; see section 7.
 | FR-02 | Serve the latest PM2.5 snapshot per area with unit, valid time, source, and age. | US-01 | Built: API and Beranda |
 | FR-03 | Serve guidance with sources and separate emergency information. | US-02, US-05 | Built: API, Panduan, and Darurat |
 | FR-04 | Persist symptom reports and append-only updates. | US-03 | Core API built and tested |
-| FR-06 | Staff queue, claim, information request, response with disposition, close. | US-06 | Core API built and tested; screens planned |
+| FR-06 | Staff queue, claim, information request, response with disposition, close. | US-06 | Built: API, Antrean, and Tinjau Laporan |
 | FR-07 | Show report state and timeline to the resident. | US-05 | Built: API, Laporan, and Detail Laporan |
 | FR-08 | Serve the simulated facility directory with services and opening schedule. | US-07 | Built: API, Fasilitas, and Detail Fasilitas |
 | FR-09 | Publish examination results to the report's owner; store a correction as a new version. | US-08 | Built: API with versions and Hasil Pemeriksaan |
@@ -73,7 +73,7 @@ US-04 (optional photo attachment) is a stretch item; see section 7.
 | FR-13 | Freeze an exposure context onto each report at submission. | US-10 | Built: API and the exposure panel |
 | FR-14 | Publish the area health signal with small-count suppression. | US-11, US-12 | Built: API and the Beranda row |
 | FR-15 | Accept PM2.5 snapshots pushed by the integration service. | US-01, US-10 | Built: core endpoint and integration push job |
-| FR-16 | Show staff screens only to staff accounts in the same app. | US-06 | Planned |
+| FR-16 | Show staff screens only to staff accounts in the same app. | US-06 | Built: tabs by role |
 | FR-17 | Show an in-app update marker when a report changes state or a result is published. | US-05, US-08 | Built: row markers and Laporan tab badge |
 
 FR-05 (attachments) is a stretch item. Push notifications, booking, pharmacy orders, and video consultation are not part of the product.
