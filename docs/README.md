@@ -33,6 +33,7 @@ When two documents disagree, the one in this table wins and the other gets fixed
 | [API_RESEARCH.md](API_RESEARCH.md) | Provider requests run on 10 November |
 | [SAFETY_PRIVACY.md](SAFETY_PRIVACY.md) | Clinical boundaries, synthetic data, access, and secrets |
 | [TEST_PLAN.md](TEST_PLAN.md) | Acceptance scenarios and their status |
+| `submissions/M2_Avela.docx` | M2 submission (Indonesian, styled after the DDD paper): links, Tugas 2 checklist with deploy evidence, endpoint list and example requests, app navigation and screens |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Test suites, results, functional test table, and bugs found (source of the testing report PDF) |
 | [BRANCH_PLAN.md](BRANCH_PLAN.md) | Branch names and merge rules |
 | [REFERENCES.md](REFERENCES.md) | Sources and what each one supports |

@@ -1,10 +1,24 @@
 # Documentation Validation Report
 
-**Date:** 19 November 2026 for the latest revision; earlier sections keep their own dates and describe the repository as it was then.
+**Date:** 20 November 2026 for the latest revision; earlier sections keep their own dates and describe the repository as it was then.
 
 **Scope:** Documentation checks. The only code check is the existing core test suite.
 
-## Latest Revision: Build-Out Across Core, Integration, and App (19 November 2026)
+## Latest Revision: 60/30/10 Palette (20 November 2026)
+
+The owner chose gray `#2B2D31` (60%), silver `#D9DADC` (30%), and yellow `#FFC93C` (10%) as the first step of the app redesign (D-36). DESIGN's frontmatter now holds one dark scheme with 23 color tokens; the light and dark teal tokens are gone. The theme module, the shared components (button kinds, chips, tab tint, links), `app.json` (dark interface, splash and adaptive-icon background), and the icon set follow it.
+
+Checks run:
+
+- WCAG contrast for every token pair a component uses: all pass. Lowest normal-text pair: textMuted on surfaceContainer 4.64:1. Control boundaries: outline on surface 3.69:1. Values are listed in DESIGN, Contrast and Non-Color Cues.
+- DESIGN frontmatter: every `{colors.*}` reference resolves.
+- No literal color remains in `apps/mobile/src` outside the theme module; every `color=` prop names an existing token.
+- Each screen has at most one yellow button; secondary actions are tonal, destructive confirmations use the danger container.
+- `npm test`: 25 passed; `npx expo export --platform android` builds.
+
+Not checked: the palette on a phone, in sunlight, and with TalkBack (T-24).
+
+## Earlier Revision: Build-Out Across Core, Integration, and App (19 November 2026)
 
 The owner delegated the open choices and asked for every remaining task to be built. Decisions D-28 to D-35 record the choices; the ISPU bands were read from the image of Lampiran I of Permen LHK P.14/2020, and the guidance and emergency text from Kemenkes pages (S-08 to S-10). The work is split into fourteen branches listed in the hand-off.
 
