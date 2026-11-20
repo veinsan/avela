@@ -59,6 +59,40 @@ function CategoryChip({ label }) {
   );
 }
 
+// shortcut: copies the PM2.5 band edges of ISPU_BANDS in the core (D-29) and caps the last band at 500 for drawing;
+// send the edges in the advisory payload if the bands ever change.
+const ISPU_EDGES = [0, 15.5, 55.4, 150.4, 250.4, 500];
+const ISPU_SEGMENTS = ['good', 'information', 'warning', 'danger', 'selected'];
+
+// Where a 24-hour mean sits on a scale of five equal segments, one per ISPU band, from 0 to 1.
+export function ispuPosition(mean) {
+  const v = Math.min(Math.max(mean, 0), ISPU_EDGES[5]);
+  let i = 0;
+  while (i < 4 && v > ISPU_EDGES[i + 1]) i += 1;
+  return (i + (v - ISPU_EDGES[i]) / (ISPU_EDGES[i + 1] - ISPU_EDGES[i])) / 5;
+}
+
+// The five ISPU bands in their colors with a ring at the 24-hour mean, so the chip's category has a place on a scale.
+function IspuScale({ mean, label }) {
+  const { colors } = useTheme();
+  return (
+    <View accessible accessibilityLabel={`Skala ISPU dari Baik sampai Berbahaya. Rata-rata 24 jam ${pm25(mean)}, ${label}.`}
+      style={{ gap: 6 }}>
+      <View style={{ height: 18, justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', height: 8, borderRadius: 4, overflow: 'hidden' }}>
+          {ISPU_SEGMENTS.map((tone) => <View key={tone} style={{ flex: 1, backgroundColor: colors[tone] }} />)}
+        </View>
+        <View style={{ position: 'absolute', left: `${ispuPosition(mean) * 100}%`, marginLeft: -9, width: 18, height: 18,
+          borderRadius: 9, borderWidth: 4, borderColor: colors.text, backgroundColor: colors.background }} />
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <AppText variant="caption" color="textMuted">Baik</AppText>
+        <AppText variant="caption" color="textMuted">Berbahaya</AppText>
+      </View>
+    </View>
+  );
+}
+
 // The next hours as a row of columns on the haze panel. A missing hour stays an empty slot, never a zero.
 function ForecastStrip({ points }) {
   const { colors } = useTheme();
@@ -137,6 +171,9 @@ function Condition({ advisory }) {
       )}
       {category ? (
         <CategoryChip label={category} />
+      ) : null}
+      {category && advisory.category.mean24h !== null ? (
+        <IspuScale mean={advisory.category.mean24h} label={category} />
       ) : null}
 
       <View style={{ height: 1.5, backgroundColor: colors.divider, marginVertical: spacing.xs }} />

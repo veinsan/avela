@@ -109,17 +109,20 @@ export function Button({ label, onPress, kind = 'primary', icon, loading = false
   );
 }
 
-export function TextField({ label, error, hint, multiline, style, onFocus, onBlur, inputRef, ...rest }) {
+export function TextField({ label, error, hint, multiline, style, onFocus, onBlur, inputRef, secureTextEntry, ...rest }) {
   const { colors } = useTheme();
   const [focused, setFocused] = useState(false);
+  const [hidden, setHidden] = useState(true);
   return (
     <View style={[{ gap: spacing.sm }, style]}>
       <View style={{ gap: 2 }}>
         <AppText variant="label">{label}</AppText>
         {hint ? <AppText variant="caption" color="textMuted">{hint}</AppText> : null}
       </View>
+      <View>
       <TextInput
         ref={inputRef}
+        secureTextEntry={secureTextEntry && hidden}
         accessibilityLabel={label}
         accessibilityHint={error || hint}
         placeholderTextColor={colors.textMuted}
@@ -143,9 +146,19 @@ export function TextField({ label, error, hint, multiline, style, onFocus, onBlu
             minHeight: multiline ? 120 : 52,
             textAlignVertical: multiline ? 'top' : 'center',
           },
+          secureTextEntry ? { paddingRight: 120 } : null,
         ]}
         {...rest}
       />
+      {secureTextEntry ? (
+        <Pressable accessibilityRole="button" accessibilityLabel={hidden ? 'Tampilkan kata sandi' : 'Sembunyikan kata sandi'}
+          onPress={() => setHidden(!hidden)}
+          style={{ position: 'absolute', right: 0, top: 0, bottom: 0, minWidth: MIN_TOUCH, paddingHorizontal: spacing.lg,
+            alignItems: 'center', justifyContent: 'center' }}>
+          <AppText variant="label">{hidden ? 'Tampilkan' : 'Sembunyikan'}</AppText>
+        </Pressable>
+      ) : null}
+      </View>
       {error ? (
         <AppText variant="caption" color="danger" accessibilityLiveRegion="polite">
           {error}

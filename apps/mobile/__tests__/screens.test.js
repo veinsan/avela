@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import PartnerSection from '../src/components/PartnerSection';
-import { AppText } from '../src/components/ui';
+import { AppText, TextField } from '../src/components/ui';
 import EmergencyScreen from '../src/screens/EmergencyScreen';
 import { todayHours, todayIndex } from '../src/screens/FacilitiesScreen';
-import { forecastAhead, peakPoint } from '../src/screens/HomeScreen';
+import { forecastAhead, ispuPosition, peakPoint } from '../src/screens/HomeScreen';
 
 test('a partner outage collapses to one line and hides the content', async () => {
   await render(
@@ -46,10 +46,25 @@ test('the forecast legend names the highest hour and skips missing ones', () => 
   expect(peakPoint([{ validAt: 'a', value: null }])).toBeNull();
 });
 
+test('the ISPU scale places a mean inside its own band', () => {
+  expect(ispuPosition(0)).toBe(0);
+  expect(ispuPosition(15.5)).toBeCloseTo(0.2); // top of Baik
+  expect(ispuPosition(35.45)).toBeCloseTo(0.3); // middle of Sedang
+  expect(ispuPosition(900)).toBe(1); // off the top stays at the end
+});
+
 test("today's hours use WIB and keep unknown apart from closed", async () => {
   const sundayNightUtc = Date.parse('2026-11-22T18:00:00Z'); // Monday 01.00 WIB
   expect(todayIndex(sundayNightUtc)).toBe(0);
   const facility = { schedule: [{ day: 'mon', hours: null }] };
   expect(todayHours(facility, sundayNightUtc)).toBe('Tidak diketahui');
   expect(todayHours({ schedule: null })).toBe('Tidak diketahui');
+});
+
+test('a password field starts hidden and can be revealed', async () => {
+  await render(<TextField label="Kata sandi" secureTextEntry value="rahasia" />);
+  expect(screen.getByLabelText('Kata sandi').props.secureTextEntry).toBe(true);
+  await fireEvent.press(screen.getByLabelText('Tampilkan kata sandi'));
+  expect(screen.getByLabelText('Kata sandi').props.secureTextEntry).toBe(false);
+  expect(screen.getByLabelText('Sembunyikan kata sandi')).toBeTruthy();
 });

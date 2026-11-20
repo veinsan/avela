@@ -2,6 +2,8 @@
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
 
 import { useAuth } from '../context/AuthContext';
 import { useUpdates } from '../context/UpdatesContext';
@@ -131,6 +133,9 @@ export default function RootNavigator() {
   const { status, account } = useAuth();
   const { colors } = useTheme();
   const base = DefaultTheme;
+  useEffect(() => {
+    if (status !== 'loading') SplashScreen.hide();
+  }, [status]);
   const navTheme = {
     ...base,
     dark: false,
