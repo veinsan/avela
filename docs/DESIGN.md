@@ -267,7 +267,7 @@ Show a small, horizontally readable forecast trend with time labels, PM2.5 units
 
 Use tonal surfaces and clear grouping first. A `Card` or a `RowList` group floats with a soft shadow plus a hairline (`shadow` in `ui.js`) so it reads on white and on the yellow wash alike; rows inside a group have no shadow of their own. The tab bar is the only translucent surface. A modal sheet may use native elevation to communicate a temporary layer; its backdrop must not obscure the current task's meaning. Avoid stacked or nested floating panels.
 
-Motion is functional and comes from the platform: the native stack's screen transitions and the pressed state of each control. The app adds no animation library. Any state transition stays at approximately 150-220 ms and preserves content position. Honor Android Remove animations and reduced-motion preferences with instant changes or a simple fade. No smoke particles, animated risk counters, page-load choreography, or endless pulsing urgency.
+Motion is functional and comes from the platform: the native stack's screen transitions and the pressed state of each control. The native splash stays until the fonts and the saved session are ready, at most 3 seconds, then fades out in 200 ms. The app adds no animation library. Any state transition stays at approximately 150-220 ms and preserves content position. Honor Android Remove animations and reduced-motion preferences with instant changes or a simple fade. No smoke particles, animated risk counters, page-load choreography, or endless pulsing urgency.
 
 Loading uses stable skeleton regions for initially absent content. A refresh preserves the last source-attributed content and shows a small updating indicator. Use a spinner only for a localized action in progress, not as a blank full-screen experience.
 
@@ -307,7 +307,7 @@ Include area, data kind, pollutant, unit, valid time, source, and freshness near
 
 ### Category Chip and Community Signal
 
-`categoryChip` sits beside the PM2.5 value and carries the category name in text with a dot. Its fill follows the ISPU category (D-38): `goodSurface`/`good` for Baik, `information` for Sedang, `warning` for Tidak Sehat, `danger` for Sangat Tidak Sehat, and ink with white text for Berbahaya. The color only speeds up reading; the words "mengacu ISPU" stay, and the chip describes the area forecast, not a personal risk level. It is not rendered while the category is null.
+`categoryChip` sits beside the PM2.5 value and carries the category name in text with a dot. Its fill follows the ISPU category (D-38): `goodSurface`/`good` for Baik, `information` for Sedang, `warning` for Tidak Sehat, `danger` for Sangat Tidak Sehat, and ink with white text for Berbahaya. The color only speeds up reading; the words "mengacu ISPU" stay, and the chip describes the area forecast, not a personal risk level. Under the chip, a five-segment ISPU scale in the same colors marks the 24-hour mean with an ink ring, ends labelled Baik and Berbahaya; it is hidden while the mean is null. It is not rendered while the category is null.
 
 The community signal is one caption-size row under the forecast: the 7-day report count for the area and the words "data simulasi" in the coursework build. A hidden count reads "Belum cukup data". It is never a chart, a map, or a trend arrow.
 

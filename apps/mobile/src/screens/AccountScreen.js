@@ -150,10 +150,14 @@ export default function AccountScreen({ navigation }) {
               Versi {Constants.expoConfig?.version ?? 'tidak diketahui'}
             </AppText>
           </View>
-          {account ? (
-            <Button label="Keluar" kind="tonal" icon={LogOut} onPress={signOut} style={{ borderRadius: rounded.pill }} />
-          ) : null}
         </Section>
+
+        {account ? (
+          <Section title="Sesi">
+            <AppText color="textMuted">Masuk sebagai @{account.username}.</AppText>
+            <Button label="Keluar" kind="tonal" icon={LogOut} onPress={signOut} style={{ borderRadius: rounded.pill }} />
+          </Section>
+        ) : null}
       </Screen>
     </View>
   );
