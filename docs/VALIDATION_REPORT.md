@@ -4,7 +4,19 @@
 
 **Scope:** Documentation checks. The only code check is the existing core test suite.
 
-## Latest Revision: Anti-Slop Review (20 November 2026)
+## Latest Revision: Alignment with the Udara Terang Redesign (20 November 2026)
+
+Mishael's light redesign (D-37, PR #11) replaced the dark D-36 palette in the app, DESIGN's tokens, AGENTS, and DECISIONS. The rest of the documents were checked against the merged code and aligned:
+
+- DESIGN prose contradicted the build in five places: the Overview ruled out glass while the tab bar is glass; Layout said 16-unit padding while the theme uses `gutter` 20; Navigation described a plain white bar while the active tab sits on a soft-yellow pill inside a floating glass bar; Elevation ruled out floating panels while cards float with a soft shadow; the category chip and queue rows described fills and dividers the code does not use. All five now describe the code. A building-blocks table lists the components in `ui.js`, `GlassBar.js`, and `EmergencyButton.js`; Motion now says the app adds no animation library; the closing checklist checks Reduce Transparency instead of the dark palette.
+- TEST_PLAN T-24 tests the light theme and the glass tab bar; TESTING_REPORT counts 26 Jest tests; ARCHITECTURE and the app README describe the built app and its Figma assets; TODO rows A-05 and A-14 name D-37.
+- The dark redesign branch `feat/redesign-ui` (Reanimated, Ionicons, haptics) was not merged; nothing on `main` uses those packages, and no document now claims they are in use.
+
+Checks run: `npm test` in `apps/mobile`, 26 passed; DESIGN frontmatter references resolve; relative links and task IDs as before.
+
+Left open for the owner: the Fasilitas list and Detail Fasilitas show an example distance (`dummyDistanceKm`, labelled "jarak contoh" on the detail screen and in the screen-reader label, but not visibly on the list). D-25, PRD US-07, and DESIGN's Facility List rule say the app shows no distance because it does not know the resident's location. Either the example distance is removed or a decision records it; DESIGN keeps the D-25 rule until then.
+
+## Earlier Revision: Anti-Slop Review (20 November 2026)
 
 The owner's `anti-vibecode-slop` checklist was applied to the repository in review mode, then the findings were fixed. The Markdown documents were also checked against the owner's `project-setup` guide; PRD, DESIGN, ARCHITECTURE, TODO, WORKFLOW, the skills, and both READMEs already followed it, so only stale facts were changed. At the owner's request, neither the checklist nor the local `project-setup` copy is kept in the repository or on the laptop (20 November).
 

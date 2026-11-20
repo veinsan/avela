@@ -17,7 +17,7 @@
 | --- | --- | --- |
 | Core API | `services/core`: `.venv/Scripts/python.exe -m pytest -q` | 26 passed |
 | Integration service | `services/integration`: `.venv/Scripts/python.exe -m pytest -q` | 15 passed |
-| Mobile unit and component | `apps/mobile`: `npm test` | 25 passed, 1 suite skipped (the opt-in integration suite) |
+| Mobile unit and component | `apps/mobile`: `npm test` | 26 passed, 1 suite skipped (the opt-in integration suite) |
 | Mobile API integration | `apps/mobile`: `AVELA_IT_URL=... AVELA_IT_PASSWORD=... AVELA_IT_INTEGRATION_URL=... npm test -- api.integration` against a local core and integration service | 3 passed; 24 requests reached the core |
 | Android bundle | `apps/mobile`: `npx expo export --platform android` | Bundle built |
 
