@@ -73,7 +73,7 @@ function CategoryChip({ label }) {
 // shortcut: copies the PM2.5 band edges of ISPU_BANDS in the core (D-29) and caps the last band at 500 for drawing;
 // send the edges in the advisory payload if the bands ever change.
 const ISPU_EDGES = [0, 15.5, 55.4, 150.4, 250.4, 500];
-const ISPU_SEGMENTS = ['good', 'information', 'warning', 'danger', 'selected'];
+const ISPU_SEGMENTS = ['scaleGood', 'scaleModerate', 'scaleUnhealthy', 'scaleVeryUnhealthy', 'scaleHazardous'];
 
 // Where a 24-hour mean sits on a scale of five equal segments, one per ISPU band, from 0 to 1.
 export function ispuPosition(mean) {
@@ -408,7 +408,7 @@ export default function HomeScreen({ navigation }) {
                 </View>
                 <View style={{ height: 6, borderRadius: 3, backgroundColor: colors.surface }}>
                   <View style={{ width: `${(100 * item.volumeKg) / wasteMax}%`, height: 6, borderRadius: 3,
-                    backgroundColor: colors.text }} />
+                    backgroundColor: colors.chartFill }} />
                 </View>
               </View>
             );

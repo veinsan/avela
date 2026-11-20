@@ -37,6 +37,14 @@ const colors = {
   // ISPU category Baik only (D-38); never a personal all-clear.
   good: '#1E6B3A',
   goodSurface: '#E6F4EA',
+  // Chart fills, set in OKLCH and converted to sRGB (React Native reads no oklch()).
+  // They share the sun-yellow accent's lightness and chroma, oklch(0.848 0.156 82.4); only the hue moves (D-40).
+  scaleGood: '#7CE695', // oklch(0.84 0.15 150)
+  scaleModerate: '#86CDFF', // oklch(0.82 0.1 240)
+  scaleUnhealthy: '#FEB16A', // oklch(0.82 0.126 62)
+  scaleVeryUnhealthy: '#FF7F71', // oklch(0.74 0.158 28)
+  scaleHazardous: '#76889E', // oklch(0.62 0.04 255)
+  chartFill: '#E8CD9D', // oklch(0.86 0.07 82)
   disabledSurface: '#EEF1F3',
   disabledText: '#5E6C74',
 };

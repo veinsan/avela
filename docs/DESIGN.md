@@ -30,6 +30,12 @@ colors:
   dangerPressed: '#F9D9D5'
   good: '#1E6B3A'
   goodSurface: '#E6F4EA'
+  scaleGood: '#7CE695'
+  scaleModerate: '#86CDFF'
+  scaleUnhealthy: '#FEB16A'
+  scaleVeryUnhealthy: '#FF7F71'
+  scaleHazardous: '#76889E'
+  chartFill: '#E8CD9D'
   disabledSurface: '#EEF1F3'
   disabledText: '#5E6C74'
 typography:
@@ -187,6 +193,21 @@ Status needs its own hues, kept muted so they never compete with the yellow butt
 
 The condition panel itself stays neutral and never uses the accent. Only the category chip carries a category color (D-38), and green there means the ISPU category Baik and nothing else: never a personal all-clear. A completed software action can use a check mark and text without implying medical safety.
 
+### Chart Fills in OKLCH
+
+Bars and scale segments are set in OKLCH, the CSS color space whose lightness matches what the eye sees, and converted to sRGB hex because React Native reads no `oklch()`. Every fill takes the sun-yellow accent as its anchor, `oklch(0.848 0.156 82.4)`: the same lightness and chroma, with only the hue moved to each ISPU band, so the scale reads as part of the app's palette instead of five dark status inks (D-40). The two worst bands ease down in lightness so the order still reads, and `chartFill` is a warm sand from the accent's own hue at low chroma. Change a fill by editing its OKLCH value and converting again; never hand-tune the hex.
+
+| Token | Source | sRGB |
+| --- | --- | --- |
+| `scaleGood` | `oklch(0.84 0.15 150)` | `#7CE695` |
+| `scaleModerate` | `oklch(0.82 0.1 240)` | `#86CDFF` |
+| `scaleUnhealthy` | `oklch(0.82 0.126 62)` | `#FEB16A` |
+| `scaleVeryUnhealthy` | `oklch(0.74 0.158 28)` | `#FF7F71` |
+| `scaleHazardous` | `oklch(0.62 0.04 255)` | `#76889E` |
+| `chartFill` | `oklch(0.86 0.07 82)` | `#E8CD9D` |
+
+The fills support text and never carry meaning alone: the category name, the ink ring on the scale, and the values beside each bar do. Except `scaleHazardous`, they sit below 3:1 against white on purpose.
+
 ### Semantic Mapping
 
 | Meaning | Visual treatment | Required label |
@@ -307,7 +328,7 @@ Include area, data kind, pollutant, unit, valid time, source, and freshness near
 
 ### Category Chip and Community Signal
 
-`categoryChip` sits beside the PM2.5 value and carries the category name in ink text with a dot in the category color. Its fill follows the ISPU category (D-38): `goodSurface`/`good` for Baik, `information` for Sedang, `warning` for Tidak Sehat, `danger` for Sangat Tidak Sehat, and ink with white text for Berbahaya. The color only speeds up reading; the words "mengacu ISPU" stay, and the chip describes the area forecast, not a personal risk level. Under the chip, a five-segment ISPU scale in the same colors marks the 24-hour mean with an ink ring, ends labelled Baik and Berbahaya; it is hidden while the mean is null. It is not rendered while the category is null.
+`categoryChip` sits beside the PM2.5 value and carries the category name in ink text with a dot in the category color. Its fill follows the ISPU category (D-38): `goodSurface`/`good` for Baik, `information` for Sedang, `warning` for Tidak Sehat, `danger` for Sangat Tidak Sehat, and ink with white text for Berbahaya. The color only speeds up reading; the words "mengacu ISPU" stay, and the chip describes the area forecast, not a personal risk level. Under the chip, a five-segment ISPU scale in the OKLCH fills of the same hues marks the 24-hour mean with an ink ring, ends labelled Baik and Berbahaya; it is hidden while the mean is null. It is not rendered while the category is null.
 
 The community signal is one caption-size row inside the "Tentang data" toggle under the forecast: the 7-day report count for the area and the words "data simulasi" in the coursework build. A hidden count reads "Belum cukup data". It is never a chart, a map, or a trend arrow.
 
