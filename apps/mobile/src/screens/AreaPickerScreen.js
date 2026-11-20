@@ -1,6 +1,6 @@
-import { View } from 'react-native';
+import { Check, MapPin } from 'lucide-react-native';
 
-import { AppText, Divider, LoadingView, Row, Screen, SimulationLabel } from '../components/ui';
+import { Icon, LoadingView, PageHeader, Row, RowList, Screen, SimulationLabel } from '../components/ui';
 import { useArea } from '../context/AreaContext';
 import { useLoad } from '../hooks/useLoad';
 import { listAreas } from '../services/ApiService';
@@ -24,28 +24,24 @@ export default function AreaPickerScreen({ navigation }) {
 
   return (
     <Screen>
-      <AppText variant="headline" accessibilityRole="header">
-        Pilih wilayah
-      </AppText>
-      <AppText color="textMuted" style={{ marginTop: spacing.sm }}>
-        Avela mencakup dua wilayah percontohan. Aplikasi tidak meminta lokasi Anda.
-      </AppText>
+      <PageHeader title="Pilih wilayah"
+        body="Avela mencakup dua wilayah percontohan. Aplikasi tidak meminta lokasi Anda." />
       {loading ? <LoadingView /> : null}
-      <View style={{ marginTop: spacing.lg }}>
+      <RowList>
         {items.map((item) => (
-          <View key={item.id}>
-            <Row
-              title={item.name}
-              subtitle={item.province}
-              meta={area?.id === item.id ? 'Wilayah dipilih' : undefined}
-              onPress={() => choose(item)}
-              accessibilityLabel={`${item.name}, ${item.province}${area?.id === item.id ? ', dipilih' : ''}`}
-            />
-            <Divider />
-          </View>
+          <Row
+            key={item.id}
+            icon={MapPin}
+            title={item.name}
+            subtitle={item.province}
+            meta={area?.id === item.id ? 'Wilayah dipilih' : undefined}
+            trailing={area?.id === item.id ? <Icon as={Check} size={20} strokeWidth={2.25} /> : null}
+            onPress={() => choose(item)}
+            accessibilityLabel={`${item.name}, ${item.province}${area?.id === item.id ? ', dipilih' : ''}`}
+          />
         ))}
-      </View>
-      <SimulationLabel text="Nilai PM2.5 adalah prakiraan model untuk wilayah, bukan pengukuran di rumah Anda." />
+      </RowList>
+      <SimulationLabel style={{ marginTop: spacing.lg }} text="Nilai PM2.5 adalah prakiraan model untuk wilayah, bukan pengukuran di rumah Anda." />
     </Screen>
   );
 }

@@ -1,53 +1,68 @@
 // Mirrors the frontmatter of docs/DESIGN.md (D-09). Change a token there first, then here, in the same change.
-// One dark scheme on the 60/30/10 rule (D-36): gray carries the screen, silver the text, and yellow appears only on
-// the one primary button per screen. The app does not follow the system light/dark setting.
+// One light scheme, "udara terang" (D-37, replaces the dark D-36 palette): white paper carries the screen, slate ink
+// the text, and the sun yellow appears only on the one primary button per screen. The app does not follow the
+// system light/dark setting.
 
 const colors = {
-  // 60%: gray and its lighter steps
-  background: '#2B2D31',
-  surface: '#33363B',
-  surfaceContainer: '#3C3F45',
-  tonal: '#45484E',
-  tonalPressed: '#50535A',
-  divider: '#46494F',
-  // 30%: silver and its dimmer steps
-  text: '#D9DADC',
-  textMuted: '#A9ACB1',
-  outline: '#8B8E94',
-  focus: '#D9DADC',
-  selected: '#D9DADC',
-  onSelected: '#2B2D31',
-  // 10%: yellow, only the primary button fill
-  accent: '#FFC93C',
-  accentPressed: '#E8B42F',
-  onAccent: '#2B2D31',
+  // 60%: white paper and its cool mist steps
+  background: '#FFFFFF',
+  surface: '#F4F7F8',
+  surfaceContainer: '#E9F0F3',
+  tonal: '#E9EEF1',
+  tonalPressed: '#DCE3E7',
+  divider: '#E3E9EC',
+  // 30%: slate ink and its softer steps
+  text: '#16252D',
+  textMuted: '#52626B',
+  outline: '#7A8A93',
+  focus: '#16252D',
+  selected: '#16252D',
+  onSelected: '#FFFFFF',
+  // 10%: sun yellow, only the primary button fill
+  accent: '#FFC23D',
+  accentPressed: '#F2B01E',
+  onAccent: '#16252D',
+  // Soft yellow: "you are here" and warmth (active tab, icon tiles, the morning wash on Beranda). Never an action fill,
+  // never a status, never tied to a pollution value.
+  accentSoft: '#FFF3CC',
+  accentWash: '#FFF8E5',
   // Status, outside the 60/30/10 and always paired with text
-  information: '#9DC1F2',
-  informationSurface: '#2E3A4B',
-  warning: '#F2A65E',
-  warningSurface: '#45372A',
-  danger: '#FF9A9A',
-  dangerSurface: '#4A2F33',
-  disabledSurface: '#3A3C41',
-  disabledText: '#ACAFB4',
+  information: '#1F5F99',
+  informationSurface: '#EAF2FA',
+  warning: '#8A4B00',
+  warningSurface: '#FFF2DF',
+  danger: '#B3261E',
+  dangerSurface: '#FDECEA',
+  disabledSurface: '#EEF1F3',
+  disabledText: '#5E6C74',
+};
+
+// Custom fonts need one family per weight on Android, so each role names its exact face.
+export const fonts = {
+  display: 'BricolageGrotesque_600SemiBold',
+  displayBold: 'BricolageGrotesque_700Bold',
+  body: 'Onest_400Regular',
+  bodyMedium: 'Onest_500Medium',
+  bodyStrong: 'Onest_600SemiBold',
 };
 
 export const typography = {
-  display: { fontSize: 40, fontWeight: '600', lineHeight: 48 },
-  headline: { fontSize: 28, fontWeight: '600', lineHeight: 36 },
-  title: { fontSize: 22, fontWeight: '600', lineHeight: 28 },
-  body: { fontSize: 16, fontWeight: '400', lineHeight: 24 },
-  bodyStrong: { fontSize: 16, fontWeight: '600', lineHeight: 24 },
-  label: { fontSize: 14, fontWeight: '600', lineHeight: 20 },
-  caption: { fontSize: 14, fontWeight: '400', lineHeight: 20 },
+  display: { fontFamily: fonts.display, fontSize: 64, lineHeight: 68, letterSpacing: -2 },
+  headline: { fontFamily: fonts.display, fontSize: 30, lineHeight: 36, letterSpacing: -0.6 },
+  title: { fontFamily: fonts.display, fontSize: 21, lineHeight: 27, letterSpacing: -0.3 },
+  body: { fontFamily: fonts.body, fontSize: 16, lineHeight: 24 },
+  bodyStrong: { fontFamily: fonts.bodyStrong, fontSize: 16, lineHeight: 24 },
+  label: { fontFamily: fonts.bodyMedium, fontSize: 14, lineHeight: 20 },
+  caption: { fontFamily: fonts.body, fontSize: 14, lineHeight: 20 },
 };
 
-export const rounded = { small: 8, control: 12, panel: 20, sheet: 24 };
+export const rounded = { small: 10, control: 14, panel: 24, sheet: 28, pill: 999 };
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, section: 40 };
+export const gutter = 20;
 export const MIN_TOUCH = 48;
 
 export { colors };
 
 export function useTheme() {
-  return { colors, dark: true };
+  return { colors, dark: false };
 }

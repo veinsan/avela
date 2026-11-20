@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react';
 import { View } from 'react-native';
 
-import { AppText, Button, Chip, ErrorView, LoadingView, Panel, Screen, Section, TextField } from '../components/ui';
+import { AppText, Button, Checkbox, Chip, ErrorView, LoadingView, PageHeader, Panel, Screen, Section, TextField }
+  from '../components/ui';
+import { Send } from 'lucide-react-native';
 import { useArea } from '../context/AreaContext';
 import { useUpdates } from '../context/UpdatesContext';
 import { useLoad } from '../hooks/useLoad';
@@ -65,12 +67,10 @@ export default function ReportFormScreen({ navigation }) {
   if (step === 'review') {
     return (
       <Screen>
-        <AppText variant="headline" accessibilityRole="header">
-          Periksa laporan
-        </AppText>
-        <Panel style={{ marginTop: spacing.lg }}>
+        <PageHeader title="Periksa laporan" body="Pastikan isiannya benar sebelum dikirim ke petugas." />
+        <Panel style={{ gap: spacing.xs }}>
           <AppText variant="caption" color="textMuted">Wilayah dan fasilitas</AppText>
-          <AppText>{areaName} · {facilityName}</AppText>
+          <AppText>{facilityName}, {areaName}</AppText>
           <AppText variant="caption" color="textMuted">Keluhan</AppText>
           <AppText>{form.complaint.trim()}</AppText>
           <AppText variant="caption" color="textMuted">Mulai</AppText>
@@ -89,7 +89,8 @@ export default function ReportFormScreen({ navigation }) {
         </View>
         {failure ? <ErrorView message={failure.message} /> : null}
         <Section>
-          <Button label={failure && failure.retryable ? 'Kirim ulang' : 'Kirim laporan'} onPress={send} loading={sending} />
+          <Button label={failure && failure.retryable ? 'Kirim ulang' : 'Kirim laporan'} icon={Send} onPress={send}
+            loading={sending} />
           <Button label="Ubah isian" kind="tonal" disabled={sending} onPress={() => setStep('edit')} />
         </Section>
       </Screen>
@@ -98,14 +99,10 @@ export default function ReportFormScreen({ navigation }) {
 
   return (
     <Screen>
-      <AppText variant="headline" accessibilityRole="header">
-        Laporan keluhan
-      </AppText>
-      <AppText color="textMuted" style={{ marginTop: spacing.sm }}>
-        Semua isian wajib, kecuali riwayat. Laporan dibaca petugas fasilitas simulasi.
-      </AppText>
+      <PageHeader title="Laporan keluhan"
+        body="Semua isian wajib, kecuali riwayat. Laporan dibaca petugas fasilitas simulasi." />
 
-      <Section title="Wilayah">
+      <Section title="Wilayah" style={{ marginTop: spacing.lg }}>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }} accessibilityRole="radiogroup">
           {PILOT_AREAS.map((a) => (
             <Chip key={a.id} label={a.name} selected={form.areaId === a.id}
@@ -150,9 +147,9 @@ export default function ReportFormScreen({ navigation }) {
         <TextField label="Riwayat yang relevan (opsional)" hint="Contoh: asma, sedang hamil, obat rutin." multiline
           value={form.additionalContext} onChangeText={(additionalContext) => set({ additionalContext })}
           error={errors.additionalContext} maxLength={2000} />
-        <Chip
+        <Checkbox
           label="Saya paham laporan ini bukan layanan darurat dan petugasnya simulasi."
-          selected={form.consent}
+          checked={form.consent}
           onPress={() => set({ consent: !form.consent })}
         />
         {errors.consent ? <AppText variant="caption" color="danger">{errors.consent}</AppText> : null}

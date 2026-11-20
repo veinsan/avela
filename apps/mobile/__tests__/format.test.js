@@ -55,3 +55,11 @@ test('update markers compare against the last time Laporan was opened', () => {
   expect(hasUpdate({ updatedAt: '2026-11-20T01:00:00Z' }, '2026-11-20T02:00:00Z')).toBe(false);
   expect(hasUpdate({ publishedAt: '2026-11-20T03:00:00Z' }, null)).toBe(false);
 });
+
+test('dummy facility distance is stable and said in m or km', () => {
+  const { distanceLabel, dummyDistanceKm } = require('../src/utils/format');
+  expect(dummyDistanceKm('demo-facility-001')).toBe(dummyDistanceKm('demo-facility-001'));
+  expect(distanceLabel(0.43)).toBe('450 m');
+  expect(distanceLabel(2.35)).toMatch(/^2,[34] km$/);
+  expect(distanceLabel(null)).toBe('jarak tidak diketahui');
+});

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Clock } from 'lucide-react-native';
 import { View } from 'react-native';
 
 import { ExposurePanel, ReportFacts, StaffResponse, StateHeading, Timeline, latestEvent } from '../components/ReportParts';
@@ -59,8 +60,8 @@ export default function ReportDetailScreen({ route, navigation }) {
           <AppText variant="caption" color="textMuted">Dikirim {formatTime(r.createdAt)}</AppText>
           <SimulationLabel />
           {r.state === 'submitted' ? (
-            <Panel tone="info" style={{ marginTop: spacing.lg }}>
-              <AppText>Laporan terkirim. Belum ditinjau petugas.</AppText>
+            <Panel tone="info" icon={Clock} style={{ marginTop: spacing.lg }}>
+              <AppText color="information">Laporan terkirim. Belum ditinjau petugas.</AppText>
             </Panel>
           ) : null}
           {actionError ? <ErrorView message={actionError} /> : null}

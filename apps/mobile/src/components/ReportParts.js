@@ -1,8 +1,10 @@
 import { View } from 'react-native';
 
-import { AppText, Divider, Panel } from './ui';
+import { CloudFog, MessageSquare } from 'lucide-react-native';
+
+import { AppText, Panel } from './ui';
 import { COURSES, EVENT_KINDS, ROLES, dispositionLabel, formatTime, pm25, stateLabel } from '../utils/format';
-import { spacing } from '../theme';
+import { colors, spacing } from '../theme';
 
 export const latestEvent = (report, kind) => [...(report.events || [])].reverse().find((e) => e.kind === kind);
 
@@ -10,15 +12,15 @@ export const latestEvent = (report, kind) => [...(report.events || [])].reverse(
 export function ExposurePanel({ report }) {
   const ctx = report.exposureContext;
   return (
-    <Panel tone="info">
+    <Panel tone="info" icon={CloudFog}>
       <AppText variant="bodyStrong">Konteks paparan</AppText>
       {ctx ? (
         <>
           <AppText>
-            Rata-rata {pm25(ctx.meanPm25)} · puncak {pm25(ctx.peakPm25)}
+            Rata-rata {pm25(ctx.meanPm25)}, puncak {pm25(ctx.peakPm25)}
           </AppText>
           <AppText variant="caption" color="textMuted">
-            {formatTime(ctx.windowStart)} sampai {formatTime(ctx.windowEnd)} · {ctx.points} titik jam · Sumber:{' '}
+            {formatTime(ctx.windowStart)} sampai {formatTime(ctx.windowEnd)}, {ctx.points} titik jam. Sumber:{' '}
             {ctx.provider === 'open-meteo' ? 'Open-Meteo, CAMS' : ctx.provider}
           </AppText>
         </>
@@ -36,12 +38,12 @@ export function StaffResponse({ report }) {
   const response = latestEvent(report, 'staff_response');
   if (!response) return null;
   return (
-    <Panel tone="surface" style={{ borderWidth: 1, borderColor: 'transparent' }}>
+    <Panel tone="surface" icon={MessageSquare}>
       <AppText variant="title">Tanggapan petugas</AppText>
       <AppText variant="bodyStrong">{dispositionLabel(response.disposition)}</AppText>
       <AppText>{response.text}</AppText>
       <AppText variant="caption" color="textMuted">
-        {response.authorName} · {formatTime(response.createdAt)} · Petugas simulasi
+        {response.authorName}, {formatTime(response.createdAt)}. Petugas simulasi
       </AppText>
     </Panel>
   );
@@ -66,19 +68,30 @@ export function ReportFacts({ report }) {
   );
 }
 
+// Events in order, joined by a thin line; the newest sits at the bottom with a filled dot.
 export function Timeline({ report }) {
+  const events = report.events || [];
   return (
     <View accessibilityLabel="Riwayat laporan">
-      {(report.events || []).map((e) => (
-        <View key={e.id} style={{ paddingVertical: spacing.sm, gap: 2 }}>
-          <AppText variant="bodyStrong">{EVENT_KINDS[e.kind] || e.kind}</AppText>
-          {e.text ? <AppText>{e.text}</AppText> : null}
-          <AppText variant="caption" color="textMuted">
-            {ROLES[e.authorRole] || e.authorRole}: {e.authorName} · {formatTime(e.createdAt)}
-          </AppText>
-          <Divider />
-        </View>
-      ))}
+      {events.map((e, i) => {
+        const last = i === events.length - 1;
+        return (
+          <View key={e.id} style={{ flexDirection: 'row', gap: spacing.md }}>
+            <View style={{ width: 12, alignItems: 'center' }}>
+              <View style={{ width: 12, height: 12, borderRadius: 6, marginTop: 6, borderWidth: 2,
+                borderColor: colors.text, backgroundColor: last ? colors.text : colors.background }} />
+              {last ? null : <View style={{ flex: 1, width: 2, backgroundColor: colors.divider, marginTop: 2 }} />}
+            </View>
+            <View style={{ flex: 1, gap: 2, paddingBottom: last ? 0 : spacing.lg }}>
+              <AppText variant="bodyStrong">{EVENT_KINDS[e.kind] || e.kind}</AppText>
+              {e.text ? <AppText>{e.text}</AppText> : null}
+              <AppText variant="caption" color="textMuted">
+                {ROLES[e.authorRole] || e.authorRole} {e.authorName}, {formatTime(e.createdAt)}
+              </AppText>
+            </View>
+          </View>
+        );
+      })}
     </View>
   );
 }

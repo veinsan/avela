@@ -22,13 +22,16 @@ The root `CLAUDE.md` imports this file. Agents that do not read `CLAUDE.md` must
 | React Navigation 7 | native-stack 7.21.1, bottom-tabs 7.22.0 |
 | expo-secure-store 58.0.3 | Session token and chosen area on the device |
 | expo-splash-screen 58.0.14 | Splash configured in `app.json`; release APK through EAS (`eas.json`) |
+| expo-font 58.0.12, @expo-google-fonts/bricolage-grotesque 0.4.1, @expo-google-fonts/onest 0.4.2 | Bundled app fonts (D-37) |
+| react-native-svg 15.16.0, lucide-react-native 1.76.0 | Outline icons (D-37); Jest maps Lucide to its CommonJS build |
+| expo-glass-effect 58.0.5, expo-blur 58.0.6 | Glass tab bar (D-37); blur fallback before iOS 26 |
 | Jest 30.5.2, jest-expo 58.0.15, Testing Library 14.1.0 | Mobile tests |
 
 Add a dependency only when the standard library or an installed package cannot do the job.
 
 ## Design System
 
-[DESIGN.md](DESIGN.md) holds the tokens and component rules. The mobile theme module, `apps/mobile/src/theme/index.js`, must mirror the frontmatter. The palette is one dark scheme on the 60/30/10 rule (D-36): gray carries the screen, silver the text, and the yellow `accent` fills only the one primary button per screen; never use it for tabs, chips, links, text, or status. Change a token in DESIGN.md first, then in the theme module, in the same change. App text is Indonesian; project documents are English, except the DDD paper.
+[DESIGN.md](DESIGN.md) holds the tokens and component rules. The mobile theme module, `apps/mobile/src/theme/index.js`, must mirror the frontmatter. The palette is one light scheme on the 60/30/10 rule (D-37): white and mist carry the screen, slate ink the text, and the sun-yellow `accent` fills only the one primary button per screen; never use it for tabs, chips, links, text, or status. Type is Bricolage Grotesque (headings, the PM2.5 value) and Onest (everything else); icons are Lucide. Change a token in DESIGN.md first, then in the theme module, in the same change. App text is Indonesian; project documents are English, except the DDD paper.
 
 ## Project Structure
 
@@ -81,7 +84,7 @@ One bounded context per module in `services/core/app`. A new context gets its ow
 - [x] Facility directory with services and schedule.
 - [x] Versioned examination results.
 - [x] Integration service: snapshot push and partner adapters (partners on labelled fixtures until A-03).
-- [x] Mobile app: 15 resident and staff screens, login, `ApiService.js`, validated report form, update markers, 60/30/10 dark theme (D-36). Checked on one phone; the staff flow on a device is pending (T-32).
+- [x] Mobile app: 15 resident and staff screens, login, `ApiService.js`, validated report form, update markers, light "udara terang" theme (D-37). Checked on one phone; the staff flow on a device is pending (T-32).
 - [x] Deployment on the STB: core v0.2 at `https://avela.stei.fun/api` since 19 November.
 
 Keep the behavior of checked features unless the task says to change it.
@@ -105,7 +108,7 @@ Run from each directory in Git Bash. Success is every test passing.
 | --- | --- | --- | --- |
 | Core | `services/core` | `uv venv .venv && uv pip install --python .venv/Scripts/python.exe -r requirements-dev.txt`, then `.venv/Scripts/python.exe -m pytest -q` | 26 |
 | Integration service | `services/integration` | The same two commands | 15 |
-| Mobile app | `apps/mobile` | `npm install`, then `npm test` | 25 (3 integration tests skipped) |
+| Mobile app | `apps/mobile` | `npm install`, then `npm test` | 26 (3 integration tests skipped) |
 | Android bundle | `apps/mobile` | `npx expo export --platform android` | Builds; catches import errors without a device |
 
 Notes:
