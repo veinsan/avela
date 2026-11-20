@@ -16,7 +16,7 @@ export default function EmergencyButton() {
       hitSlop={6}
       style={({ pressed }) => ({ minHeight: MIN_TOUCH - 8, minWidth: MIN_TOUCH, justifyContent: 'center',
         alignItems: 'center', flexDirection: 'row', gap: 6, paddingHorizontal: spacing.md, marginRight: spacing.xs,
-        borderRadius: rounded.pill, backgroundColor: pressed ? '#F9D9D5' : colors.dangerSurface })}
+        borderRadius: rounded.pill, backgroundColor: pressed ? colors.dangerPressed : colors.dangerSurface })}
     >
       <Phone size={16} color={colors.danger} strokeWidth={2} />
       <AppText variant="label" color="danger">

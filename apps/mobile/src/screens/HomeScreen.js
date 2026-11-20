@@ -69,11 +69,11 @@ function Condition({ advisory }) {
   const category = advisory.category && advisory.category.label;
   const ahead = forecastAhead(advisory.series);
   return (
-    <View style={{ padding: spacing.xl, gap: spacing.md, borderRadius: 28, borderWidth: 1.5, borderColor: colors.divider,
+    <View style={{ padding: spacing.xl, gap: spacing.md, borderRadius: rounded.panel, borderWidth: 1.5, borderColor: colors.divider,
       backgroundColor: colors.background }}>
       <AppText variant="label" color="textMuted">PM2.5 jam ini, prakiraan model</AppText>
       {current && current.value !== null ? (
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm }}
+        <View style={{ flexDirection: 'row', alignItems: 'flex-end', flexWrap: 'wrap', gap: spacing.sm }}
           accessible accessibilityLabel={`PM2.5 ${pm25(current.value)}`}>
           <AppText variant="display" style={{ fontVariant: ['tabular-nums'] }}>
             {Number(current.value).toFixed(1).replace('.', ',')}

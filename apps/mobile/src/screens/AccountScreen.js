@@ -2,9 +2,11 @@
 import Constants from 'expo-constants';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BadgeCheck, LogIn, LogOut, MapPin, Phone } from 'lucide-react-native';
+import { BadgeCheck, LogIn, LogOut, MapPin } from 'lucide-react-native';
 
-import { AppText, Button, Card, Icon, RoundButton, Row, RowList, Screen, Section, SimulationLabel, SkyBackdrop,
+import EmergencyButton from '../components/EmergencyButton';
+
+import { AppText, Button, Card, Icon, Row, RowList, Screen, Section, SimulationLabel, SkyBackdrop,
   StatRow, Tag } from '../components/ui';
 import { useArea } from '../context/AreaContext';
 import { useAuth } from '../context/AuthContext';
@@ -24,14 +26,14 @@ const ICONS = {
 const initials = (name) => (name || '?').split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const ANSWERED = ['responded', 'closed'];
 
-function TopBar({ onEmergency }) {
+// Same top bar as Beranda: the title on the left, the labelled Darurat pill on the right.
+function TopBar() {
   const insets = useSafeAreaInsets();
   return (
     <View style={{ paddingTop: insets.top + spacing.sm, flexDirection: 'row', alignItems: 'center',
       justifyContent: 'space-between' }}>
-      <View style={{ width: 48 }} />
       <AppText variant="title" accessibilityRole="header">Profil</AppText>
-      <RoundButton icon={Phone} tone="danger" accessibilityLabel="Darurat: nomor gawat darurat" onPress={onEmergency} />
+      <EmergencyButton />
     </View>
   );
 }
@@ -67,7 +69,7 @@ export default function AccountScreen({ navigation }) {
     <View style={{ flex: 1 }}>
       <Screen>
         <SkyBackdrop />
-        <TopBar onEmergency={() => navigation.navigate('Darurat')} />
+        <TopBar />
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.lg, marginTop: spacing.xl }}>
           <Avatar name={account ? account.displayName : '?'} verified={!!account} />

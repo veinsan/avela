@@ -27,6 +27,7 @@ colors:
   warningSurface: '#FFF2DF'
   danger: '#B3261E'
   dangerSurface: '#FDECEA'
+  dangerPressed: '#F9D9D5'
   disabledSurface: '#EEF1F3'
   disabledText: '#5E6C74'
 typography:
@@ -205,7 +206,7 @@ AQI colors and category names require a separate, named standard and review. Do 
 
 Target at least 4.5:1 for normal text and 3:1 for large text and essential control boundaries. Outline identifies controls; divider is decorative and must not be the only field boundary. Use text, icon, and placement alongside color. Disabled controls retain a readable reason. Review theme pairs numerically and on-device; a token check alone does not certify accessibility.
 
-Computed on 20 November 2026 for D-37 (WCAG relative luminance): text on background 15.71:1, on surfaceContainer 13.63:1, on tonal 13.44:1; textMuted on background 6.33:1, on surface 5.88:1, on surfaceContainer 5.49:1; onAccent on accent 9.75:1, on accentPressed 8.23:1; outline against background 3.57:1 and surface 3.32:1; information, warning, and danger on their surfaces 5.89, 6.16, and 5.72:1; danger on background 6.54:1. The yellow fill against white is below 3:1, so a primary button is identified by its dark label and its position, never by its fill alone.
+Computed on 20 November 2026 for D-37 (WCAG relative luminance): text on background 15.71:1, on surfaceContainer 13.63:1, on tonal 13.44:1; textMuted on background 6.33:1, on surface 5.88:1, on surfaceContainer 5.49:1; onAccent on accent 9.75:1, on accentPressed 8.23:1; outline against background 3.57:1 and surface 3.32:1; information, warning, and danger on their surfaces 5.89, 6.16, and 5.72:1; danger on background 6.54:1, on dangerPressed 4.95:1. The yellow fill against white is below 3:1, so a primary button is identified by its dark label and its position, never by its fill alone.
 
 ## Typography
 
@@ -252,7 +253,7 @@ Keep environmental data readable without signing in. Private reports and results
 
 ### Navigation and Adaptation
 
-Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. The tab bar floats as a glass pill (see Shapes). Each tab stacks a Lucide icon over its label; the active tab is ink with a heavier stroke (2.25) on a soft-yellow `accentSoft` pill that wraps icon and label, and inactive tabs use `textMuted`. The full `accent` never colors a tab. The Laporan tab shows a count badge for update markers. Beranda and Akun draw their own top bar with a round Darurat button; the other screens use the native header with the Darurat button on the right. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
+Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. The tab bar floats as a glass pill (see Shapes). Each tab stacks a Lucide icon over its label; the active tab is ink with a heavier stroke (2.25) on a soft-yellow `accentSoft` pill that wraps icon and label, and inactive tabs use `textMuted`. The full `accent` never colors a tab. The Laporan tab shows a count badge for update markers. Beranda and Akun draw their own top bar with the labelled Darurat pill (`EmergencyButton`), the same control as in the native headers; the other screens use the native header with the Darurat button on the right. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
 
 At medium width (proposed 600-839 logical units), consider a navigation rail and preserve comfortable reading measure. At expanded width (840+), a staff queue may use master/detail panes if that surface is approved. Do not stretch paragraphs across the whole display. Width thresholds are implementation proposals to test, not evidence of tablet support.
 
@@ -293,7 +294,6 @@ These are the component contracts; `apps/mobile/src/components/ui.js` implements
 | `Panel` | A notice in the neutral, info, warning, or danger tone, with an icon |
 | `StatusPill`, `Tag` | A report state in words; a short label in a soft-yellow, information, or mist pill |
 | `StatRow` | Three counts side by side on Akun; a missing count is said in words |
-| `RoundButton` | A round icon button, such as Darurat in the Beranda and Akun top bars |
 | `EmptyView`, `LoadingView`, `ErrorView` | An empty screen with an optional spot illustration and the next step; loading; an error with retry |
 | `SimulationLabel` | The "Simulasi tugas kuliah" line |
 | `SkyBackdrop`, `SunMark` | Decoration only: the soft-yellow sky behind the top of a page and the sun-and-haze motif; hidden from screen readers and never driven by data |
