@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { ActivityIndicator, Image, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View }
   from 'react-native';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { AlertTriangle, Check, ChevronRight, FlaskConical } from 'lucide-react-native';
 
 import { MIN_TOUCH, gutter, rounded, spacing, typography, useTheme } from '../theme';
@@ -178,8 +177,7 @@ export function Chip({ label, selected, onPress }) {
       style={({ pressed }) => [
         styles.chip,
         {
-          borderColor: selected ? colors.selected : colors.divider,
-          backgroundColor: selected ? colors.selected : pressed ? colors.surface : colors.background,
+          backgroundColor: selected ? colors.selected : pressed ? colors.tonalPressed : colors.tonal,
         },
       ]}
     >
@@ -195,12 +193,12 @@ export function Panel({ tone = 'neutral', icon, children, style }) {
   const { colors } = useTheme();
   const bg = {
     neutral: colors.surfaceContainer,
-    info: colors.informationSurface,
+    info: colors.surface,
     warning: colors.warningSurface,
     danger: colors.dangerSurface,
     surface: colors.surface,
   }[tone];
-  const iconColor = { info: 'information', warning: 'warning', danger: 'danger' }[tone] || 'text';
+  const iconColor = { info: 'textMuted', warning: 'warning', danger: 'danger' }[tone] || 'text';
   const body = <View style={{ gap: spacing.sm, flex: icon ? 1 : undefined }}>{children}</View>;
   return (
     <View style={[styles.panel, { backgroundColor: bg, borderRadius: tone === 'neutral' ? rounded.panel : rounded.control },
@@ -285,13 +283,13 @@ export function Row({ title, subtitle, meta, onPress, marker, icon, image, trail
           <Image source={image} style={{ width: 34, height: 34 }} accessibilityIgnoresInvertColors />
         </View>
       ) : icon ? (
-        <View style={[styles.rowIcon, { backgroundColor: colors.accentSoft }]}>
+        <View style={[styles.rowIcon, { backgroundColor: colors.surface }]}>
           <Icon as={icon} size={20} />
         </View>
       ) : null}
       <View style={{ flex: 1, gap: 4 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-          {marker ? <View accessibilityLabel="Ada pembaruan" style={[styles.marker, { backgroundColor: colors.information }]} />
+          {marker ? <View accessibilityLabel="Ada pembaruan" style={[styles.marker, { backgroundColor: colors.text }]} />
             : null}
           <AppText variant="bodyStrong" numberOfLines={2} style={{ flex: 1 }}>
             {title}
@@ -306,63 +304,38 @@ export function Row({ title, subtitle, meta, onPress, marker, icon, image, trail
   );
 }
 
-// A group of rows on one white card, hairlines between rows (one card per group, not per row).
+// Rows of one kind straight on the page with hairlines between them, and no card around the group (D-39). The
+// hairline starts under the text when the row leads with an icon.
 export function RowList({ children }) {
   const items = (Array.isArray(children) ? children : [children]).flat().filter(Boolean);
   return (
-    <Card style={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.xs }}>
+    <View>
       {items.map((child, i) => (
         <View key={child.key ?? i}>
-          {i ? <Divider inset={56} /> : null}
+          {i ? <Divider inset={child.props.icon || child.props.image ? 56 : 0} /> : null}
           {child}
         </View>
       ))}
-    </Card>
+    </View>
   );
 }
 
-// A floating white surface: soft shadow plus a hairline, so it reads on white and on the yellow wash alike.
+// A quiet grouped surface: mist fill, no border, no shadow. Only the condition summary and the tab bar float (D-39).
 export function Card({ children, style }) {
   const { colors } = useTheme();
-  return (
-    <View style={[{ backgroundColor: colors.background, borderRadius: rounded.panel, borderWidth: 1, borderColor: colors.divider },
-      shadow, style]}>
-      {children}
-    </View>
-  );
+  return <View style={[{ backgroundColor: colors.surface, borderRadius: rounded.panel }, style]}>{children}</View>;
 }
 
 export const shadow = Platform.select({
-  ios: { shadowColor: '#16252D', shadowOpacity: 0.07, shadowRadius: 16, shadowOffset: { width: 0, height: 6 } },
+  ios: { shadowColor: '#16252D', shadowOpacity: 0.06, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
   android: { elevation: 2 },
-  default: { boxShadow: '0px 6px 16px rgba(22, 37, 45, 0.07)' },
+  default: { boxShadow: '0px 8px 24px rgba(22, 37, 45, 0.06)' },
 });
 
-// The soft-yellow sky that fades into white behind the top of a page. Decoration only.
-export function SkyBackdrop({ height = 360 }) {
-  const { colors } = useTheme();
-  return (
-    <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
-      style={{ position: 'absolute', top: 0, left: 0, right: 0, height }}>
-      <Svg width="100%" height="100%">
-        <Defs>
-          <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor={colors.accentSoft} stopOpacity="1" />
-            <Stop offset="0.55" stopColor={colors.accentWash} stopOpacity="1" />
-            <Stop offset="1" stopColor={colors.background} stopOpacity="1" />
-          </LinearGradient>
-        </Defs>
-        <Rect x="0" y="0" width="100%" height="100%" fill="url(#sky)" />
-      </Svg>
-    </View>
-  );
-}
-
-// A short label in a pill. Tones: soft yellow, information blue, or plain mist.
+// A short label in a pill: soft yellow or plain mist, never blue text.
 export function Tag({ label, tone = 'sun' }) {
   const { colors } = useTheme();
-  const [bg, fg] = { sun: [colors.accentSoft, 'text'], info: [colors.informationSurface, 'information'],
-    plain: [colors.surface, 'textMuted'] }[tone];
+  const [bg, fg] = { sun: [colors.accentSoft, 'text'], plain: [colors.surface, 'textMuted'] }[tone];
   return (
     <View style={{ backgroundColor: bg, borderRadius: rounded.pill, paddingHorizontal: spacing.md, paddingVertical: 4 }}>
       <AppText variant="label" color={fg}>{label}</AppText>
@@ -398,10 +371,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   textButton: { minHeight: MIN_TOUCH, paddingHorizontal: spacing.md },
-  field: { borderWidth: 1.5, borderRadius: rounded.control, paddingHorizontal: spacing.lg, paddingVertical: spacing.md },
+  field: { borderWidth: 1, borderRadius: rounded.control, paddingHorizontal: spacing.lg, paddingVertical: spacing.md },
   chip: {
     minHeight: MIN_TOUCH - 4,
-    borderWidth: 1.5,
     borderRadius: rounded.pill,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
@@ -410,7 +382,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   panel: { padding: spacing.lg },
-  row: { minHeight: MIN_TOUCH + 20, flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.md, gap: spacing.md },
+  row: { minHeight: MIN_TOUCH + 20, marginHorizontal: -gutter, paddingHorizontal: gutter, flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.md, gap: spacing.md },
   rowIcon: { width: 44, height: 44, borderRadius: rounded.control, alignItems: 'center', justifyContent: 'center' },
   marker: { width: 8, height: 8, borderRadius: 4 },
 });
@@ -458,7 +430,7 @@ export function SunMark({ size = 120, style }) {
 
 // Report state as a small pill, always in words; the tone only helps scanning (DESIGN, Semantic Mapping).
 const STATE_TONES = {
-  submitted: ['informationSurface', 'information'],
+  submitted: ['tonal', 'text'],
   in_review: ['accentSoft', 'text'],
   awaiting_information: ['warningSurface', 'warning'],
   responded: ['selected', 'onSelected'],
@@ -482,8 +454,7 @@ export function ActionTile({ icon, image, title, body, onPress }) {
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={`${title}. ${body}`} onPress={onPress}
       style={({ pressed }) => [{ flex: 1, minHeight: 140, padding: spacing.lg, gap: spacing.sm,
-        borderRadius: rounded.panel, borderWidth: 1, borderColor: colors.divider,
-        backgroundColor: pressed ? colors.surface : colors.background }, shadow]}>
+        borderRadius: rounded.panel, backgroundColor: pressed ? colors.tonal : colors.surface }]}>
       {image ? (
         <Image source={image} style={{ width: 52, height: 52 }} accessibilityIgnoresInvertColors />
       ) : (

@@ -27,7 +27,7 @@ test('times show in WIB and missing values are said in words, never as zero', ()
   expect(formatTime('2026-11-19T17:30:00Z')).toBe('20 Nov 2026, 00.30 WIB');
   expect(formatTime(null)).toBe('waktu tidak diketahui');
   expect(pm25(null)).toBe('tidak ada data');
-  expect(pm25(41.25)).toBe('41.3 µg/m³');
+  expect(pm25(41.25)).toBe('41,3 µg/m³');
   expect(hoursLabel(null)).toBe('Tidak diketahui');
   expect(hoursLabel('closed')).toBe('Tutup');
   expect(hoursLabel('07:30-14:00')).toBe('07.30–14.00 WIB');

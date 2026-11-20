@@ -6,7 +6,7 @@ import { BadgeCheck, LogIn, LogOut, MapPin } from 'lucide-react-native';
 
 import EmergencyButton from '../components/EmergencyButton';
 
-import { AppText, Button, Card, Icon, Row, RowList, Screen, Section, SimulationLabel, SkyBackdrop,
+import { AppText, Button, Card, Icon, Row, RowList, Screen, Section, SimulationLabel,
   StatRow, Tag } from '../components/ui';
 import { useArea } from '../context/AreaContext';
 import { useAuth } from '../context/AuthContext';
@@ -43,7 +43,7 @@ function Avatar({ name, verified }) {
   return (
     <View style={{ width: 104, height: 104 }}>
       <View style={{ width: 104, height: 104, borderRadius: 30, alignItems: 'center', justifyContent: 'center',
-        backgroundColor: colors.accentSoft, borderWidth: 4, borderColor: colors.background }}>
+        backgroundColor: colors.accentSoft }}>
         <AppText variant="headline" style={{ fontSize: 36, lineHeight: 42 }}>{initials(name)}</AppText>
       </View>
       {verified ? (
@@ -68,7 +68,6 @@ export default function AccountScreen({ navigation }) {
   return (
     <View style={{ flex: 1 }}>
       <Screen>
-        <SkyBackdrop />
         <TopBar />
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.lg, marginTop: spacing.xl }}>
@@ -87,7 +86,7 @@ export default function AccountScreen({ navigation }) {
             </View>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
               {account ? <Tag label={ROLES[account.role]} /> : null}
-              <Tag label={account ? `@${account.username}` : 'Tamu'} tone="info" />
+              <Tag label={account ? `@${account.username}` : 'Tamu'} tone="plain" />
             </View>
           </View>
         </View>

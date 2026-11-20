@@ -4,7 +4,7 @@ import PartnerSection from '../src/components/PartnerSection';
 import { AppText, TextField } from '../src/components/ui';
 import EmergencyScreen from '../src/screens/EmergencyScreen';
 import { todayHours, todayIndex } from '../src/screens/FacilitiesScreen';
-import { forecastAhead, ispuPosition, peakPoint } from '../src/screens/HomeScreen';
+import { forecastAhead, forecastTrend, ispuPosition, peakPoint } from '../src/screens/HomeScreen';
 
 test('a partner outage collapses to one line and hides the content', async () => {
   await render(
@@ -44,6 +44,15 @@ test('the forecast legend names the highest hour and skips missing ones', () => 
   const points = [{ validAt: 'a', value: null }, { validAt: 'b', value: 30 }, { validAt: 'c', value: 12 }];
   expect(peakPoint(points)).toBe(points[1]);
   expect(peakPoint([{ validAt: 'a', value: null }])).toBeNull();
+});
+
+test('the forecast trend compares this hour with the last forecast hour that has a value', () => {
+  const now = { value: 30 };
+  expect(forecastTrend(now, [{ value: 35 }, { value: 41 }, { value: null }]).word).toBe('naik');
+  expect(forecastTrend(now, [{ value: 22 }]).word).toBe('turun');
+  expect(forecastTrend(now, [{ value: 30.04 }]).word).toBe('tetap'); // same to one decimal
+  expect(forecastTrend({ value: null }, [{ value: 22 }])).toBeNull();
+  expect(forecastTrend(now, [{ value: null }])).toBeNull();
 });
 
 test('the ISPU scale places a mean inside its own band', () => {

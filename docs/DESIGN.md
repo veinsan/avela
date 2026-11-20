@@ -130,14 +130,14 @@ components:
     rounded: '{rounded.control}'
     padding: '{spacing.lg}'
   exposurePanel:
-    backgroundColor: '{colors.informationSurface}'
+    backgroundColor: '{colors.surface}'
     textColor: '{colors.text}'
     typography: '{typography.body}'
     rounded: '{rounded.control}'
     padding: '{spacing.lg}'
   categoryChip:
     backgroundColor: '{colors.goodSurface}'
-    textColor: '{colors.good}'
+    textColor: '{colors.text}'
     typography: '{typography.label}'
     rounded: '{rounded.pill}'
     padding: '{spacing.sm}'
@@ -170,7 +170,7 @@ Two colors do 90% of the work and one color that does not quite match takes the 
 | 30% | Slate ink | `#16252D` | `text`, `focus`, `selected` (chosen chips), active tab, links, icons, and its softer steps `textMuted`, `outline` |
 | 10% | Sun yellow | `#FFC23D` | `accent`: the fill of the one primary button per screen, and nothing else (the illustrations' sun shares the hue) |
 
-Two soft steps of the same yellow carry warmth without competing with the button (D-37): `accentSoft` marks where the user is (the active-tab pill, icon tiles, the avatar) and `accentWash` is the morning band behind the top of Beranda and Masuk and behind empty-state illustrations. The full `accent` also appears in two decorative places that never carry meaning: the sun-and-haze mark (a sun disc crossed by haze bands, echoing the logo's crossbar) and the bar for the current hour in the forecast strip, which is highlighted by position, not by its value.
+Two soft steps of the same yellow carry warmth without competing with the button (D-37): `accentSoft` marks where the user is (the active-tab pill and the avatar) and `accentWash` is the morning band behind the top of Beranda and Masuk and behind empty-state illustrations. The full `accent` also appears in two decorative places that never carry meaning: the sun-and-haze mark (a sun disc crossed by haze bands, echoing the logo's crossbar) and the bar for the current hour in the forecast strip, which is highlighted by position, not by its value.
 
 The accent goes on **Masuk**, **Kirim laporan** (and its review step), **Klaim laporan**, **Terbitkan tanggapan**, **Tutup laporan**, **Terbitkan ke warga**, and the one leading action on Beranda. It never colors tabs, chips, links, text, icons, panels, headers, or status. Secondary actions use `tonal`, low-emphasis ones are text buttons in `text`, and a chosen chip inverts to `selected` with `onSelected` text plus a check mark. Squint test: on any screen, the only thing that stands out is the yellow button.
 
@@ -182,7 +182,7 @@ Status needs its own hues, kept muted so they never compete with the yellow butt
 
 - `danger` (soft red) for Darurat and failed actions that block the user. Yellow is never used for danger, and danger is never used for a normal action.
 - `warning` (soft orange, distinct from the yellow accent) for stale data and recoverable errors.
-- `information` (soft blue) for neutral notices such as "Terkirim, belum ditinjau" and the exposure context.
+- `information` (blue) only for the ISPU category Sedang. Neutral notices such as "Terkirim, belum ditinjau" and the exposure context sit on the mist `surface` with ink text; the app sets no text in blue (D-39).
 - `good` (soft green) only for the ISPU category Baik on the category chip (D-38).
 
 The condition panel itself stays neutral and never uses the accent. Only the category chip carries a category color (D-38), and green there means the ISPU category Baik and nothing else: never a personal all-clear. A completed software action can use a check mark and text without implying medical safety.
@@ -194,11 +194,11 @@ The condition panel itself stays neutral and never uses the accent. Only the cat
 | Model forecast | Neutral condition panel, forecast icon | Prakiraan model plus area and valid time |
 | Station observation | Neutral panel, observation icon | Pengukuran stasiun plus station and measured time |
 | Stale or unavailable data | Warning or neutral unavailable panel | Explicit age or unavailable text; no low-risk badge |
-| Report received, not reviewed | Information treatment | Terkirim / Belum ditinjau |
+| Report received, not reviewed | Neutral mist notice, ink text | Terkirim / Belum ditinjau |
 | Staff response available | Attributed response on a `surface` panel; the yellow goes only on the next action, if there is one | Tanggapan petugas plus author and time |
 | Urgent-access information | Danger text/container with direct navigation | Approved action wording, independent of report queue |
 | Synthetic service | Persistent small plain-language label | Simulasi tugas kuliah |
-| Exposure context on a report | Information panel, forecast icon | Prakiraan wilayah, bukan dosis pribadi |
+| Exposure context on a report | Neutral mist panel, forecast icon | Prakiraan wilayah, bukan dosis pribadi |
 | Community signal | Plain caption row under the forecast | Jumlah laporan 7 hari, or Belum cukup data |
 | PM2.5 category | Chip filled in its ISPU category color, always with text (D-38) | Category name and "mengacu ISPU"; hidden while the label is null |
 
@@ -261,11 +261,11 @@ At medium width (proposed 600-839 logical units), consider a navigation rail and
 
 ### Environmental Timeline
 
-Show a small, horizontally readable forecast trend with time labels, PM2.5 units, and an accessible list/table alternative. Break the line at missing samples. A legend under the bars names each bar color, the unit, and the highest value in the window with its time. No smooth curve or confidence band unless supported by data. A selected time displays its exact value and valid time. Forecasts remain separate from station observations; changing the source must be visible.
+Show a small, horizontally readable forecast trend with time labels, PM2.5 units, and an accessible list/table alternative. Break the line at missing samples. One sentence above the bars answers first: where the forecast ends up against this hour (naik, turun, or tetap, with both values in µg/m³), the key word in the strong weight and never in color. A one-line legend under the bars names the highlighted hour (and missing hours, when there are any) and the highest value with its time. Under it, the source and data age stay in view; the valid date, the category method, and the community signal open from a "Tentang data" toggle so the card stays easy to scan. No smooth curve or confidence band unless supported by data. A selected time displays its exact value and valid time. Forecasts remain separate from station observations; changing the source must be visible.
 
 ## Elevation & Depth
 
-Use tonal surfaces and clear grouping first. A `Card` or a `RowList` group floats with a soft shadow plus a hairline (`shadow` in `ui.js`) so it reads on white and on the yellow wash alike; rows inside a group have no shadow of their own. The tab bar is the only translucent surface. A modal sheet may use native elevation to communicate a temporary layer; its backdrop must not obscure the current task's meaning. Avoid stacked or nested floating panels.
+Use tonal surfaces and clear grouping first. Only the condition summary on Beranda floats, with a soft shadow and no border (`shadow` in `ui.js`), because it overlaps the yellow wash. A `Card` is a flat mist surface with no border or shadow, and a `RowList` puts rows straight on the page with hairlines between them (D-39). The tab bar is the only translucent surface. A modal sheet may use native elevation to communicate a temporary layer; its backdrop must not obscure the current task's meaning. Avoid stacked or nested floating panels.
 
 Motion is functional and comes from the platform: the native stack's screen transitions and the pressed state of each control. The native splash stays until the fonts and the saved session are ready, at most 3 seconds, then fades out in 200 ms. The app adds no animation library. Any state transition stays at approximately 150-220 ms and preserves content position. Honor Android Remove animations and reduced-motion preferences with instant changes or a simple fade. No smoke particles, animated risk counters, page-load choreography, or endless pulsing urgency.
 
@@ -275,7 +275,7 @@ Loading uses stable skeleton regions for initially absent content. A refresh pre
 
 Small radius belongs to notices and compact grouping. Control radius is shared by inputs and buttons. Panel radius is reserved for the main condition summary or genuinely distinct content; sheet radius applies to temporary surfaces. Avela's visual signature is the spacious condition summary paired with a concise, plainly attributed next step, not a repeated rounded-card grid.
 
-Use Lucide outline icons (`lucide-react-native`) at a 1.75 stroke, always next to a text label. Entry points that a resident returns to (Profil rows, the Beranda tiles) use a small set of 3D clay icons generated in Figma in the same yellow, ink, and mist palette (`assets/icons3d`); they sit on a soft-yellow tile and never stand for a status or a value. Grouped rows sit together on one white card with a soft shadow, and the tab bar floats as a glass pill above the home indicator: native liquid glass (`expo-glass-effect`) on iOS 26 and later, a light blur (`expo-blur`) on earlier iOS and the web, frosted white on Android, and solid white when the user turns on Reduce Transparency. The active tab's soft-yellow pill wraps both the icon and its label. Spot illustrations come from Figma (welcome, login, empty reports) in the mist, ink, and sun palette; they appear only on empty or first-run screens, never beside data. Familiar symbols support labels rather than replacing them. No emoji as clinical status icons, no fake hospital logos, and no photography suggesting a partner or staff member who does not exist.
+Use Lucide outline icons (`lucide-react-native`) at a 1.75 stroke, always next to a text label. Entry points that a resident returns to (Profil rows, the Beranda tiles) use a small set of 3D clay icons generated in Figma in the same yellow, ink, and mist palette (`assets/icons3d`); they sit on a soft-yellow tile and never stand for a status or a value. Grouped rows sit on the page with hairlines between them, and the tab bar floats as a glass pill above the home indicator: native liquid glass (`expo-glass-effect`) on iOS 26 and later, a light blur (`expo-blur`) on earlier iOS and the web, frosted white on Android, and solid white when the user turns on Reduce Transparency. The active tab's soft-yellow pill wraps both the icon and its label. Spot illustrations come from Figma (welcome, login, empty reports) in the mist, ink, and sun palette; they appear only on empty or first-run screens, never beside data. Familiar symbols support labels rather than replacing them. No emoji as clinical status icons, no fake hospital logos, and no photography suggesting a partner or staff member who does not exist.
 
 ## Components
 
@@ -287,18 +287,18 @@ These are the component contracts; `apps/mobile/src/components/ui.js` implements
 | --- | --- |
 | `Screen`, `PageHeader`, `Section` | The scrolling page, its large title with an optional sentence and control, and a titled group of content |
 | `Button` | `primary` (yellow, one per screen), `tonal` (secondary), text (low emphasis), `danger` (destructive or emergency); optional Lucide icon |
-| `Card` | One distinct object on a floating white surface: the condition summary, a staff response, a result |
-| `Row`, `RowList` | Rows of one kind on one card with hairlines: a leading Lucide icon or a 3D clay image, title, subtitle, meta, and a trailing element |
+| `Card` | One distinct object on a flat mist surface with no border or shadow: the profile counts, the sign-in prompt |
+| `Row`, `RowList` | Rows of one kind straight on the page with hairlines, no card: a leading Lucide icon or a 3D clay image, title, subtitle, meta, and a trailing element |
 | `ActionTile` | A large entry point used in pairs on Beranda: a 3D clay icon on a soft-yellow tile, a title, and one line |
 | `Chip` | One choice among a few (area, facility, course of symptoms, disposition); the chosen chip inverts to `selected` |
 | `Checkbox` | A statement the user confirms, such as the report consent |
 | `TextField` | Persistent label, hint, inline error; the border turns `focus` while typing |
 | `Panel` | A notice in the neutral, info, warning, or danger tone, with an icon |
-| `StatusPill`, `Tag` | A report state in words; a short label in a soft-yellow, information, or mist pill |
+| `StatusPill`, `Tag` | A report state in words; a short label in a soft-yellow or mist pill; neither sets blue text |
 | `StatRow` | Three counts side by side on Akun; a missing count is said in words |
 | `EmptyView`, `LoadingView`, `ErrorView` | An empty screen with an optional spot illustration and the next step; loading; an error with retry |
 | `SimulationLabel` | The "Simulasi tugas kuliah" line |
-| `SkyBackdrop`, `SunMark` | Decoration only: the soft-yellow sky behind the top of a page and the sun-and-haze motif; hidden from screen readers and never driven by data |
+| `SunMark` | Decoration only: the sun-and-haze motif; hidden from screen readers and never driven by data |
 | `GlassBar`, `EmergencyButton` | The floating tab bar's material, and the Darurat pill in native headers |
 
 ### Environmental Summary
@@ -307,9 +307,9 @@ Include area, data kind, pollutant, unit, valid time, source, and freshness near
 
 ### Category Chip and Community Signal
 
-`categoryChip` sits beside the PM2.5 value and carries the category name in text with a dot. Its fill follows the ISPU category (D-38): `goodSurface`/`good` for Baik, `information` for Sedang, `warning` for Tidak Sehat, `danger` for Sangat Tidak Sehat, and ink with white text for Berbahaya. The color only speeds up reading; the words "mengacu ISPU" stay, and the chip describes the area forecast, not a personal risk level. Under the chip, a five-segment ISPU scale in the same colors marks the 24-hour mean with an ink ring, ends labelled Baik and Berbahaya; it is hidden while the mean is null. It is not rendered while the category is null.
+`categoryChip` sits beside the PM2.5 value and carries the category name in ink text with a dot in the category color. Its fill follows the ISPU category (D-38): `goodSurface`/`good` for Baik, `information` for Sedang, `warning` for Tidak Sehat, `danger` for Sangat Tidak Sehat, and ink with white text for Berbahaya. The color only speeds up reading; the words "mengacu ISPU" stay, and the chip describes the area forecast, not a personal risk level. Under the chip, a five-segment ISPU scale in the same colors marks the 24-hour mean with an ink ring, ends labelled Baik and Berbahaya; it is hidden while the mean is null. It is not rendered while the category is null.
 
-The community signal is one caption-size row under the forecast: the 7-day report count for the area and the words "data simulasi" in the coursework build. A hidden count reads "Belum cukup data". It is never a chart, a map, or a trend arrow.
+The community signal is one caption-size row inside the "Tentang data" toggle under the forecast: the 7-day report count for the area and the words "data simulasi" in the coursework build. A hidden count reads "Belum cukup data". It is never a chart, a map, or a trend arrow.
 
 ### Exposure Context
 
@@ -317,7 +317,7 @@ The community signal is one caption-size row under the forecast: the 7-day repor
 
 ### Staff Queue and Review
 
-`queueRow` shows the complaint's first line, a `StatusPill`, and how long the report has waited. The rows sit in one `RowList` card with hairlines between them, not in a card each. The review screen shows exactly one primary action for the current state: claim, then ask or respond, then close. A version conflict shows an inline message and reloads the report. Every staff screen carries the "Simulasi tugas kuliah" label.
+`queueRow` shows the complaint's first line, a `StatusPill`, and how long the report has waited. The rows sit in one `RowList` with hairlines between them and no card around them. The review screen shows exactly one primary action for the current state: claim, then ask or respond, then close. A version conflict shows an inline message and reloads the report. Every staff screen carries the "Simulasi tugas kuliah" label.
 
 ### Guidance and Next Step
 
@@ -378,7 +378,7 @@ Do not display reassuring medical copy as a default empty state. A successful su
 - Make source, valid time, and unanswered-review state easy to find.
 - Use the theme and typography roles consistently across the two resident journeys.
 - Keep facility lists, large text, keyboard/Back behavior, and offline/error states first-class.
-- Avoid generic metric tiles, gradients, glass outside the tab bar, decorative maps, 3D lungs, or an invented Avela health score. The 3D clay icons mark entry points only, never a status or a value.
+- Avoid generic metric tiles, gradients, heavy borders (1 unit at most, except the checkbox box), cards around lists, blue text, glass outside the tab bar, decorative maps, 3D lungs, or an invented Avela health score. The 3D clay icons mark entry points only, never a status or a value.
 - Never use weather icons or sky color as a pollution measurement.
 - Do not claim the palette or this document has passed a rendered accessibility audit.
 
