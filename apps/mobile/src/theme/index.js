@@ -33,6 +33,7 @@ const colors = {
   warningSurface: '#FFF2DF',
   danger: '#B3261E',
   dangerSurface: '#FDECEA',
+  dangerPressed: '#F9D9D5',
   disabledSurface: '#EEF1F3',
   disabledText: '#5E6C74',
 };

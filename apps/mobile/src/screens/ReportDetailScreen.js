@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Clock } from 'lucide-react-native';
-import { View } from 'react-native';
 
 import { ExposurePanel, ReportFacts, StaffResponse, StateHeading, Timeline, latestEvent } from '../components/ReportParts';
-import { AppText, Button, Divider, ErrorView, LoadingView, Panel, Row, Screen, Section, SimulationLabel, TextField }
+import { AppText, Button, ErrorView, LoadingView, Panel, Row, RowList, Screen, Section, SimulationLabel, TextField }
   from '../components/ui';
 import { useUpdates } from '../context/UpdatesContext';
 import { useLoad } from '../hooks/useLoad';
@@ -87,13 +86,12 @@ export default function ReportDetailScreen({ route, navigation }) {
 
           {mine.length ? (
             <Section title="Hasil pemeriksaan">
-              {mine.map((x) => (
-                <View key={x.id}>
-                  <Row title={`${x.facilityName} · versi ${x.version}`} meta={`Terbit ${formatTime(x.publishedAt)}`}
+              <RowList>
+                {mine.map((x) => (
+                  <Row key={x.id} title={`${x.facilityName}, versi ${x.version}`} meta={`Terbit ${formatTime(x.publishedAt)}`}
                     onPress={() => navigation.navigate('HasilPemeriksaan', { id: x.id })} />
-                  <Divider />
-                </View>
-              ))}
+                ))}
+              </RowList>
             </Section>
           ) : null}
 

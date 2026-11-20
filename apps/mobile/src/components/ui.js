@@ -83,7 +83,7 @@ export function Button({ label, onPress, kind = 'primary', icon, loading = false
     primary: { bg: colors.accent, pressed: colors.accentPressed, fg: colors.onAccent },
     tonal: { bg: colors.tonal, pressed: colors.tonalPressed, fg: colors.text },
     text: { bg: 'transparent', pressed: colors.surface, fg: colors.text },
-    danger: { bg: colors.dangerSurface, pressed: '#F9D9D5', fg: colors.danger },
+    danger: { bg: colors.dangerSurface, pressed: colors.dangerPressed, fg: colors.danger },
   }[kind];
   const fg = off ? colors.disabledText : look.fg;
   return (
@@ -218,7 +218,8 @@ export function SimulationLabel({ text = 'Simulasi tugas kuliah', style }) {
 export function LoadingView({ label = 'Memuat…' }) {
   const { colors } = useTheme();
   return (
-    <View accessibilityLabel={label} style={{ gap: spacing.md, marginTop: spacing.lg }}>
+    <View accessible accessibilityRole="progressbar" accessibilityLabel={label}
+      style={{ gap: spacing.md, marginTop: spacing.lg }}>
       {[0, 1, 2].map((n) => (
         <View key={n} style={{ height: n === 0 ? 88 : 18, width: n === 2 ? '60%' : '100%',
           borderRadius: n === 0 ? rounded.panel : rounded.small, backgroundColor: colors.surface }} />
@@ -311,7 +312,7 @@ export function RowList({ children }) {
 export function Card({ children, style }) {
   const { colors } = useTheme();
   return (
-    <View style={[{ backgroundColor: colors.background, borderRadius: 22, borderWidth: 1, borderColor: colors.divider },
+    <View style={[{ backgroundColor: colors.background, borderRadius: rounded.panel, borderWidth: 1, borderColor: colors.divider },
       shadow, style]}>
       {children}
     </View>
@@ -341,19 +342,6 @@ export function SkyBackdrop({ height = 360 }) {
         <Rect x="0" y="0" width="100%" height="100%" fill="url(#sky)" />
       </Svg>
     </View>
-  );
-}
-
-export function RoundButton({ icon, onPress, accessibilityLabel, tone = 'neutral' }) {
-  const { colors } = useTheme();
-  const fg = tone === 'danger' ? 'danger' : 'text';
-  return (
-    <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} onPress={onPress} hitSlop={4}
-      style={({ pressed }) => [{ width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center',
-        backgroundColor: tone === 'danger' ? colors.dangerSurface : pressed ? colors.surface : colors.background },
-        tone === 'danger' ? null : shadow]}>
-      <Icon as={icon} size={20} color={fg} />
-    </Pressable>
   );
 }
 
@@ -481,7 +469,7 @@ export function ActionTile({ icon, image, title, body, onPress }) {
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={`${title}. ${body}`} onPress={onPress}
       style={({ pressed }) => [{ flex: 1, minHeight: 140, padding: spacing.lg, gap: spacing.sm,
-        borderRadius: 22, borderWidth: 1, borderColor: colors.divider,
+        borderRadius: rounded.panel, borderWidth: 1, borderColor: colors.divider,
         backgroundColor: pressed ? colors.surface : colors.background }, shadow]}>
       {image ? (
         <Image source={image} style={{ width: 52, height: 52 }} accessibilityIgnoresInvertColors />

@@ -20,7 +20,7 @@ function CallCard({ contact }) {
       accessibilityHint="Membuka aplikasi telepon"
       onPress={() => Linking.openURL(`tel:${contact.number}`)}
       style={({ pressed }) => ({ borderRadius: rounded.panel, padding: spacing.xl, gap: spacing.md,
-        backgroundColor: pressed ? '#F9D9D5' : colors.dangerSurface })}
+        backgroundColor: pressed ? colors.dangerPressed : colors.dangerSurface })}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <AppText variant="display" color="danger" style={{ fontSize: 56, lineHeight: 60 }}>

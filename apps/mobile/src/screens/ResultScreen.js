@@ -1,6 +1,4 @@
-import { View } from 'react-native';
-
-import { AppText, Button, Divider, ErrorView, LoadingView, Panel, Row, Screen, Section, SimulationLabel }
+import { AppText, Button, ErrorView, LoadingView, Panel, Row, RowList, Screen, Section, SimulationLabel }
   from '../components/ui';
 import { useLoad } from '../hooks/useLoad';
 import { getResult } from '../services/ApiService';
@@ -42,13 +40,12 @@ export default function ResultScreen({ route, navigation }) {
           </Section>
           {r.history && r.history.length ? (
             <Section title="Versi sebelumnya">
-              {r.history.map((h) => (
-                <View key={h.id}>
-                  <Row title={`Versi ${h.version}`} meta={`Terbit ${formatTime(h.publishedAt)} · ${h.authorName}`}
+              <RowList>
+                {r.history.map((h) => (
+                  <Row key={h.id} title={`Versi ${h.version}`} meta={`Terbit ${formatTime(h.publishedAt)}, ${h.authorName}`}
                     onPress={() => navigation.push('HasilPemeriksaan', { id: h.id })} />
-                  <Divider />
-                </View>
-              ))}
+                ))}
+              </RowList>
             </Section>
           ) : null}
         </>
