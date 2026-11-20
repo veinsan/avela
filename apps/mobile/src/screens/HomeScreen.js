@@ -1,12 +1,13 @@
 // Beranda: what the data says about the area, what to do next, and the latest report state (DESIGN, Overview).
+import { useState } from 'react';
 import { Image, Pressable, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronDown, MapPin, Recycle, ShieldCheck, TriangleAlert } from 'lucide-react-native';
+import { ChevronDown, ChevronUp, MapPin, ShieldCheck, TriangleAlert } from 'lucide-react-native';
 
 import EmergencyButton from '../components/EmergencyButton';
 import PartnerSection from '../components/PartnerSection';
 import { ActionTile, AppText, Button, ErrorView, Icon, LoadingView, Panel, Row, RowList, Screen, Section, SimulationLabel,
-  StatusPill, SunMark } from '../components/ui';
+  StatusPill, SunMark, shadow } from '../components/ui';
 import { useArea } from '../context/AreaContext';
 import { useAuth } from '../context/AuthContext';
 import { useUpdates } from '../context/UpdatesContext';
@@ -19,6 +20,16 @@ const HERO = require('../../assets/illustrations/hero.png');
 
 export function forecastAhead(series, now = Date.now(), count = 6) {
   return (series || []).filter((p) => new Date(p.validAt).getTime() > now).slice(0, count);
+}
+
+// One plain answer before the chart: where the forecast ends up against this hour. Both numbers are said, so the word
+// carries no threshold of its own.
+export function forecastTrend(current, points) {
+  const last = [...points].reverse().find((p) => p.value !== null);
+  if (!current || current.value === null || !last) return null;
+  const from = Math.round(current.value * 10);
+  const to = Math.round(last.value * 10);
+  return { word: to > from ? 'naik' : to < from ? 'turun' : 'tetap', last };
 }
 
 // The highest hour in the window, skipping missing values; null when every hour is missing.
@@ -54,7 +65,7 @@ function CategoryChip({ label }) {
     <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: spacing.sm,
       backgroundColor: colors[bg], borderRadius: rounded.pill, paddingHorizontal: spacing.md, paddingVertical: 6 }}>
       <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: colors[fg] }} />
-      <AppText variant="label" color={fg}>{label}, mengacu ISPU</AppText>
+      <AppText variant="label" color={bg === 'selected' ? 'onSelected' : 'text'}>{label}, mengacu ISPU</AppText>
     </View>
   );
 }
@@ -126,23 +137,21 @@ function ForecastStrip({ points }) {
         </View>
       ))}
     </View>
-    {/* Legend: what each bar color means, the unit, and the highest value in the window. */}
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: spacing.lg, rowGap: spacing.xs }}>
+    {/* One-line legend: the highlighted hour, missing hours when there are any, and the highest value. */}
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: spacing.lg, rowGap: spacing.xs }}>
       <Swatch color="accent" label="Jam terdekat" />
-      <Swatch color="tonalPressed" label="Jam berikutnya" />
       {points.some((p) => p.value === null) ? <Swatch dashed label="Tidak ada data" /> : null}
+      <AppText variant="caption" color="textMuted">
+        {peak ? `Tertinggi ${pm25(peak.value)} pukul ${formatTime(peak.validAt, { withDate: false })}` : 'Belum ada nilai'}
+      </AppText>
     </View>
-    <AppText variant="caption" color="textMuted">
-      {peak
-        ? `Angka di atas batang adalah PM2.5 dalam µg/m³. Tertinggi ${pm25(peak.value)} pukul ${formatTime(peak.validAt, { withDate: false })}.`
-        : 'Belum ada nilai untuk jam-jam ini.'}
-    </AppText>
     </>
   );
 }
 
 function Condition({ advisory }) {
   const { colors } = useTheme();
+  const [about, setAbout] = useState(false);
   if (advisory.freshness === 'unavailable') {
     return (
       <Panel>
@@ -154,10 +163,15 @@ function Condition({ advisory }) {
   const current = advisory.current;
   const category = advisory.category && advisory.category.label;
   const ahead = forecastAhead(advisory.series);
+  const trend = forecastTrend(current, ahead);
   return (
-    <View style={{ padding: spacing.xl, gap: spacing.md, borderRadius: rounded.panel, borderWidth: 1.5, borderColor: colors.divider,
-      backgroundColor: colors.background }}>
-      <AppText variant="label" color="textMuted">PM2.5 jam ini, prakiraan model</AppText>
+    <View style={[{ padding: spacing.xl, gap: spacing.md, borderRadius: rounded.panel, backgroundColor: colors.background },
+      shadow]}>
+      <AppText variant="label" color="textMuted">
+        {current && current.validAt
+          ? `PM2.5 pukul ${formatTime(current.validAt, { withDate: false })}, prakiraan model`
+          : 'PM2.5 jam ini, prakiraan model'}
+      </AppText>
       {current && current.value !== null ? (
         <View style={{ flexDirection: 'row', alignItems: 'flex-end', flexWrap: 'wrap', gap: spacing.sm }}
           accessible accessibilityLabel={`PM2.5 ${pm25(current.value)}`}>
@@ -176,28 +190,45 @@ function Condition({ advisory }) {
         <IspuScale mean={advisory.category.mean24h} label={category} />
       ) : null}
 
-      <View style={{ height: 1.5, backgroundColor: colors.divider, marginVertical: spacing.xs }} />
-      <AppText variant="label">Beberapa jam ke depan</AppText>
+      <View style={{ height: 1, backgroundColor: colors.divider, marginVertical: spacing.xs }} />
+      {trend ? (
+        <AppText>
+          Sampai {formatTime(trend.last.validAt, { withDate: false })}, PM2.5 diprakirakan{' '}
+          <AppText variant="bodyStrong">{trend.word}</AppText> {trend.word === 'tetap' ? 'di' : 'ke'} {pm25(trend.last.value)}.
+        </AppText>
+      ) : (
+        <AppText variant="label">Beberapa jam ke depan</AppText>
+      )}
       {ahead.length ? (
         <ForecastStrip points={ahead} />
       ) : (
         <AppText color="textMuted">Belum ada prakiraan untuk jam berikutnya.</AppText>
       )}
 
-      <View style={{ gap: 2, marginTop: spacing.xs, padding: spacing.md, borderRadius: rounded.control,
-        backgroundColor: colors.surface }}>
-        <AppText variant="caption" color="textMuted">
-          Berlaku {formatTime(current && current.validAt)}. Sumber: {advisory.attributions.join(', ') || advisory.provider}.
-          Diperbarui {ageLabel(advisory.ageMinutes)}.
+      {/* Source and age stay in view; the method and the community signal open on request. */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md,
+        marginTop: spacing.xs }}>
+        <AppText variant="caption" color="textMuted" style={{ flexShrink: 1 }}>
+          {advisory.attributions.join(', ') || advisory.provider}, diperbarui {ageLabel(advisory.ageMinutes)}
         </AppText>
-        {category ? (
-          <AppText variant="caption" color="textMuted">
-            Kategori dihitung dari rata-rata prakiraan 24 jam ({pm25(advisory.category.mean24h)}), bukan pembacaan ISPU
-            resmi.
-          </AppText>
-        ) : null}
-        <CommunitySignal signal={advisory.communitySignal} />
+        <Pressable accessibilityRole="button" accessibilityState={{ expanded: about }} onPress={() => setAbout(!about)}
+          hitSlop={8} style={{ flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 40 }}>
+          <AppText variant="label">{about ? 'Tutup' : 'Tentang data'}</AppText>
+          <Icon as={about ? ChevronUp : ChevronDown} size={16} />
+        </Pressable>
       </View>
+      {about ? (
+        <View style={{ gap: spacing.xs }}>
+          <AppText variant="caption" color="textMuted">Berlaku {formatTime(current && current.validAt)}.</AppText>
+          {category ? (
+            <AppText variant="caption" color="textMuted">
+              Kategori dihitung dari rata-rata prakiraan 24 jam ({pm25(advisory.category.mean24h)}), bukan pembacaan ISPU
+              resmi.
+            </AppText>
+          ) : null}
+          <CommunitySignal signal={advisory.communitySignal} />
+        </View>
+      ) : null}
       {advisory.freshness === 'stale' ? (
         <Panel tone="warning" icon={TriangleAlert}>
           <AppText color="warning">
@@ -323,6 +354,7 @@ export default function HomeScreen({ navigation }) {
   }
 
   const wasteItems = waste.data && waste.data.data ? waste.data.data.items : [];
+  const wasteMax = Math.max(1, ...wasteItems.map((i) => i.volumeKg || 0));
   return (
     <Screen
       refreshing={advisory.refreshing}
@@ -365,17 +397,22 @@ export default function HomeScreen({ navigation }) {
 
       <Section title="Pengelolaan sampah di wilayah ini">
         <PartnerSection envelope={waste.data} loading={waste.loading} isEmpty={!wasteItems.length}>
-          {wasteItems.map((item) => (
-            <View key={item.wasteType} style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
-              <Icon as={Recycle} size={18} color="textMuted" />
-              <AppText style={{ flex: 1 }}>
-                {item.wasteType[0].toUpperCase() + item.wasteType.slice(1)}
-              </AppText>
-              <AppText variant="bodyStrong" style={{ fontVariant: ['tabular-nums'] }}>
-                {item.volumeKg.toLocaleString('id-ID')} kg
-              </AppText>
-            </View>
-          ))}
+          {[...wasteItems].sort((a, b) => b.volumeKg - a.volumeKg).map((item) => {
+            const name = item.wasteType[0].toUpperCase() + item.wasteType.slice(1);
+            const kg = `${item.volumeKg.toLocaleString('id-ID')} kg`;
+            return (
+              <View key={item.wasteType} accessible accessibilityLabel={`${name}: ${kg}`} style={{ gap: 6 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: spacing.md }}>
+                  <AppText style={{ flexShrink: 1 }}>{name}</AppText>
+                  <AppText variant="bodyStrong" style={{ fontVariant: ['tabular-nums'] }}>{kg}</AppText>
+                </View>
+                <View style={{ height: 6, borderRadius: 3, backgroundColor: colors.surface }}>
+                  <View style={{ width: `${(100 * item.volumeKg) / wasteMax}%`, height: 6, borderRadius: 3,
+                    backgroundColor: colors.text }} />
+                </View>
+              </View>
+            );
+          })}
           {wasteItems.length && waste.data.data.period ? (
             <AppText variant="caption" color="textMuted">Periode {waste.data.data.period}</AppText>
           ) : null}

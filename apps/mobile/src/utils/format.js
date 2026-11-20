@@ -72,7 +72,7 @@ export function hoursLabel(hours) {
 }
 
 export function pm25(value) {
-  return value === null || value === undefined ? 'tidak ada data' : `${Number(value).toFixed(1)} µg/m³`;
+  return value === null || value === undefined ? 'tidak ada data' : `${Number(value).toFixed(1).replace('.', ',')} µg/m³`;
 }
 
 export const MAX_ONSET_HOURS = 14 * 24;

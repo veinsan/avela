@@ -60,7 +60,7 @@ export default function ReportDetailScreen({ route, navigation }) {
           <SimulationLabel />
           {r.state === 'submitted' ? (
             <Panel tone="info" icon={Clock} style={{ marginTop: spacing.lg }}>
-              <AppText color="information">Laporan terkirim. Belum ditinjau petugas.</AppText>
+              <AppText>Laporan terkirim. Belum ditinjau petugas.</AppText>
             </Panel>
           ) : null}
           {actionError ? <ErrorView message={actionError} /> : null}

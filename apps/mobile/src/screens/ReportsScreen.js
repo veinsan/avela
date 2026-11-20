@@ -14,7 +14,7 @@ import { spacing } from '../theme';
 export function ReceiptNotice() {
   return (
     <Panel tone="info" icon={Info}>
-      <AppText color="information">
+      <AppText>
         Laporan dikirim ke petugas fasilitas simulasi. Mengirim laporan bukan pertolongan darurat, tidak dipantau
         terus-menerus, dan tidak ada janji waktu tanggapan.
       </AppText>

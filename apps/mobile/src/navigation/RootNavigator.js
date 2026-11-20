@@ -84,7 +84,7 @@ function Tabs() {
         tabBarShowLabel: false,
         tabBarItemStyle: { height: 72, justifyContent: 'center', alignItems: 'center', paddingTop: 0, paddingBottom: 0 },
         tabBarIconStyle: { width: '100%', height: 56 },
-        tabBarBadgeStyle: { backgroundColor: colors.information, color: colors.onSelected, fontFamily: fonts.bodyStrong,
+        tabBarBadgeStyle: { backgroundColor: colors.text, color: colors.onSelected, fontFamily: fonts.bodyStrong,
           fontSize: 11 },
         ...headerLook(colors),
         headerTitleAlign: 'left',
@@ -140,7 +140,7 @@ export default function RootNavigator() {
     ...base,
     dark: false,
     colors: { ...base.colors, primary: colors.text, background: colors.background, card: colors.background,
-      text: colors.text, border: colors.divider, notification: colors.information },
+      text: colors.text, border: colors.divider, notification: colors.text },
   };
   if (status === 'loading') {
     return (
