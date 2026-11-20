@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 
-import { AppText, Chip, Divider, EmptyView, ErrorView, LoadingView, Row, Screen, SimulationLabel } from '../components/ui';
+import { Chip, EmptyView, ErrorView, LoadingView, Row, RowList, Screen, StatusPill, SimulationLabel } from '../components/ui';
 import { useLoad } from '../hooks/useLoad';
 import { staffQueue } from '../services/ApiService';
 import { stateLabel, waitingLabel } from '../utils/format';
@@ -25,9 +25,6 @@ export default function QueueScreen({ navigation }) {
 
   return (
     <Screen refreshing={refreshing} onRefresh={refresh}>
-      <AppText variant="headline" accessibilityRole="header">
-        Antrean laporan
-      </AppText>
       <SimulationLabel text="Simulasi tugas kuliah: petugas dan kasus fiktif." />
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.lg }}
         accessibilityRole="radiogroup">
@@ -41,17 +38,17 @@ export default function QueueScreen({ navigation }) {
         <EmptyView title="Tidak ada laporan di antrean ini." body="Laporan baru dari warga untuk fasilitas Anda muncul di sini." />
       ) : null}
       <View style={{ marginTop: spacing.md }}>
+        <RowList>
         {items.map((r) => (
-          <View key={r.id}>
             <Row
+              key={r.id}
               title={r.complaint.split('\n')[0]}
-              subtitle={stateLabel(r.state)}
-              meta={`${r.state === 'submitted' ? waitingLabel(r.createdAt) : `masuk ${waitingLabel(r.createdAt).replace('menunggu ', '')} lalu`}${r.reviewerName ? ` · diklaim ${r.reviewerName}` : ''}`}
+              subtitle={<StatusPill state={r.state} label={stateLabel(r.state)} />}
+              meta={`${r.state === 'submitted' ? waitingLabel(r.createdAt) : `masuk ${waitingLabel(r.createdAt).replace('menunggu ', '')} lalu`}${r.reviewerName ? `, diklaim ${r.reviewerName}` : ''}`}
               onPress={() => navigation.navigate('TinjauLaporan', { id: r.id })}
             />
-            <Divider />
-          </View>
         ))}
+        </RowList>
       </View>
     </Screen>
   );

@@ -1,73 +1,79 @@
 ---
-version: 0.4
+version: 0.5
 name: Avela
 description: 'A calm resident companion: regional air context, a clear next step,
   and accountable care follow-up.'
 colors:
-  background: '#2B2D31'
-  surface: '#33363B'
-  surfaceContainer: '#3C3F45'
-  text: '#D9DADC'
-  textMuted: '#A9ACB1'
-  outline: '#8B8E94'
-  divider: '#46494F'
-  focus: '#D9DADC'
-  tonal: '#45484E'
-  tonalPressed: '#50535A'
-  selected: '#D9DADC'
-  onSelected: '#2B2D31'
-  accent: '#FFC93C'
-  accentPressed: '#E8B42F'
-  onAccent: '#2B2D31'
-  information: '#9DC1F2'
-  informationSurface: '#2E3A4B'
-  warning: '#F2A65E'
-  warningSurface: '#45372A'
-  danger: '#FF9A9A'
-  dangerSurface: '#4A2F33'
-  disabledSurface: '#3A3C41'
-  disabledText: '#ACAFB4'
+  background: '#FFFFFF'
+  surface: '#F4F7F8'
+  surfaceContainer: '#E9F0F3'
+  text: '#16252D'
+  textMuted: '#52626B'
+  outline: '#7A8A93'
+  divider: '#E3E9EC'
+  focus: '#16252D'
+  tonal: '#E9EEF1'
+  tonalPressed: '#DCE3E7'
+  selected: '#16252D'
+  onSelected: '#FFFFFF'
+  accent: '#FFC23D'
+  accentPressed: '#F2B01E'
+  onAccent: '#16252D'
+  accentSoft: '#FFF3CC'
+  accentWash: '#FFF8E5'
+  information: '#1F5F99'
+  informationSurface: '#EAF2FA'
+  warning: '#8A4B00'
+  warningSurface: '#FFF2DF'
+  danger: '#B3261E'
+  dangerSurface: '#FDECEA'
+  disabledSurface: '#EEF1F3'
+  disabledText: '#5E6C74'
 typography:
   display:
-    fontFamily: system
-    fontSize: 40
+    fontFamily: Bricolage Grotesque
+    fontSize: 64
     fontWeight: 600
-    lineHeight: 48
+    lineHeight: 68
+    letterSpacing: -2
   headline:
-    fontFamily: system
-    fontSize: 28
+    fontFamily: Bricolage Grotesque
+    fontSize: 30
     fontWeight: 600
     lineHeight: 36
+    letterSpacing: -0.6
   title:
-    fontFamily: system
-    fontSize: 22
+    fontFamily: Bricolage Grotesque
+    fontSize: 21
     fontWeight: 600
-    lineHeight: 28
+    lineHeight: 27
+    letterSpacing: -0.3
   body:
-    fontFamily: system
+    fontFamily: Onest
     fontSize: 16
     fontWeight: 400
     lineHeight: 24
   bodyStrong:
-    fontFamily: system
+    fontFamily: Onest
     fontSize: 16
     fontWeight: 600
     lineHeight: 24
   label:
-    fontFamily: system
+    fontFamily: Onest
     fontSize: 14
-    fontWeight: 600
+    fontWeight: 500
     lineHeight: 20
   caption:
-    fontFamily: system
+    fontFamily: Onest
     fontSize: 14
     fontWeight: 400
     lineHeight: 20
 rounded:
-  small: 8
-  control: 12
-  panel: 20
-  sheet: 24
+  small: 10
+  control: 14
+  panel: 24
+  sheet: 28
+  pill: 999
 spacing:
   xs: 4
   sm: 8
@@ -76,14 +82,15 @@ spacing:
   xl: 24
   xxl: 32
   section: 40
+  gutter: 20
 components:
   buttonPrimary:
     backgroundColor: '{colors.accent}'
     textColor: '{colors.onAccent}'
     typography: '{typography.bodyStrong}'
     rounded: '{rounded.control}'
-    padding: '{spacing.lg}'
-    height: 48
+    padding: '{spacing.xl}'
+    height: 52
   buttonPrimaryPressed:
     backgroundColor: '{colors.accentPressed}'
     textColor: '{colors.onAccent}'
@@ -91,11 +98,11 @@ components:
     backgroundColor: '{colors.tonal}'
     textColor: '{colors.text}'
     rounded: '{rounded.control}'
-    height: 48
+    height: 52
   buttonDisabled:
     backgroundColor: '{colors.disabledSurface}'
     textColor: '{colors.disabledText}'
-    height: 48
+    height: 52
   conditionPanel:
     backgroundColor: '{colors.surfaceContainer}'
     textColor: '{colors.text}'
@@ -103,6 +110,8 @@ components:
     padding: '{spacing.xl}'
   field:
     backgroundColor: '{colors.surface}'
+    borderColor: '{colors.divider}'
+    focusBorderColor: '{colors.focus}'
     textColor: '{colors.text}'
     typography: '{typography.body}'
     rounded: '{rounded.control}'
@@ -110,27 +119,28 @@ components:
   warningPanel:
     backgroundColor: '{colors.warningSurface}'
     textColor: '{colors.warning}'
-    rounded: '{rounded.small}'
+    rounded: '{rounded.control}'
     padding: '{spacing.lg}'
   urgentPanel:
     backgroundColor: '{colors.dangerSurface}'
     textColor: '{colors.danger}'
-    rounded: '{rounded.small}'
+    rounded: '{rounded.control}'
     padding: '{spacing.lg}'
   exposurePanel:
     backgroundColor: '{colors.informationSurface}'
     textColor: '{colors.text}'
     typography: '{typography.body}'
-    rounded: '{rounded.small}'
+    rounded: '{rounded.control}'
     padding: '{spacing.lg}'
   categoryChip:
-    backgroundColor: '{colors.surfaceContainer}'
+    backgroundColor: 'transparent'
+    borderColor: '{colors.outline}'
     textColor: '{colors.text}'
     typography: '{typography.label}'
-    rounded: '{rounded.small}'
+    rounded: '{rounded.pill}'
     padding: '{spacing.sm}'
   queueRow:
-    backgroundColor: '{colors.surface}'
+    backgroundColor: '{colors.background}'
     textColor: '{colors.text}'
     typography: '{typography.body}'
     padding: '{spacing.lg}'
@@ -138,9 +148,9 @@ components:
 
 ## Overview
 
-**Status:** Baseline for implementation (D-09). Updated 12 November 2026 for the exposure context, the community signal, and the staff screens; 17 November 2026 for the DDD paper (partner sections, facility directory, area list); and 20 November 2026 for the 60/30/10 palette chosen by the owner (D-36). The app in `apps/mobile` implements it; it has been opened on one phone, but the accessibility checks at the end of this file have not been run. The mobile theme module (`apps/mobile/src/theme/index.js`) mirrors the frontmatter; change a token here first.
+**Status:** Baseline for implementation (D-09). Updated 20 November 2026 for the light "udara terang" redesign (D-37), which supersedes the dark palette of D-36. Updated 12 November 2026 for the exposure context, the community signal, and the staff screens; 17 November 2026 for the DDD paper (partner sections, facility directory, area list); and 20 November 2026 for the 60/30/10 palette chosen by the owner (D-36). The app in `apps/mobile` implements it; it has been opened on one phone, but the accessibility checks at the end of this file have not been run. The mobile theme module (`apps/mobile/src/theme/index.js`) mirrors the frontmatter; change a token here first.
 
-The direction is a calm, dark personal health companion with the readability of a well-organized field guide: charcoal gray surfaces, silver text, a single yellow action per screen, and source/time information close to environmental values. Brand character comes from proportion, spacing, and precise language. It does not need smoke imagery, a medical mascot, gradients, glass effects, or a dashboard full of interchangeable cards.
+The direction is a calm, light personal health companion: the app is the clear patch in the haze. White paper and cool mist surfaces, slate ink text, a single sun-yellow action per screen, and source and time information close to environmental values. The signature element is the condition panel on Beranda: the PM2.5 value set large in Bricolage Grotesque on a mist panel, with the next hours drawn as a row of columns where a missing hour stays an empty dashed slot. Brand character comes from proportion, spacing, and precise language. It does not need smoke imagery, a medical mascot, gradients, glass effects, or a dashboard full of interchangeable cards.
 
 The resident should understand three things in order: **what the available data says about the area, what they can do next, and whether a person has reviewed their report**. Environmental certainty, medical urgency, and report progress are separate visual signals.
 
@@ -148,19 +158,21 @@ This is a documentation-only refinement informed by [Impeccable](https://github.
 
 ## Colors
 
-### The 60/30/10 Rule (D-36)
+### The 60/30/10 Rule (D-37)
 
 Two colors do 90% of the work and one color that does not quite match takes the last 10%, only on the action the user should press.
 
 | Share | Color | Hex | Roles |
 | --- | --- | --- | --- |
-| 60% | Gray | `#2B2D31` | `background`, and its lighter steps `surface`, `surfaceContainer`, `tonal`, `divider` |
-| 30% | Silver | `#D9DADC` | `text`, `focus`, `selected` (chosen chips), active tab, links, and its dimmer steps `textMuted`, `outline` |
-| 10% | Yellow | `#FFC93C` | `accent`: the fill of the one primary button per screen, and nothing else |
+| 60% | White and mist | `#FFFFFF` | `background`, and its cool mist steps `surface`, `surfaceContainer`, `tonal`, `divider` |
+| 30% | Slate ink | `#16252D` | `text`, `focus`, `selected` (chosen chips), active tab, links, icons, and its softer steps `textMuted`, `outline` |
+| 10% | Sun yellow | `#FFC23D` | `accent`: the fill of the one primary button per screen, and nothing else (the illustrations' sun shares the hue) |
+
+Two soft steps of the same yellow carry warmth without competing with the button (D-37): `accentSoft` marks where the user is (the active-tab pill, icon tiles, the avatar) and `accentWash` is the morning band behind the top of Beranda and Masuk and behind empty-state illustrations. The full `accent` also appears in two decorative places that never carry meaning: the sun-and-haze mark (a sun disc crossed by haze bands, echoing the logo's crossbar) and the bar for the current hour in the forecast strip, which is highlighted by position, not by its value.
 
 The accent goes on **Masuk**, **Kirim laporan** (and its review step), **Klaim laporan**, **Terbitkan tanggapan**, **Tutup laporan**, **Terbitkan ke warga**, and the one leading action on Beranda. It never colors tabs, chips, links, text, icons, panels, headers, or status. Secondary actions use `tonal`, low-emphasis ones are text buttons in `text`, and a chosen chip inverts to `selected` with `onSelected` text plus a check mark. Squint test: on any screen, the only thing that stands out is the yellow button.
 
-The palette is one dark scheme. The app does not switch to a light scheme with the system setting, because a light version would swap the 60% and 30% roles and lose the brand. Resolve roles through the theme module instead of placing literal colors in screens.
+The palette is one light scheme. The app does not switch to a dark scheme with the system setting. Resolve roles through the theme module instead of placing literal colors in screens.
 
 ### Status Colors Outside the 60/30/10
 
@@ -193,11 +205,11 @@ AQI colors and category names require a separate, named standard and review. Do 
 
 Target at least 4.5:1 for normal text and 3:1 for large text and essential control boundaries. Outline identifies controls; divider is decorative and must not be the only field boundary. Use text, icon, and placement alongside color. Disabled controls retain a readable reason. Review theme pairs numerically and on-device; a token check alone does not certify accessibility.
 
-Computed on 20 November 2026 (WCAG relative luminance): text on background 9.86:1, on surface 8.67:1, on surfaceContainer 7.55:1, on tonal 6.56:1; textMuted on background 6.06:1, on surfaceContainer 4.64:1; onAccent on accent 8.98:1, on accentPressed 7.23:1; accent against background 8.98:1; outline against background 4.20:1 and surface 3.69:1; information, warning, and danger on their surfaces 6.22, 5.67, and 5.92:1; danger on background 6.79:1; disabledText on disabledSurface 5.02:1.
+Computed on 20 November 2026 for D-37 (WCAG relative luminance): text on background 15.71:1, on surfaceContainer 13.63:1, on tonal 13.44:1; textMuted on background 6.33:1, on surface 5.88:1, on surfaceContainer 5.49:1; onAccent on accent 9.75:1, on accentPressed 8.23:1; outline against background 3.57:1 and surface 3.32:1; information, warning, and danger on their surfaces 5.89, 6.16, and 5.72:1; danger on background 6.54:1. The yellow fill against white is below 3:1, so a primary button is identified by its dark label and its position, never by its fill alone.
 
 ## Typography
 
-Use one platform system sans family. On Android, resolve through the native system face rather than downloading a display font. Avela is a task-oriented health interface; familiarity and legibility are deliberate choices. No decorative type appears in guidance, navigation, forms, or clinical results.
+Two bundled families, clearly distinct (D-37). Bricolage Grotesque (SemiBold) sets headings, section titles, and the PM2.5 value: a grotesque with slightly irregular, friendly forms that gives Avela its voice without decoration. Onest (Regular, Medium, SemiBold) sets body, labels, captions, forms, and buttons: a neutral, highly legible sans with clear numerals. Both ship inside the app through `@expo-google-fonts`, so they load without the network; Android needs one family name per weight, so the theme names the exact face for each role. No decorative type appears in guidance, forms, or clinical results.
 
 | Role | Use |
 | --- | --- |
@@ -240,7 +252,7 @@ Keep environmental data readable without signing in. Private reports and results
 
 ### Navigation and Adaptation
 
-Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. The active tab is silver text on the gray bar; inactive tabs use `textMuted`. Tabs never use the yellow accent. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
+Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. Tabs pair a Lucide icon with its label. The active tab is ink with a heavier stroke on the white bar; inactive tabs use `textMuted`. Tabs never use the yellow accent. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
 
 At medium width (proposed 600-839 logical units), consider a navigation rail and preserve comfortable reading measure. At expanded width (840+), a staff queue may use master/detail panes if that surface is approved. Do not stretch paragraphs across the whole display. Width thresholds are implementation proposals to test, not evidence of tablet support.
 
@@ -260,11 +272,11 @@ Loading uses stable skeleton regions for initially absent content. A refresh pre
 
 Small radius belongs to notices and compact grouping. Control radius is shared by inputs and buttons. Panel radius is reserved for the main condition summary or genuinely distinct content; sheet radius applies to temporary surfaces. Avela's visual signature is the spacious condition summary paired with a concise, plainly attributed next step, not a repeated rounded-card grid.
 
-Use a consistent outline icon family chosen for Expo compatibility during implementation. Familiar symbols support labels rather than replacing them. No emoji as clinical status icons, no fake hospital logos, and no photography suggesting a partner or staff member who does not exist.
+Use Lucide outline icons (`lucide-react-native`) at a 1.75 stroke, always next to a text label. Entry points that a resident returns to (Profil rows, the Beranda tiles) use a small set of 3D clay icons generated in Figma in the same yellow, ink, and mist palette (`assets/icons3d`); they sit on a soft-yellow tile and never stand for a status or a value. Grouped rows sit together on one white card with a soft shadow, and the tab bar floats as a glass pill above the home indicator: native liquid glass (`expo-glass-effect`) on iOS 26 and later, a light blur (`expo-blur`) on earlier iOS and the web, frosted white on Android, and solid white when the user turns on Reduce Transparency. The active tab's soft-yellow pill wraps both the icon and its label. Spot illustrations come from Figma (welcome, login, empty reports) in the mist, ink, and sun palette; they appear only on empty or first-run screens, never beside data. Familiar symbols support labels rather than replacing them. No emoji as clinical status icons, no fake hospital logos, and no photography suggesting a partner or staff member who does not exist.
 
 ## Components
 
-These are planned component contracts. No component code exists yet.
+These are the component contracts; `apps/mobile/src/components/ui.js` implements the shared ones.
 
 ### Environmental Summary
 
@@ -312,7 +324,7 @@ Use persistent labels, optional markers, inline errors, preserved values, and a 
 | Loading | Preserve action label, prevent duplicate taps, announce progress |
 | Error | Actionable inline message, retain input, offer an appropriate retry |
 
-Use the yellow filled button for the current primary action, a `tonal` button for a secondary action, and a silver text action for low-emphasis navigation. A screen has at most one yellow button; never put two side by side. A destructive confirmation (such as "Ya, batalkan") uses the danger container, not yellow. Input outline uses the outline role; focus uses the focus role. These border/state rules live in prose rather than invalid custom component token properties.
+Use the yellow filled button for the current primary action, a `tonal` button for a secondary action, and an ink text action for low-emphasis navigation. A screen has at most one yellow button; never put two side by side. A destructive confirmation (such as "Ya, batalkan") uses the danger container, not yellow. Input outline uses the outline role; focus uses the focus role. These border/state rules live in prose rather than invalid custom component token properties.
 
 ### Report Timeline and Staff Response
 

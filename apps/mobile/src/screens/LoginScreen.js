@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { Image, View } from 'react-native';
+import { LogIn } from 'lucide-react-native';
 
-import { AppText, Button, ErrorView, Screen, SimulationLabel, TextField } from '../components/ui';
+import { Button, ErrorView, PageHeader, Screen, SimulationLabel, SunMark, TextField } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { validateLogin } from '../utils/format';
-import { spacing } from '../theme';
+import { colors, gutter, spacing } from '../theme';
 
 export default function LoginScreen({ navigation }) {
   const { signIn } = useAuth();
@@ -11,6 +13,7 @@ export default function LoginScreen({ navigation }) {
   const [errors, setErrors] = useState({});
   const [failure, setFailure] = useState(null);
   const [busy, setBusy] = useState(false);
+  const passwordRef = useRef(null);
 
   async function submit() {
     const found = validateLogin(form);
@@ -30,13 +33,15 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <Screen>
-      <AppText variant="headline" accessibilityRole="header">
-        Masuk ke Avela
-      </AppText>
-      <AppText color="textMuted" style={{ marginTop: spacing.sm }}>
-        Masuk untuk mengirim laporan keluhan dan membaca tanggapan petugas.
-      </AppText>
-      <SimulationLabel text="Akun dan petugas adalah simulasi tugas kuliah." />
+      <View style={{ marginHorizontal: -gutter, marginTop: -spacing.lg, marginBottom: spacing.xl, paddingTop: spacing.lg,
+        alignItems: 'center', backgroundColor: colors.accentWash, borderBottomLeftRadius: 32, borderBottomRightRadius: 32,
+        overflow: 'hidden' }}>
+        <SunMark size={110} style={{ position: 'absolute', left: -30, top: -24 }} />
+        <Image source={require('../../assets/illustrations/window.png')} accessibilityIgnoresInvertColors
+          resizeMode="contain" style={{ width: 220, height: 168 }} />
+      </View>
+      <PageHeader title="Masuk ke Avela"
+        body="Kirim keluhan dari rumah dan baca tanggapan petugas, tanpa harus keluar menembus asap." />
       <TextField
         label="Nama pengguna"
         value={form.username}
@@ -44,21 +49,29 @@ export default function LoginScreen({ navigation }) {
         autoCapitalize="none"
         autoCorrect={false}
         autoComplete="username"
+        textContentType="username"
+        returnKeyType="next"
+        submitBehavior="submit"
+        onSubmitEditing={() => passwordRef.current && passwordRef.current.focus()}
         error={errors.username}
-        style={{ marginTop: spacing.xl }}
+        style={{ marginTop: spacing.sm }}
       />
       <TextField
         label="Kata sandi"
         value={form.password}
         onChangeText={(password) => setForm({ ...form, password })}
+        inputRef={passwordRef}
         secureTextEntry
         autoComplete="password"
+        textContentType="password"
+        returnKeyType="go"
         error={errors.password}
         onSubmitEditing={submit}
         style={{ marginTop: spacing.lg }}
       />
       {failure ? <ErrorView message={failure} /> : null}
-      <Button label="Masuk" onPress={submit} loading={busy} style={{ marginTop: spacing.xl }} />
+      <Button label="Masuk" icon={LogIn} onPress={submit} loading={busy} style={{ marginTop: spacing.xl }} />
+      <SimulationLabel text="Akun dan petugas adalah simulasi tugas kuliah." style={{ marginTop: spacing.lg }} />
     </Screen>
   );
 }

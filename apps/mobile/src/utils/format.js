@@ -109,3 +109,17 @@ export function hasUpdate(item, seenAt) {
   const changed = item.publishedAt || item.updatedAt;
   return Boolean(seenAt && changed && changed > seenAt);
 }
+
+// shortcut: dummy distance from the facility id, because the app does not ask for location (D-25) and facilities have
+// no coordinates; replace with a real distance if both ever exist. The same facility always gets the same value.
+export function dummyDistanceKm(id) {
+  let h = 2166136261; // FNV-1a, so ids that differ only at the end still spread apart
+  for (const ch of String(id || '')) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+  return Math.round(4 + (h % 86)) / 10; // 0,4 to 8,9 km
+}
+
+export function distanceLabel(km) {
+  if (km === null || km === undefined) return 'jarak tidak diketahui';
+  if (km < 1) return `${Math.round((km * 1000) / 50) * 50} m`;
+  return `${km.toFixed(1).replace('.', ',')} km`;
+}
