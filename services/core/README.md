@@ -162,6 +162,8 @@ docker compose exec core python -m app.seed   # rerun after every upgrade; it is
 curl http://127.0.0.1:8081/health
 ```
 
+After `git pull` changes `nginx.conf`, run `docker compose up -d --force-recreate gateway`, not `nginx -s reload`. The file is bind-mounted on its own, and the pull replaces it with a new file, so a running container keeps reading the old one. Check with `curl -sI http://127.0.0.1:8081/api/health`: the response must carry `Content-Security-Policy`.
+
 Starting the service adds new columns to an existing database; the seed then fills facility details. Back up the database before an upgrade:
 
 ```bash

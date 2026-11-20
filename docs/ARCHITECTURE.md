@@ -14,7 +14,7 @@
 | Public access | Cloudflare Tunnel `k01-avela` to `https://avela.stei.fun` | Live: the class route sends `/api/*` to the gateway |
 | Integration service | FastAPI, same versions, on the owner's laptop at `https://avela-int.stei.fun` (D-34) | Built in `services/integration`: snapshot push job, Veriqu and FlowGanic adapters on labelled fixtures |
 | PM2.5 source | Open-Meteo Air Quality, `cams_global` domain | Probed on 10 Nov |
-| Mobile app | React Native with Expo SDK 58, React Navigation 7 (stack and bottom tabs), React Context | Scaffolded in `apps/mobile`; versions pinned in `package.json` |
+| Mobile app | React Native with Expo SDK 58, React Navigation 7 (stack and bottom tabs), React Context | Built in `apps/mobile`: 15 screens on the light udara terang design (D-37); versions pinned in `package.json` |
 | Mobile language | JavaScript with `ApiService.js` | Confirmed (D-28) |
 | Mobile tests | Jest with `jest-expo` and React Native Testing Library | In use |
 | Release | EAS Build, Android APK | Configured in `apps/mobile/eas.json`; build not run yet |

@@ -148,13 +148,13 @@ components:
 
 ## Overview
 
-**Status:** Baseline for implementation (D-09). Updated 20 November 2026 for the light "udara terang" redesign (D-37), which supersedes the dark palette of D-36. Updated 12 November 2026 for the exposure context, the community signal, and the staff screens; 17 November 2026 for the DDD paper (partner sections, facility directory, area list); and 20 November 2026 for the 60/30/10 palette chosen by the owner (D-36). The app in `apps/mobile` implements it; it has been opened on one phone, but the accessibility checks at the end of this file have not been run. The mobile theme module (`apps/mobile/src/theme/index.js`) mirrors the frontmatter; change a token here first.
+**Status:** Baseline for implementation (D-09), now the light "udara terang" redesign (D-37, 20 November 2026), which supersedes the dark palette of D-36. Earlier updates: 12 November (exposure context, community signal, staff screens) and 17 November (the DDD paper: partner sections, facility directory, area list). `apps/mobile` implements it and has been opened on one phone; the accessibility checks at the end of this file have not been run. The mobile theme module (`apps/mobile/src/theme/index.js`) mirrors the frontmatter; change a token here first.
 
-The direction is a calm, light personal health companion: the app is the clear patch in the haze. White paper and cool mist surfaces, slate ink text, a single sun-yellow action per screen, and source and time information close to environmental values. The signature element is the condition panel on Beranda: the PM2.5 value set large in Bricolage Grotesque on a mist panel, with the next hours drawn as a row of columns where a missing hour stays an empty dashed slot. Brand character comes from proportion, spacing, and precise language. It does not need smoke imagery, a medical mascot, gradients, glass effects, or a dashboard full of interchangeable cards.
+The direction is a calm, light personal health companion: the app is the clear patch in the haze. White paper and cool mist surfaces, slate ink text, a single sun-yellow action per screen, and source and time information close to environmental values. The signature element is the condition panel on Beranda: the PM2.5 value set large in Bricolage Grotesque on a mist panel, with the next hours drawn as a row of columns where a missing hour stays an empty dashed slot. Brand character comes from proportion, spacing, and precise language. It does not need smoke imagery, a medical mascot, gradients, or a dashboard full of interchangeable cards. Glass appears in one place only: the floating tab bar.
 
 The resident should understand three things in order: **what the available data says about the area, what they can do next, and whether a person has reviewed their report**. Environmental certainty, medical urgency, and report progress are separate visual signals.
 
-This is a documentation-only refinement informed by [Impeccable](https://github.com/pbakaus/impeccable), especially its Operate and Android guidance. No launcher or rendering tool ran, no global skill was installed, and no UI exists to extract or visually certify. Existing PRD and PRODUCT_FLOWS provide product context. Detailed screen composition below remains a proposal, not evidence of usability testing.
+The visual language was drawn in Figma and then built in `apps/mobile` (D-37); the 3D clay icons and the spot illustrations come from that Figma file. PRD and PRODUCT_FLOWS give the product context. The screen composition below describes the built layout; it is not evidence of usability testing.
 
 ## Colors
 
@@ -229,7 +229,7 @@ Body text is left-aligned. Long guidance and responses wrap naturally; no fixed 
 
 ### Shared Spatial Rules
 
-Use a single phone content column with 16-unit horizontal padding and 24-unit section separation. Reserve the larger section token for major changes in task, not every row. Align titles, values, and actions to a consistent left edge. Prefer grouped lists and whitespace over nested cards.
+Use a single phone content column with `spacing.gutter` (20) horizontal padding and 24-unit section separation. Reserve the larger section token for major changes in task, not every row. Align titles, values, and actions to a consistent left edge. Put rows of the same kind in one `RowList` card with hairlines between them, never a card per row, and never nest a card inside a card. Scrolling content leaves 120 units at the bottom so the floating tab bar never covers it.
 
 Honor safe areas, display cutouts, system navigation, and keyboard insets. All interactive targets are at least 48 by 48 logical units, with at least 8 units separation. Token height is a minimum baseline: controls expand under larger text settings. Keep essential information in the scrolling content rather than behind a floating action.
 
@@ -252,7 +252,7 @@ Keep environmental data readable without signing in. Private reports and results
 
 ### Navigation and Adaptation
 
-Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. Tabs pair a Lucide icon with its label. The active tab is ink with a heavier stroke on the white bar; inactive tabs use `textMuted`. Tabs never use the yellow accent. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
+Compact width uses four labeled destinations for residents: Beranda, Laporan, Fasilitas, Akun. A staff account gets two: Antrean and Akun. The tab bar floats as a glass pill (see Shapes). Each tab stacks a Lucide icon over its label; the active tab is ink with a heavier stroke (2.25) on a soft-yellow `accentSoft` pill that wraps icon and label, and inactive tabs use `textMuted`. The full `accent` never colors a tab. The Laporan tab shows a count badge for update markers. Beranda and Akun draw their own top bar with a round Darurat button; the other screens use the native header with the Darurat button on the right. The role from the session decides which set is shown; the two sets never mix. Detail screens use a contextual top app bar and native Back behavior; Android system Back must work. Avoid a permanent floating button that duplicates the screen's primary action.
 
 At medium width (proposed 600-839 logical units), consider a navigation rail and preserve comfortable reading measure. At expanded width (840+), a staff queue may use master/detail panes if that surface is approved. Do not stretch paragraphs across the whole display. Width thresholds are implementation proposals to test, not evidence of tablet support.
 
@@ -262,9 +262,9 @@ Show a small, horizontally readable forecast trend with time labels, PM2.5 units
 
 ## Elevation & Depth
 
-Use tonal surfaces and clear grouping first. Ordinary rows do not need shadows. A modal sheet may use native elevation to communicate a temporary layer; its backdrop must not obscure the current task's meaning. Avoid floating, stacked, translucent panels.
+Use tonal surfaces and clear grouping first. A `Card` or a `RowList` group floats with a soft shadow plus a hairline (`shadow` in `ui.js`) so it reads on white and on the yellow wash alike; rows inside a group have no shadow of their own. The tab bar is the only translucent surface. A modal sheet may use native elevation to communicate a temporary layer; its backdrop must not obscure the current task's meaning. Avoid stacked or nested floating panels.
 
-Motion is functional: approximately 150-220 ms for state transitions, preserving content position. Honor Android Remove animations and reduced-motion preferences with instant changes or a simple fade. No smoke particles, animated risk counters, page-load choreography, or endless pulsing urgency.
+Motion is functional and comes from the platform: the native stack's screen transitions and the pressed state of each control. The app adds no animation library. Any state transition stays at approximately 150-220 ms and preserves content position. Honor Android Remove animations and reduced-motion preferences with instant changes or a simple fade. No smoke particles, animated risk counters, page-load choreography, or endless pulsing urgency.
 
 Loading uses stable skeleton regions for initially absent content. A refresh preserves the last source-attributed content and shows a small updating indicator. Use a spinner only for a localized action in progress, not as a blank full-screen experience.
 
@@ -276,7 +276,28 @@ Use Lucide outline icons (`lucide-react-native`) at a 1.75 stroke, always next t
 
 ## Components
 
-These are the component contracts; `apps/mobile/src/components/ui.js` implements the shared ones.
+These are the component contracts; `apps/mobile/src/components/ui.js` implements the shared ones. Build screens from them instead of styling by hand.
+
+### Building Blocks
+
+| Component | Use |
+| --- | --- |
+| `Screen`, `PageHeader`, `Section` | The scrolling page, its large title with an optional sentence and control, and a titled group of content |
+| `Button` | `primary` (yellow, one per screen), `tonal` (secondary), text (low emphasis), `danger` (destructive or emergency); optional Lucide icon |
+| `Card` | One distinct object on a floating white surface: the condition summary, a staff response, a result |
+| `Row`, `RowList` | Rows of one kind on one card with hairlines: a leading Lucide icon or a 3D clay image, title, subtitle, meta, and a trailing element |
+| `ActionTile` | A large entry point used in pairs on Beranda: a 3D clay icon on a soft-yellow tile, a title, and one line |
+| `Chip` | One choice among a few (area, facility, course of symptoms, disposition); the chosen chip inverts to `selected` |
+| `Checkbox` | A statement the user confirms, such as the report consent |
+| `TextField` | Persistent label, hint, inline error; the border turns `focus` while typing |
+| `Panel` | A notice in the neutral, info, warning, or danger tone, with an icon |
+| `StatusPill`, `Tag` | A report state in words; a short label in a soft-yellow, information, or mist pill |
+| `StatRow` | Three counts side by side on Akun; a missing count is said in words |
+| `RoundButton` | A round icon button, such as Darurat in the Beranda and Akun top bars |
+| `EmptyView`, `LoadingView`, `ErrorView` | An empty screen with an optional spot illustration and the next step; loading; an error with retry |
+| `SimulationLabel` | The "Simulasi tugas kuliah" line |
+| `SkyBackdrop`, `SunMark` | Decoration only: the soft-yellow sky behind the top of a page and the sun-and-haze motif; hidden from screen readers and never driven by data |
+| `GlassBar`, `EmergencyButton` | The floating tab bar's material, and the Darurat pill in native headers |
 
 ### Environmental Summary
 
@@ -284,7 +305,7 @@ Include area, data kind, pollutant, unit, valid time, source, and freshness near
 
 ### Category Chip and Community Signal
 
-`categoryChip` sits beside the PM2.5 value and carries the category name in text. It has an outline in the outline role, a `surfaceContainer` fill, and no status color, so the category never reads as a personal risk level. It is not rendered while the category is null.
+`categoryChip` sits beside the PM2.5 value and carries the category name in text. It is an outline pill with no fill and no status color, so the category never reads as a personal risk level. It is not rendered while the category is null.
 
 The community signal is one caption-size row under the forecast: the 7-day report count for the area and the words "data simulasi" in the coursework build. A hidden count reads "Belum cukup data". It is never a chart, a map, or a trend arrow.
 
@@ -294,7 +315,7 @@ The community signal is one caption-size row under the forecast: the 7-day repor
 
 ### Staff Queue and Review
 
-`queueRow` shows the complaint's first line, the state in text, and how long the report has waited. Rows are separated by dividers, not cards. The review screen shows exactly one primary action for the current state: claim, then ask or respond, then close. A version conflict shows an inline message and reloads the report. Every staff screen carries the "Simulasi tugas kuliah" label.
+`queueRow` shows the complaint's first line, a `StatusPill`, and how long the report has waited. The rows sit in one `RowList` card with hairlines between them, not in a card each. The review screen shows exactly one primary action for the current state: claim, then ask or respond, then close. A version conflict shows an inline message and reloads the report. Every staff screen carries the "Simulasi tugas kuliah" label.
 
 ### Guidance and Next Step
 
@@ -355,8 +376,8 @@ Do not display reassuring medical copy as a default empty state. A successful su
 - Make source, valid time, and unanswered-review state easy to find.
 - Use the theme and typography roles consistently across the two resident journeys.
 - Keep facility lists, large text, keyboard/Back behavior, and offline/error states first-class.
-- Avoid generic metric tiles, gradients, glass, decorative maps, 3D lungs, or an invented Avela health score.
+- Avoid generic metric tiles, gradients, glass outside the tab bar, decorative maps, 3D lungs, or an invented Avela health score. The 3D clay icons mark entry points only, never a status or a value.
 - Never use weather icons or sky color as a pollution measurement.
 - Do not claim the palette or this document has passed a rendered accessibility audit.
 
-Before UI completion, capture an actual Android build at compact width, large text (including a 200% stress check where supported), outdoor brightness (the dark palette must stay readable in sunlight), keyboard-open form, missing environmental data, long staff response, and a failed upload. Run the squint test on every screen: only the yellow button should stand out. Include TalkBack checks. Add tablet evidence only if tablet support is claimed. Browser mockups do not prove native behavior.
+Before UI completion, capture an actual Android build at compact width, large text (including a 200% stress check where supported), outdoor brightness, iOS Reduce Transparency (the tab bar turns solid white), keyboard-open form, missing environmental data, long staff response, and a failed upload. Run the squint test on every screen: only the yellow button should stand out. Include TalkBack checks. Add tablet evidence only if tablet support is claimed. Browser mockups do not prove native behavior.
