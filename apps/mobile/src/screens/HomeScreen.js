@@ -21,12 +21,52 @@ export function forecastAhead(series, now = Date.now(), count = 6) {
   return (series || []).filter((p) => new Date(p.validAt).getTime() > now).slice(0, count);
 }
 
+// The highest hour in the window, skipping missing values; null when every hour is missing.
+export function peakPoint(points) {
+  return points.reduce((top, p) => (p.value !== null && (!top || p.value > top.value) ? p : top), null);
+}
+
+function Swatch({ color, dashed, label }) {
+  const { colors } = useTheme();
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+      <View style={{ width: 12, height: 12, borderRadius: 3, backgroundColor: dashed ? 'transparent' : colors[color],
+        borderWidth: dashed ? 1.5 : 0, borderStyle: 'dashed', borderColor: colors.outline }} />
+      <AppText variant="caption" color="textMuted">{label}</AppText>
+    </View>
+  );
+}
+
+// ISPU category colors (S-08), always beside the name in text (D-38). ISPU yellow shows as the warning amber because
+// the sun yellow belongs to the primary button; ISPU black shows as ink.
+const CATEGORY_TONES = {
+  Baik: ['goodSurface', 'good'],
+  Sedang: ['informationSurface', 'information'],
+  'Tidak Sehat': ['warningSurface', 'warning'],
+  'Sangat Tidak Sehat': ['dangerSurface', 'danger'],
+  Berbahaya: ['selected', 'onSelected'],
+};
+
+function CategoryChip({ label }) {
+  const { colors } = useTheme();
+  const [bg, fg] = CATEGORY_TONES[label] || ['surface', 'text'];
+  return (
+    <View style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: spacing.sm,
+      backgroundColor: colors[bg], borderRadius: rounded.pill, paddingHorizontal: spacing.md, paddingVertical: 6 }}>
+      <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: colors[fg] }} />
+      <AppText variant="label" color={fg}>{label}, mengacu ISPU</AppText>
+    </View>
+  );
+}
+
 // The next hours as a row of columns on the haze panel. A missing hour stays an empty slot, never a zero.
 function ForecastStrip({ points }) {
   const { colors } = useTheme();
   const top = Math.max(1, ...points.map((p) => p.value || 0));
   const said = points.map((p) => `${formatTime(p.validAt, { withDate: false })} ${pm25(p.value)}`).join(', ');
+  const peak = peakPoint(points);
   return (
+    <>
     <View accessible accessibilityLabel={`Prakiraan beberapa jam ke depan: ${said}`}
       style={{ flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm, marginTop: spacing.sm }}>
       {points.map((p, i) => (
@@ -52,6 +92,18 @@ function ForecastStrip({ points }) {
         </View>
       ))}
     </View>
+    {/* Legend: what each bar color means, the unit, and the highest value in the window. */}
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: spacing.lg, rowGap: spacing.xs }}>
+      <Swatch color="accent" label="Jam terdekat" />
+      <Swatch color="tonalPressed" label="Jam berikutnya" />
+      {points.some((p) => p.value === null) ? <Swatch dashed label="Tidak ada data" /> : null}
+    </View>
+    <AppText variant="caption" color="textMuted">
+      {peak
+        ? `Angka di atas batang adalah PM2.5 dalam µg/m³. Tertinggi ${pm25(peak.value)} pukul ${formatTime(peak.validAt, { withDate: false })}.`
+        : 'Belum ada nilai untuk jam-jam ini.'}
+    </AppText>
+    </>
   );
 }
 
@@ -84,10 +136,7 @@ function Condition({ advisory }) {
         <AppText variant="title">Belum ada nilai untuk jam ini</AppText>
       )}
       {category ? (
-        <View style={{ alignSelf: 'flex-start', borderWidth: 1.5, borderColor: colors.outline, borderRadius: rounded.pill,
-          paddingHorizontal: spacing.md, paddingVertical: spacing.xs }}>
-          <AppText variant="label">{category}, mengacu ISPU</AppText>
-        </View>
+        <CategoryChip label={category} />
       ) : null}
 
       <View style={{ height: 1.5, backgroundColor: colors.divider, marginVertical: spacing.xs }} />

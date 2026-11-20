@@ -34,6 +34,9 @@ const colors = {
   danger: '#B3261E',
   dangerSurface: '#FDECEA',
   dangerPressed: '#F9D9D5',
+  // ISPU category Baik only (D-38); never a personal all-clear.
+  good: '#1E6B3A',
+  goodSurface: '#E6F4EA',
   disabledSurface: '#EEF1F3',
   disabledText: '#5E6C74',
 };
