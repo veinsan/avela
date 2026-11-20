@@ -4,7 +4,7 @@ import PartnerSection from '../src/components/PartnerSection';
 import { AppText } from '../src/components/ui';
 import EmergencyScreen from '../src/screens/EmergencyScreen';
 import { todayHours, todayIndex } from '../src/screens/FacilitiesScreen';
-import { forecastAhead } from '../src/screens/HomeScreen';
+import { forecastAhead, peakPoint } from '../src/screens/HomeScreen';
 
 test('a partner outage collapses to one line and hides the content', async () => {
   await render(
@@ -38,6 +38,12 @@ test('forecast shows only future hours', async () => {
   const now = Date.parse('2026-11-20T02:30:00Z');
   const series = [{ validAt: '2026-11-20T02:00:00Z', value: 1 }, { validAt: '2026-11-20T03:00:00Z', value: 2 }];
   expect(forecastAhead(series, now)).toEqual([series[1]]);
+});
+
+test('the forecast legend names the highest hour and skips missing ones', () => {
+  const points = [{ validAt: 'a', value: null }, { validAt: 'b', value: 30 }, { validAt: 'c', value: 12 }];
+  expect(peakPoint(points)).toBe(points[1]);
+  expect(peakPoint([{ validAt: 'a', value: null }])).toBeNull();
 });
 
 test("today's hours use WIB and keep unknown apart from closed", async () => {

@@ -28,6 +28,8 @@ colors:
   danger: '#B3261E'
   dangerSurface: '#FDECEA'
   dangerPressed: '#F9D9D5'
+  good: '#1E6B3A'
+  goodSurface: '#E6F4EA'
   disabledSurface: '#EEF1F3'
   disabledText: '#5E6C74'
 typography:
@@ -134,9 +136,8 @@ components:
     rounded: '{rounded.control}'
     padding: '{spacing.lg}'
   categoryChip:
-    backgroundColor: 'transparent'
-    borderColor: '{colors.outline}'
-    textColor: '{colors.text}'
+    backgroundColor: '{colors.goodSurface}'
+    textColor: '{colors.good}'
     typography: '{typography.label}'
     rounded: '{rounded.pill}'
     padding: '{spacing.sm}'
@@ -182,8 +183,9 @@ Status needs its own hues, kept muted so they never compete with the yellow butt
 - `danger` (soft red) for Darurat and failed actions that block the user. Yellow is never used for danger, and danger is never used for a normal action.
 - `warning` (soft orange, distinct from the yellow accent) for stale data and recoverable errors.
 - `information` (soft blue) for neutral notices such as "Terkirim, belum ditinjau" and the exposure context.
+- `good` (soft green) only for the ISPU category Baik on the category chip (D-38).
 
-Environmental information sits on a neutral `surfaceContainer` panel. It must not turn reassuring green because a pollution value is low, and it must never use the accent. A completed software action can use a check mark and text without implying medical safety.
+The condition panel itself stays neutral and never uses the accent. Only the category chip carries a category color (D-38), and green there means the ISPU category Baik and nothing else: never a personal all-clear. A completed software action can use a check mark and text without implying medical safety.
 
 ### Semantic Mapping
 
@@ -198,15 +200,15 @@ Environmental information sits on a neutral `surfaceContainer` panel. It must no
 | Synthetic service | Persistent small plain-language label | Simulasi tugas kuliah |
 | Exposure context on a report | Information panel, forecast icon | Prakiraan wilayah, bukan dosis pribadi |
 | Community signal | Plain caption row under the forecast | Jumlah laporan 7 hari, or Belum cukup data |
-| PM2.5 category | Neutral chip with text; no traffic-light fill | Category name and "mengacu ISPU"; hidden while the label is null |
+| PM2.5 category | Chip filled in its ISPU category color, always with text (D-38) | Category name and "mengacu ISPU"; hidden while the label is null |
 
-AQI colors and category names require a separate, named standard and review. Do not label US or European AQI as Indonesian ISPU. Raw PM2.5 concentration is not an AQI score. No invented health thresholds are encoded in this palette.
+Category colors follow the ISPU convention (S-08): Baik green, Sedang blue, Tidak Sehat yellow shown as the `warning` amber because sun yellow belongs to the primary button, Sangat Tidak Sehat red, Berbahaya black shown as ink. Any other standard needs its own review. Do not label US or European AQI as Indonesian ISPU. Raw PM2.5 concentration is not an AQI score. No invented health thresholds are encoded in this palette.
 
 ### Contrast and Non-Color Cues
 
 Target at least 4.5:1 for normal text and 3:1 for large text and essential control boundaries. Outline identifies controls; divider is decorative and must not be the only field boundary. Use text, icon, and placement alongside color. Disabled controls retain a readable reason. Review theme pairs numerically and on-device; a token check alone does not certify accessibility.
 
-Computed on 20 November 2026 for D-37 (WCAG relative luminance): text on background 15.71:1, on surfaceContainer 13.63:1, on tonal 13.44:1; textMuted on background 6.33:1, on surface 5.88:1, on surfaceContainer 5.49:1; onAccent on accent 9.75:1, on accentPressed 8.23:1; outline against background 3.57:1 and surface 3.32:1; information, warning, and danger on their surfaces 5.89, 6.16, and 5.72:1; danger on background 6.54:1, on dangerPressed 4.95:1. The yellow fill against white is below 3:1, so a primary button is identified by its dark label and its position, never by its fill alone.
+Computed on 20 November 2026 for D-37 (WCAG relative luminance): text on background 15.71:1, on surfaceContainer 13.63:1, on tonal 13.44:1; textMuted on background 6.33:1, on surface 5.88:1, on surfaceContainer 5.49:1; onAccent on accent 9.75:1, on accentPressed 8.23:1; outline against background 3.57:1 and surface 3.32:1; information, warning, and danger on their surfaces 5.89, 6.16, and 5.72:1; danger on background 6.54:1, good on goodSurface 5.74:1, on dangerPressed 4.95:1. The yellow fill against white is below 3:1, so a primary button is identified by its dark label and its position, never by its fill alone.
 
 ## Typography
 
@@ -259,7 +261,7 @@ At medium width (proposed 600-839 logical units), consider a navigation rail and
 
 ### Environmental Timeline
 
-Show a small, horizontally readable forecast trend with time labels, PM2.5 units, and an accessible list/table alternative. Break the line at missing samples. No smooth curve or confidence band unless supported by data. A selected time displays its exact value and valid time. Forecasts remain separate from station observations; changing the source must be visible.
+Show a small, horizontally readable forecast trend with time labels, PM2.5 units, and an accessible list/table alternative. Break the line at missing samples. A legend under the bars names each bar color, the unit, and the highest value in the window with its time. No smooth curve or confidence band unless supported by data. A selected time displays its exact value and valid time. Forecasts remain separate from station observations; changing the source must be visible.
 
 ## Elevation & Depth
 
@@ -305,7 +307,7 @@ Include area, data kind, pollutant, unit, valid time, source, and freshness near
 
 ### Category Chip and Community Signal
 
-`categoryChip` sits beside the PM2.5 value and carries the category name in text. It is an outline pill with no fill and no status color, so the category never reads as a personal risk level. It is not rendered while the category is null.
+`categoryChip` sits beside the PM2.5 value and carries the category name in text with a dot. Its fill follows the ISPU category (D-38): `goodSurface`/`good` for Baik, `information` for Sedang, `warning` for Tidak Sehat, `danger` for Sangat Tidak Sehat, and ink with white text for Berbahaya. The color only speeds up reading; the words "mengacu ISPU" stay, and the chip describes the area forecast, not a personal risk level. It is not rendered while the category is null.
 
 The community signal is one caption-size row under the forecast: the 7-day report count for the area and the words "data simulasi" in the coursework build. A hidden count reads "Belum cukup data". It is never a chart, a map, or a trend arrow.
 
